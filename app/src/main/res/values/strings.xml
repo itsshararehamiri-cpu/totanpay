@@ -1,0 +1,52 @@
+<resources>
+    <string name="app_name">TotanPay</string>
+    <string name="currency">ریال</string>
+    <string name="terminal">پایانه</string>
+    <string name="merchant">پذیرنده</string>
+    <string name="rrn_trace">مرجع/پیگیری</string>
+    <string name="amount">مبلغ</string>
+    <string name="print_customer_receipt">چاپ رسید مشتری</string>
+    <string name="purchase">خرید</string>
+    <string name="customer_receipt">رسید مشتری</string>
+    <string name="cancel">انصراف</string>
+    <string name="plz_swipe_card">لطفا کارت را بکشید</string>
+    <string name="in_processing">در حال پردازش</string>
+    <string name="reports">گزارشات</string>
+    <string name="last_transaction">آخرین تراکنش</string>
+    <string name="details_of_transactions">ریز تراکنش ها</string>
+    <string name="report_based_on_trace">گزارش بر اساس شماره پیگیری</string>
+    <string name="from_date">از تاریخ</string>
+    <string name="to_date">تا تاریخ</string>
+    <string name="trace">شماره پیگیری</string>
+    <string name="display_results">مشاهده نتایج</string>
+    <string name="supervisor_settings">تنظیمات پشتیبان</string>
+    <string name="merchant_settings">تنظیمات پذیرنده</string>
+
+    <string name="settings">تنظیمات</string>
+    <string name="connection_settings">تنظیمات ارتباط</string>
+    <string name="key_injection">کلیدگذاری</string>
+    <string name="configuration">پیکربندی</string>
+
+
+    <string name="enable_and_disable_voice">فعال و غیرفعال کردن صدا</string>
+    <string name="choose_theme">انتخاب تم</string>
+
+
+    <string name="ip">IP</string>
+    <string name="port">Port</string>
+    <string name="nii">Nii</string>
+
+
+    <string name="balance">مانده موجودی</string>
+    <string name="real_balance">مانده موجودی واقعی</string>
+
+
+    <string name="pin">رمز</string>
+    <string name="serial">سریال شارژ</string>
+    <string name="code">کد دستوری</string>
+
+
+
+    <string name="success_transaction">تراکنش موفق</string>
+    <string name="unsuccess_transaction">تراکنش ناموفق</string>
+</resources>

@@ -1,0 +1,74 @@
+package com.example.totanpay.ui.theme
+
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
+
+val TINY_PADDING = 3.dp
+val END_PADDING = 12.dp
+val START_PADDING = 12.dp
+
+
+val SMALL_PADDING = 5.dp
+val MEDIUM_PADDING = 8.dp
+val LARGE_PADDING = 12.dp
+val ULTRA_LARGE_PADDING = 16.dp
+val MARGIN = 8.dp
+val TINY_MARGIN = 2.dp
+val SMALL_MARGIN = 4.dp
+val MEDIUM_MARGIN = 8.dp
+val LARGE_MARGIN = 16.dp
+val ULTRA_LARGE_MARGIN = 32.dp
+val SIDE_MARGIN_CHANGE_PRICE_DIALOG = 15.dp
+
+
+val UNDERLINE_ACTIONBAR = 2.dp
+val UNDERLINE_PAYMENT = 1.dp
+
+val PRIORITY_INDICATER_SIZE = 12.dp
+val TOP_APP_BAR_HEIGHT = 56.dp
+val TASK_ITEM_ELEVATION = 5.dp
+val PRIORITY_DROP_DOWN = 60.dp
+val FONT_SIZE_12 = 12.sp
+val FONT_SIZE_13 = 13.sp
+val FONT_SIZE_14 = 14.sp
+val FONT_SIZE_16 = 16.sp
+val FONT_SIZE_18 = 18.sp
+val FONT_SIZE_20 = 20.sp
+val SMALL_CORNER_RADIUS = 5
+val MEDIUM_CORNER_RADIUS = 10
+val LARGE_CORNER_RADIUS = 15
+
+val TINY_STORK_WIDTH = 1.dp
+val SMALL_STORK_WIDTH = 2.dp
+val MEDIUM_STORK_WIDTH = 3.dp
+val LARGE_STORK_WIDTH = 4.dp
+
+val CIRCULAR_PROGRESS_BAR_SMALL_SIZE = 24.dp
+val CIRCULAR_PROGRESS_BAR_MEDIUM_SIZE = 32.dp
+val CIRCULAR_PROGRESS_BAR_LARGE_SIZE = 48.dp
+val CIRCULAR_PROGRESS_BAR_ULTRA_LARGE_SIZE = 64.dp
+val TEXT_FILED_HEIGHT_SIZE = 50.dp
+val ADD_CUSTOMER_ICON_WIDTH_HEIGHT_SIZE = 50.dp
+val USER_ICON_WIDTH_HEIGHT_SIZE = 32.dp
+val TEXT_FIELD_ICON_WIDTH_HEIGHT_SMALL_SIZE = 24.dp
+val TEXT_FIELD_ICON_WIDTH_HEIGHT_MEDIUM_SIZE = 28.dp
+val TEXT_FIELD_ICON_WIDTH_HEIGHT_LARGE_SIZE = 32.dp
+val DIALOG_CLOSE_ICON_WIDTH_HEIGHT_SIZE = 32.dp
+
+val RemoveOrderIconSize=32.dp
+val MarginSideOrderItem=10.dp
+val MarginTopOrderItem=15.dp
+val MarginTopTextInputWithTitleOrderItem=12.dp
+val MarginSideTable=5.dp
+val MarginSideProductInOrder=5.dp
+
+
+
+
+
+val HEIGHT_TEXT_INPUT=80.dp
+val MARGIN_BOTTOM_MAIN_CONFIRM=25.dp
+val MARGIN_SIDE_MAIN_CONFIRM=12.dp
+
+
+val MARGIN_TOP_ROW=12.dp
