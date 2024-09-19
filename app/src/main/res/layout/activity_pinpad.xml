@@ -1,0 +1,451 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:padding="5dp">
+
+    <ScrollView
+        android:id="@+id/scrollView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="center"
+                android:orientation="vertical">
+
+                <RadioGroup
+                    android:id="@+id/radioGroup"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:gravity="center_vertical"
+                    android:orientation="horizontal">
+
+                    <RadioButton
+                        android:id="@+id/radio1"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:checked="true"
+                        android:text="DES"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/radio2"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="SM4"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+
+                    <RadioButton
+                        android:id="@+id/radio3"
+                        android:layout_width="0dp"
+                        android:layout_height="match_parent"
+                        android:layout_weight="1"
+                        android:text="AES"
+                        android:textSize="15sp"
+                        android:textStyle="bold" />
+                </RadioGroup>
+
+
+
+                    <Button
+                        android:id="@+id/button_isKeyExist"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="Is Key Exist" />
+
+                    <Button
+                        android:id="@+id/button_diversifiedKey"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="DiversifiedKey" />
+
+                    <Button
+                        android:id="@+id/button_loadTEK"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="Load TEK" />
+
+
+                    <Button
+                        android:id="@+id/button_loadMainKeyEnc"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="Load Enc MainKey" />
+
+                    <Button
+                        android:id="@+id/button_loadMainKey"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="Load MainKey" />
+
+                    <Button
+                        android:id="@+id/button_loadWorkKey"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="Load WorkKey" />
+
+
+                    <Button
+                        android:id="@+id/button_startPinInput"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="Start Pin(online)" />
+
+                    <Button
+                        android:id="@+id/button_startPinInput2"
+                        style="@style/button_style"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="Start Pin(offline)"
+                        android:visibility="visible" />
+
+                    <Button
+                        android:id="@+id/button_encryptData"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="Encrypt Data" />
+
+                    <Button
+                        android:id="@+id/button_deleteKey"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="Delete Key" />
+
+                    <Button
+                        android:id="@+id/button_calcMAC"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="Calc MAC" />
+
+                    <Button
+                        android:id="@+id/downloadKeyDukpt"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="Download Dukpt key" />
+
+
+                    <Button
+                        android:id="@+id/DukptGetKsn"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="DukptGetKsn" />
+
+                    <Button
+                        android:id="@+id/calculateMACOfDUKPTExtend"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="CalcMACOfDUKPT" />
+
+                    <Button
+                        android:id="@+id/GetDukptPinBlock"
+                        style="@style/button_style"
+                        android:layout_width="0dp"
+                        android:layout_height="35dp"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="GetDukptPinBlock" />
+
+
+
+                    <Button
+                        android:id="@+id/button_getRSAPublicKeyModel"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="getRSAPublicKey" />
+
+                    <Button
+                        android:id="@+id/button_encryptWithPEK"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="encryptWithPEK" />
+
+                    <Button
+                        android:id="@+id/button_DukptEncryptDataIV"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="DukptEncryptDataIV" />
+
+                    <Button
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:visibility="gone" />
+
+
+
+                    <Button
+                        android:id="@+id/button_genKeyHashValue"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="genKeyHashValue" />
+
+                    <Button
+                        android:id="@+id/button_customKeyboard1"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="customKeyboard 1" />
+
+                    <Button
+                        android:id="@+id/button_customKeyboard3"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="customKeyboard 3" />
+
+
+
+                    <Button
+                        android:id="@+id/button_customKeyboard4"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="customKeyboard 4" />
+
+                    <Button
+                        android:id="@+id/button_customKeyboard5"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="customKeyboard 5" />
+
+                    <Button
+                        android:id="@+id/button_customKeyboard6"
+                        style="@style/button_style"
+
+                        android:layout_marginLeft="5dp"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="customKeyboard 6"
+                        android:textAllCaps="false" />
+
+
+                    <Button
+                        android:id="@+id/button_pinpad_half"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="Pinpad Half"
+                        android:textAllCaps="false" />
+
+                    <Button
+                        android:id="@+id/button_pinpadblind"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="Pinpad Blind"
+                        android:textAllCaps="false" />
+
+                    <Button
+                        android:id="@+id/button_DukptAesInitial"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="DukptAesInitial"
+                        android:textAllCaps="false" />
+
+
+                    <Button
+                        android:id="@+id/button_DukptAesUpdateKSN"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="DukptAesUpdateKsn"
+                        android:textAllCaps="false"
+                        android:textSize="12sp" />
+
+                    <Button
+                        android:id="@+id/button_DukptAesGetKsn"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="DukptAesGetKsn"
+                        android:textAllCaps="false" />
+
+                    <Button
+                        android:id="@+id/button_DukptAesEncryptDataIV"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="DukptAesEncDataIV"
+                        android:textAllCaps="false" />
+
+
+                    <Button
+                        android:id="@+id/button_DukptAesGetPinBlock"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="DukptAesGetPinBlock"
+                        android:textAllCaps="false" />
+
+                    <Button
+                        android:id="@+id/button_downloadKeyTR31"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="DownloadKeyTR31"
+                        android:textAllCaps="false" />
+
+                    <Button
+                        android:id="@+id/button_downloadDukptTR31"
+                        style="@style/button_style"
+                        android:layout_width="match_parent"
+                        android:layout_height="wrap_content"
+                        android:layout_marginLeft="5dp"
+                        android:layout_weight="1"
+                        android:background="@drawable/bg_round"
+                        android:onClick="onClick"
+                        android:text="downloadDukptTR31"
+                        android:textAllCaps="false"
+                        android:visibility="visible" />
+
+
+            <include layout="@layout/layout_output" />
+        </LinearLayout>
+    </ScrollView>
+
+
+</LinearLayout>

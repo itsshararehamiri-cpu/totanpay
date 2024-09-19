@@ -2,16 +2,20 @@ package com.example.totanpay.data.repository.datasource.transaction.request
 
 
 class PurchaseTransactionRequest (val amount:String,val pan:String,stan: Int, val terminalId:String,
-                                 val terminalLanguage:String,
-                                 val terminalConnectionType:String,
+                                  terminalLanguage:String,
+                                  terminalConnectionType:String,
                                  val terminalType:String,
                                  val track2:String,
                                  val pinBlock:String,
                                  val merchantId:String,
                                  val currency:String,
                                  val POS:String,
-                                 serial: String, appVersion: String, nii: String,date:String,time:String):
+                                  val dateTimeInGMT:String, val acquiringInstitutionIdentificationCode:String,
+                                 serial: String, appVersion: String, nii: String,date:String,time:String,posConditionCode:String,
+                                val  purchaseId:String?
+    ,  val apportionments: List<Apportionment>?=null):
     BaseTransactionRequest(
         serial = serial, appVersion = appVersion, nii = nii, stan = stan,
-        date = date, time = time
+        date = date, time = time, terminalLanguage = terminalLanguage, posConditionCode = posConditionCode,terminalConnectionType=terminalConnectionType
     )
+data class Apportionment(val IBAN:String , var amount:String,val bankName:String)

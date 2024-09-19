@@ -1,294 +1,229 @@
 package com.example.totanpay.feature.purchase
 
+import android.app.Activity.RESULT_OK
 import android.graphics.Bitmap
-import android.os.Build
-import android.os.Build.VERSION.SDK_INT
 import androidx.activity.compose.BackHandler
-import androidx.annotation.RequiresApi
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Text
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
-import androidx.compose.ui.unit.dp
+import androidx.constraintlayout.compose.layoutId
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
-import coil.ImageLoader
-import coil.compose.rememberAsyncImagePainter
-import coil.decode.GifDecoder
-import coil.decode.ImageDecoderDecoder
-import coil.request.ImageRequest
-import coil.size.Size
+import com.example.totanpay.MainActivity
 import com.example.totanpay.R
-import com.example.totanpay.ReceiptUi
+import com.example.totanpay.ResultReceiptContainer
+import com.example.totanpay.TIME_TO_FINISH_SUCCESS_RESULT
+import com.example.totanpay.common.CountdownEffect
+import com.example.totanpay.common.PlaybackSoundEffect
+import com.example.totanpay.common.ReceiptResultContainer
+import com.example.totanpay.common.containerReceiptModifier
+import com.example.totanpay.common.isSmall
 import com.example.totanpay.common.receipt.AddAmount
 import com.example.totanpay.common.receipt.AddMaskedPanCardIssuer
 import com.example.totanpay.common.receipt.AddMerchantIdTerminalId
 import com.example.totanpay.common.receipt.AddMerchantNamePhone
+import com.example.totanpay.common.receipt.AddPSPLog
+import com.example.totanpay.common.receipt.AddPosCode
+import com.example.totanpay.common.receipt.AddPurchaseId
 import com.example.totanpay.common.receipt.AddRRNStan
 import com.example.totanpay.common.receipt.AddTypeDateTime
+import com.example.totanpay.common.rowReceiptModifier
+import com.example.totanpay.data.repository.PrintStatus
+import com.example.totanpay.data.repository.datasource.mask
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
-import com.example.totanpay.data.repository.datasource.transaction.TransactionType
-import com.example.totanpay.ui.component.MainButton
-import com.example.totanpay.ui.theme.Background
-import com.example.totanpay.ui.theme.Black100
-import com.example.totanpay.ui.theme.MARGIN_TOP_ROW
+import com.example.totanpay.receipt.ReceiptUi
+import com.example.totanpay.ui.component.HorizontalDivider
+import com.example.totanpay.ui.theme.Black
+import com.example.totanpay.ui.theme.Green60
 import com.example.totanpay.ui.theme.TotanPayTheme
-import com.example.totanpay.ui.theme.White100
-import com.google.gson.Gson
 import kotlinx.coroutines.delay
-import kotlin.time.Duration.Companion.seconds
 
-@RequiresApi(Build.VERSION_CODES.O)
 @Composable
 fun PurchaseSuccessResult(
     viewModel: PurchaseSuccessResultViewModel,
     response: String,
+    packageName: String?,
     onBackButtonClicked: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    if (packageName != null) {
+        viewModel.getResponseFroCallerApp(response)
+    }
+    LaunchedEffect(uiState.responseForCallerApp) {
+        if (uiState.responseForCallerApp != null && !packageName.isNullOrEmpty()) {
+            delay(1000)
+            val intent = context.packageManager.getLaunchIntentForPackage(packageName)
+            intent?.putExtra("transaction", uiState.responseForCallerApp)
+            (context as MainActivity).setResult(RESULT_OK, intent)
+            context.finish()
+        }
+    }
     var receiptBitmap: Bitmap? by remember {
         mutableStateOf(null)
     }
-    var secondsToRemainInScreen: Int by remember {
-        mutableStateOf(15000)
+    var printForCustomer: Boolean by remember {
+        mutableStateOf(true)
+    }
+    var printCount: Int by remember {
+        mutableIntStateOf(0)
     }
     var startPrint by remember {
         mutableStateOf(false)
     }
-    BackHandler {
-        onBackButtonClicked()
-    }
+    PlaybackSoundEffect(uiState.playbackSound, R.raw.successfultransaction)
     LaunchedEffect(Unit) {
         viewModel.init(response)
     }
-    LaunchedEffect(Unit) {
-        while (secondsToRemainInScreen > 0) {
-            delay(1.seconds)
-            secondsToRemainInScreen -= 1
-            if (secondsToRemainInScreen == 0) {
-                onBackButtonClicked()
-            }
+    LaunchedEffect(uiState.printStatus) {
+        startPrint = when (uiState.printStatus) {
+            PrintStatus.NO_PRINTING -> false
+            PrintStatus.ALWAYS_PRINTING -> true
+            else -> false
         }
     }
-    ReceiptUi(content = {
-        if (uiState.result != null)
-//            Box(
-//                modifier = Modifier
-//                    .layoutId("mainContentReceipt")
-//                    .padding(horizontal = 12.dp)
-//                    .padding(top = 30.dp)
-//                    .background(
-//                        color = White100,
-//                        shape = RoundedCornerShape(16.dp)
-//                    )
-//            )
-//            {
-                Column(modifier = Modifier.fillMaxWidth() .background(
-                    color = White100), horizontalAlignment = Alignment.CenterHorizontally) {
-                    ReceiptContent(true, uiState.result)
-                }
-           // }
+    BackHandler {
+        onBackButtonClicked()
+    }
+    CountdownEffect(TIME_TO_FINISH_SUCCESS_RESULT) {
+        onBackButtonClicked()
+    }
+    if (uiState.result != null) ReceiptUi(content = {
+        ReceiptContent(true, uiState.result, printForCustomer)
     }) {
         receiptBitmap = it
     }
     LaunchedEffect(startPrint) {
-        if (receiptBitmap != null) {
+        if (receiptBitmap != null && startPrint) {
             viewModel.print(bitmap = receiptBitmap!!, context = context)
-            startPrint=false
+            viewModel.changePrintStatus()
+            startPrint = false
+            printCount++
         }
     }
+    LaunchedEffect(receiptBitmap) {
+        if (receiptBitmap != null && startPrint) {
+            viewModel.print(bitmap = receiptBitmap!!, context = context)
+            viewModel.changePrintStatus()
+            startPrint = false
+            printCount++
+        }
+    }
+    if (uiState.result != null) {
+        ReceiptResultContainer(printTitle = stringResource(
+            id = if (printCount != 0)
+                R.string.print_merchant_receipt else R.string.print_customer_receipt
+        ),
+            onPrintButtonClicked = { startPrint = true },
+            onBackButtonClicked = {
+                onBackButtonClicked()
+            }) {
+            ResultReceiptContainer(
+                isPaperReceipt = false,
+                modifier = Modifier.layoutId("receipt"), isSuccess = true
+            ) {
+                ReceiptContent(false, uiState.result, printForCustomer = true)
+            }
+        }
+    }
+}
+
+@Composable
+fun ReceiptContent(
+    isPaperReceipt: Boolean, result: ResponseTransaction?, printForCustomer: Boolean = true
+) {
+    val context = LocalContext.current
     Column(
-        Modifier
-            .fillMaxSize()
-            .background(Background)
+        modifier = Modifier.containerReceiptModifier(isPaperReceipt, context)
     ) {
-        if (uiState.result != null)
-            PurchaseSuccessReceipt(isPaperReceipt = false, uiState.result)
-        MainButton(
-            title = "چاپ رسید مشتری", modifier = Modifier
-                .padding(top = 18.dp)
-                .padding(bottom = 12.dp, start = 8.dp, end = 8.dp)
-                .fillMaxWidth()
-
-        ) {
-            startPrint=true
-        }
-        val imageLoader = ImageLoader.Builder(LocalContext.current)
-            .components {
-                if (SDK_INT >= 28) {
-                    add(ImageDecoderDecoder.Factory())
-                } else {
-                    add(GifDecoder.Factory())
-                }
-            }
-            .build()
-        Image(
-            painter = rememberAsyncImagePainter(
-                ImageRequest.Builder(LocalContext.current)
-                    .data(data = receiptBitmap)
-                    .apply(block = fun ImageRequest.Builder.() {
-                        size(Size.ORIGINAL)
-                    }).build(),
-                imageLoader = imageLoader
-            ),
-            contentDescription = null,
-            modifier = Modifier.fillMaxWidth()
-               // .padding(top = 20.dp)
-                .align(Alignment.CenterHorizontally)
-              //  .size(50.dp)
-                .layoutId("successTickImage")
-        )
-    }
-}
-
-@Composable
-@Preview
-fun PurchaseSuccessResultPreveiw() {
-    TotanPayTheme {
-        // PurchaseSuccessResult("")
-    }
-}
-
-@Composable
-fun PurchaseSuccessReceipt(isPaperReceipt: Boolean, result: ResponseTransaction?) {
-    println("aaaaPurchaseSuccessReceiptaaaaaaaa->${Gson().toJson(result)}")
-    val imageLoader = ImageLoader.Builder(LocalContext.current)
-        .components {
-            if (SDK_INT >= 28) {
-                add(ImageDecoderDecoder.Factory())
-            } else {
-                add(GifDecoder.Factory())
-            }
-        }
-        .build()
-
-    Box(
-        modifier = Modifier
-            .layoutId("mainContentReceipt")
-            .padding(horizontal = 12.dp)
-            .padding(top = 30.dp)
-            .background(
-                color = if (isPaperReceipt) White100 else Black100,
-                shape = RoundedCornerShape(16.dp)
+        val firstColor = if (isPaperReceipt) Color.Black else MaterialTheme.colorScheme.onSurface
+        if (!isPaperReceipt) {
+            AddPSPLog(
+                modifier = Modifier.fillMaxWidth(), color = firstColor, isPaperReceipt = false
             )
-    )
-    {
-        Column {
-            if (!isPaperReceipt)
-                Image(
-                    painter = rememberAsyncImagePainter(
-                        ImageRequest.Builder(LocalContext.current)
-                            .data(data = R.drawable.aa)
-                            .apply(block = fun ImageRequest.Builder.() {
-                                size(Size.ORIGINAL)
-                            }).build(),
-                        imageLoader = imageLoader
-                    ),
-                    contentDescription = null,
-                    modifier = Modifier
-                        .padding(top = 20.dp)
-                        .align(Alignment.CenterHorizontally)
-                        .size(50.dp)
-                        .layoutId("successTickImage")
-                )
-            ReceiptContent(false, result)
         }
-    }
-}
-
-@Composable
-fun ReceiptContent(isPaperReceipt: Boolean, result: ResponseTransaction?) {
-    Column(
-        modifier = Modifier
-            .padding(horizontal = if (isPaperReceipt) 0.dp else 12.dp)
-            .background(if (isPaperReceipt) White100 else Black100)
-    ) {
-        val firstColor = if (isPaperReceipt) Black100 else White100
-        AddMerchantNamePhone(modifier = Modifier.padding(top = MARGIN_TOP_ROW),
+        if(isSmall(context))
+            AddAmount(
+                modifier = Modifier.rowReceiptModifier(isPaperReceipt),
+                result!!.amount,
+                textColor = Green60,
+                isPaperReceipt
+            )
+        AddMerchantNamePhone(
+            modifier = Modifier.rowReceiptModifier(isPaperReceipt),
             merchantName = result!!.merchantName,
             merchantPhone = result.merchantPhone,
-            textColor = firstColor,isPaperReceipt
+            textColor = firstColor,
+            isPaperReceipt
         )
-        AddTypeDateTime(modifier = Modifier.padding(top = MARGIN_TOP_ROW),
-            type = TransactionType.PURCHASE.title,
+        AddTypeDateTime(
+            modifier = Modifier.rowReceiptModifier(isPaperReceipt),
+            type = result.transactionType,
             date = result.date,
             time = result.time,
-            textColor = firstColor,isPaperReceipt
+            textColor = firstColor,
+            isPaperReceipt
         )
         HorizontalDivider(
-            modifier = Modifier.padding(top = 10.dp),
-            color = Color.White.copy(alpha = 0.16f), thickness = 1.dp
-        )// TODO: dotted
-        AddMerchantIdTerminalId(modifier = Modifier.padding(top = MARGIN_TOP_ROW),
+            isPaperReceipt = isPaperReceipt
+        )
+        AddMerchantIdTerminalId(
+            modifier = Modifier.rowReceiptModifier(isPaperReceipt),
             merchantId = result.merchantId,
             terminalId = result.terminalID,
-            textColor = firstColor,isPaperReceipt
+            textColor = firstColor,
+            isPaperReceipt
         )
-        AddMaskedPanCardIssuer(modifier = Modifier.padding(top = MARGIN_TOP_ROW),
-            maskedPan = result.maskedPan,
+        if (!result.posCode.isNullOrEmpty()) AddPosCode(
+            modifier = Modifier.rowReceiptModifier(isPaperReceipt),
+            result.posCode,
+            firstColor,
+            isPaperReceipt
+        )
+        if (!result.purchaseId.isNullOrEmpty()) AddPurchaseId(
+            modifier = Modifier.rowReceiptModifier(isPaperReceipt),
+            purchaseId = result.purchaseId,
+            textColor = firstColor,
+            isPaperReceipt
+        )
+        AddMaskedPanCardIssuer(
+            modifier = Modifier.rowReceiptModifier(isPaperReceipt),
+            maskedPan = result.maskedPan.mask(),
             cardIssuer = result.issuerName,
-            textColor = firstColor,isPaperReceipt
+            textColor = firstColor,
+            isPaperReceipt
         )
-        AddRRNStan(modifier = Modifier.padding(top = MARGIN_TOP_ROW),rrn = result.rrn, stan = result.trace, textColor = firstColor,isPaperReceipt)
-        AddAmount(modifier = Modifier.padding(top = MARGIN_TOP_ROW),result.amount, firstColor,isPaperReceipt)
-    }
-}
-
-@Composable
-fun RowReceipt(
-    first: String,
-    second: String,
-    firstTextColor: Color,
-    secondTextColor: Color,
-    isPaperReceipt: Boolean = false
-) {
-    Row(
-        modifier = Modifier
-            .padding(top = 5.dp)
-            .padding(horizontal = if (isPaperReceipt) 1.dp else 12.dp)
-            .fillMaxWidth()
-    ) {
-        Text(
-            text = first,
-            modifier = Modifier.padding(end = if (isPaperReceipt) 2.dp else 12.dp),
-            color = firstTextColor
+        AddRRNStan(
+            modifier = Modifier.rowReceiptModifier(isPaperReceipt),
+            rrn = result.rrn,
+            stan = result.trace,
+            textColor = firstColor,
+            isPaperReceipt
         )
-        Spacer(modifier = Modifier.weight(1f))
-        Text(
-            text = second,
-            modifier = Modifier.padding(start = if (isPaperReceipt) 2.dp else 12.dp),
-            color = secondTextColor
-        )
+        if (isPaperReceipt || !isSmall(context))
+            AddAmount(
+                modifier = Modifier.rowReceiptModifier(isPaperReceipt),
+                result.amount
+                ,textColor=if(isPaperReceipt) Black else Green60
+                ,isPaperReceipt
+            )
+        if (isPaperReceipt) {
+            AddPSPLog(
+                modifier = Modifier.fillMaxWidth(), color = firstColor, isPaperReceipt = true
+            )
+        }
 
-    }
-}
-
-@Composable
-@Preview
-fun RowReceiptPreveiw() {
-    TotanPayTheme {
-        RowReceipt("خرید کالا", "رسید مشتری", White100, White100, true)
     }
 }
 
@@ -311,9 +246,19 @@ fun ReceiptContentPreveiw() {
                 time = "10:22",
                 issuerName = "صادرات",
                 amount = "10000",
-                availableBalance = "10000", maskedPan = "6037********78",
-                realBalance = "13", voucherPin = "12"
-            )
+                availableBalance = "10000",
+                maskedPan = "6037********78",
+                realBalance = "13",
+                voucherPin = "12"
+            ), printForCustomer = true
         )
+    }
+}
+
+@Composable
+@Preview
+fun PurchaseSuccessResultPreveiw() {
+    TotanPayTheme {
+        // PurchaseSuccessResult("")
     }
 }

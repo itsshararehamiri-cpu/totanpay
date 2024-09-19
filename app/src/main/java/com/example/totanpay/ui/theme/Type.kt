@@ -7,24 +7,16 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 import com.example.totanpay.R
+import com.example.totanpay.ui.theme.Dimensions.LINE_HEIGHT_RECEIPT
 
 val fontFamily = FontFamily(
     Font(R.font.danafanum_light)
 )
-val iranSansFanum = FontFamily(
-    Font(R.font.peydafanum_regular)
-)
-
-val iranYekanRegular = FontFamily(
-    Font(R.font.peydafanum_regular)
-)
-
-// Set of Material typography styles to start with
 val Typography = Typography(
     displayLarge = TextStyle(//okkkkkkkkkkkkkkkkkkkkkkkkkkkk
         fontFamily = fontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 32.sp,
+        fontSize = 30.sp,
         lineHeight = 41.sp,
         //letterSpacing = 0.5.sp
     ),
@@ -57,14 +49,14 @@ val Typography = Typography(
     headlineSmall = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 13.sp,
+        fontSize = 16.sp,
         lineHeight = 24.sp,
         letterSpacing = 0.5.sp
     ),
-    bodyLarge = TextStyle(//okkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
+    bodyLarge = TextStyle(//zzzzzzzzzzzzzzz
         fontFamily = fontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 18.sp,
+        fontSize = 20.sp,
         lineHeight = 18.sp,
         letterSpacing = 0.0.sp
     ),
@@ -72,7 +64,7 @@ val Typography = Typography(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Medium,
         fontSize = 18.sp,
-        lineHeight = 26.sp,
+        lineHeight =LINE_HEIGHT_RECEIPT,
         letterSpacing = 0.5.sp
     ),
     bodySmall = TextStyle(
@@ -85,21 +77,21 @@ val Typography = Typography(
     titleLarge = TextStyle(
         fontFamily = fontFamily,
         fontWeight = FontWeight.Normal,
-        fontSize = 13.sp,
+        fontSize = 16.sp,
         lineHeight = 28.sp,
         letterSpacing = 0.sp
     ),
     titleMedium = TextStyle(//okkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkkk
         fontFamily = fontFamily,
-        fontWeight = FontWeight.ExtraBold,
-        fontSize = 20.sp,
+        fontWeight = FontWeight.Medium,
+        fontSize = 18.sp,
         lineHeight = 29.sp,
       //  letterSpacing = 0.sp
     ),
     titleSmall = TextStyle(//okkkkkkkkkkkkkkkkkk
         fontWeight = FontWeight.SemiBold,
         fontFamily = fontFamily,
-        fontSize = 14.sp,
+        fontSize = 12.sp,
         lineHeight = 19.sp,
         //letterSpacing = 0.sp
     ),
@@ -116,52 +108,113 @@ val Typography = Typography(
         fontWeight = FontWeight.Normal
         // letterSpacing = 0.5.sp
     ),
-    labelSmall = TextStyle(
+    labelSmall = TextStyle(//
         fontFamily = fontFamily,
-        fontSize = 11.sp,
-        lineHeight = 13.sp,
-        letterSpacing = 0.5.sp
+        fontSize = 11.sp,//11
+        lineHeight = 15.sp,//13
+        letterSpacing = 0.5.sp//0.5
     )
 )
-/*
-@property displayLarge displayLarge is the largest display text.
- * @property displayMedium displayMedium is the second largest display text.
- * @property displaySmall displaySmall is the smallest display text.
- * @property headlineLarge headlineLarge is the largest headline, reserved for short, important text
- * or numerals. For headlines, you can choose an expressive font, such as a display, handwritten, or
- * script style. These unconventional font designs have details and intricacy that help attract the
- * eye.
- * @property headlineMedium headlineMedium is the second largest headline, reserved for short,
- * important text or numerals. For headlines, you can choose an expressive font, such as a display,
- * handwritten, or script style. These unconventional font designs have details and intricacy that
- * help attract the eye.
- * @property headlineSmall headlineSmall is the smallest headline, reserved for short, important
- * text or numerals. For headlines, you can choose an expressive font, such as a display,
- * handwritten, or script style. These unconventional font designs have details and intricacy that
- * help attract the eye.
- * @property titleLarge titleLarge is the largest title, and is typically reserved for
- * medium-emphasis text that is shorter in length. Serif or sans serif typefaces work well for
- * subtitles.
- * @property titleMedium titleMedium is the second largest title, and is typically reserved for
- * medium-emphasis text that is shorter in length. Serif or sans serif typefaces work well for
- * subtitles.
- * @property titleSmall titleSmall is the smallest title, and is typically reserved for
- * medium-emphasis text that is shorter in length. Serif or sans serif typefaces work well for
- * subtitles.
- * @property bodyLarge bodyLarge is the largest body, and is typically used for long-form writing as
- * it works well for small text sizes. For longer sections of text, a serif or sans serif typeface
- * is recommended.
- * @property bodyMedium bodyMedium is the second largest body, and is typically used for long-form
- * writing as it works well for small text sizes. For longer sections of text, a serif or sans serif
- * typeface is recommended.
- * @property bodySmall bodySmall is the smallest body, and is typically used for long-form writing
- * as it works well for small text sizes. For longer sections of text, a serif or sans serif
- * typeface is recommended.
- * @property labelLarge labelLarge text is a call to action used in different types of buttons (such
- * as text, outlined and contained buttons) and in tabs, dialogs, and cards. Button text is
- * typically sans serif, using all caps text.
- * @property labelMedium labelMedium is one of the smallest font sizes. It is used sparingly to
- * annotate imagery or to introduce a headline.
- * @property labelSmall labelSmall is one of the smallest font sizes. It is used sparingly to
- * annotate imagery or to introduce a headline.
- */
+val TypographyI5000 = Typography(
+    displayLarge = TextStyle(//zzzzzzzzzzzzzzzzzzzz
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 34.sp,
+        lineHeight = 41.sp,
+        //letterSpacing = 0.5.sp
+    ),
+    displayMedium = TextStyle(//zzzzzzzzzzzz
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 18.sp,
+        lineHeight = 23.sp),
+    displaySmall = TextStyle(//zzzzzzzzzzzzzzzzzz
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 20.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    headlineLarge = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 13.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    headlineMedium = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 13.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    headlineSmall = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 20.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    bodyLarge = TextStyle(//zzzzzzzzzzzzzzzzzzzz
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 22.sp,
+        lineHeight = 18.sp,
+        letterSpacing = 0.0.sp
+    ),
+    bodyMedium = TextStyle(//okkkkkkkkkk
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 24.sp,
+        lineHeight =LINE_HEIGHT_RECEIPT,
+        letterSpacing = 0.5.sp
+    ),
+    bodySmall = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 15.sp,
+        lineHeight = 24.sp,
+        letterSpacing = 0.5.sp
+    ),
+    titleLarge = TextStyle(
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Normal,
+        fontSize = 22.sp,
+        lineHeight = 28.sp,
+        letterSpacing = 0.sp
+    ),
+    titleMedium = TextStyle(//zzzzzzzzzzz
+        fontFamily = fontFamily,
+        fontWeight = FontWeight.Medium,
+        fontSize = 24.sp,
+        lineHeight = 29.sp,
+        //  letterSpacing = 0.sp
+    ),
+    titleSmall = TextStyle(//okkkkkkkkkkkkkkkkkk
+        fontWeight = FontWeight.SemiBold,
+        fontFamily = fontFamily,
+        fontSize = 16.sp,
+        lineHeight = 19.sp,
+        //letterSpacing = 0.sp
+    ),
+    labelLarge = TextStyle(//zzzzzzzzzzzzzzzzzzz
+        fontFamily = fontFamily,
+        fontSize = 20.sp,
+        lineHeight = 13.sp,
+        letterSpacing = 0.5.sp
+    ),
+    labelMedium = TextStyle(//zzzzzzzzzzzzzzzzzzz
+        fontFamily = fontFamily,
+        fontSize = 19.sp,
+        lineHeight = 17.sp,
+        fontWeight = FontWeight.Normal
+        // letterSpacing = 0.5.sp
+    ),
+    labelSmall = TextStyle(//zzzzz
+        fontFamily = fontFamily,
+        fontSize = 22.sp,//11
+        lineHeight = 13.sp,//13
+        letterSpacing = 0.5.sp//0.5
+    )
+)

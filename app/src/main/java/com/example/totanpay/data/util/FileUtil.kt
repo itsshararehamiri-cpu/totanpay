@@ -3,6 +3,7 @@ package com.example.totanpay.data.util
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.util.Log
 import java.io.BufferedReader
 import java.io.IOException
 import java.io.InputStreamReader
@@ -32,10 +33,12 @@ fun getJson(fileName: String?, context: Context): String {
     var image: Bitmap? = null
     val am = context.resources.assets
     try {
-        val `is` = am.open(fileName)
-        image = BitmapFactory.decodeStream(`is`)
-        `is`.close()
+        val inputStream = am.open(fileName)
+        image = BitmapFactory.decodeStream(inputStream)
+        inputStream.close()
     } catch (e: IOException) {
+        Log.d("TAG", "cause: ${e.cause}")
+        Log.d("TAG", "message: ${e.message}")
         e.printStackTrace()
     }
     return image

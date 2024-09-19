@@ -1,44 +1,37 @@
 package com.example.totanpay.data.util
 
-import android.os.Build
-import androidx.annotation.RequiresApi
-import com.google.gson.Gson
+import android.util.Log
 import saman.zamani.persiandate.PersianDate
-import java.time.LocalDateTime
-import java.time.Month
-import java.time.Year
-import java.time.ZoneId
-import java.util.TimeZone
+import java.text.SimpleDateFormat
+import java.util.Date
+import java.util.Locale
 
-fun String?.formatTime() : String{
+fun String?.formatTime(): String {
     return if (this != null)
-        with(this){"${take(2)}:${substring(2,4)}:${takeLast(2)}"}
+        with(this) { "${take(2)}:${substring(2, 4)}:${takeLast(2)}" }.dropLast(3)
     else ""
 }
-@RequiresApi(Build.VERSION_CODES.O)
-fun getPersianDate(date_MMdd: String) : String{
-    val localDateTime = LocalDateTime.of(
-        Year.now().value,
-        Month.of(date_MMdd.take(2).toIntOrNull() ?: 1),
-        date_MMdd.takeLast(2).toIntOrNull() ?: 1,
-         10,
-        10
-    )
-    val pDate = PersianDate(localDateTime.atZone(ZoneId.systemDefault()).toInstant().toEpochMilli())
-    println("oii->${Gson().toJson(pDate)}")
-    return "${pDate.shYear}/${if(pDate.shMonth<10)0 else ""}${pDate.shMonth}/${if(pDate.shDay<10)0 else ""}${pDate.shDay}"
+fun String?.timeToForm(): String {
+    return if (this != null)
+        with(this) { "${take(2)}:${substring(2, 4)}" }
+    else ""
 }
-//object DateUtil {
-//    fun getCurrentDateTime():String{
-//        val sdf = SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault())
-//        return sdf.format(Date())
-//    }//yyyyMMdd_HHmmss
-//
-//    fun getPersianDate(date_MMdd: String) : String{
-//        with(date_MMdd) {
-//            val cal = PersianCalendar()
-//            cal.set(2023, take(2).toInt() - 1, takeLast(2).toInt())
-//            return cal.persianShortDate
-//        }
-//    }
-//}
+
+fun getPersianDate(date_MMdd: String): String {
+    return with(date_MMdd) {
+        val cal = PersianDate()
+        cal.setGrgMonth(take(2).toInt() )
+        cal.setGrgDay(takeLast(2).toInt())
+        cal.grgYear = cal.grgYear
+        "${cal.shYear}/${if (cal.shMonth < 10) 0 else ""}${cal.shMonth}/${if (cal.shDay < 10) 0 else ""}${cal.shDay}"
+    }
+}
+    fun getCurrentMinuteTime():String{
+        val sdf = SimpleDateFormat("yyyyMMddHHmmss", Locale.getDefault())
+        return sdf.format(Date()).substring(10,12)
+    }
+fun String.toFormattedDate():String{
+    return java.text.SimpleDateFormat("yyyyMMddHHmmss", Locale.US).parse(
+       this
+    )?.time.toString()
+}

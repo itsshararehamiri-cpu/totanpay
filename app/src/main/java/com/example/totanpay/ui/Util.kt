@@ -38,3 +38,38 @@ private fun String.withThousands(separator: Char = ','): String {
         }
     }
 }
+fun getPersianDateFrom(year: Int, month: Int, day: Int): String {
+    val monthName = when (month) {
+        1 -> "فروردین"
+        2 -> "اردیبهشت"
+        3 -> "خرداد"
+        4 -> "تیر"
+        5 -> "مرداد"
+        6 -> "شهریور"
+        7 -> "مهر"
+        8 -> "آبان"
+        9 -> "آذر"
+        10 -> "دی"
+        11 -> "بهمن"
+        12 -> "اسفند"
+        else -> ""
+    }
+    return "$day $monthName $year"
+}
+fun selectedDateIsSmallerOrEqualThanCurrenDate(year: Int,month: Int,day: Int,currentYear:Int,currentMonth:Int,currentDay: Int):Boolean{
+    var flag=true
+    if(year>currentYear)
+    {
+        flag=false
+    }
+    else if(year==currentYear){
+        if(month>currentMonth){
+            flag=false
+        }
+        else  if(month==currentMonth){
+            if(day>currentDay)
+                flag=false
+        }
+    }
+    return flag
+}

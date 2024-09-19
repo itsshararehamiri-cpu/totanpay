@@ -1,13 +1,13 @@
 package com.example.totanpay.feature.reports
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.totanpay.data.repository.MainRepository
+import com.example.totanpay.common.PrintableViewModel
+import com.example.totanpay.data.repository.DeviceRepository
+import com.example.totanpay.data.repository.ReportRepository
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
-import com.google.gson.Gson
-import com.urovo.i9000s.api.emv.ContantPara.TransactionResult
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -16,18 +16,32 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class SearchTransactionViewModel @Inject constructor(private val mainRepository: MainRepository) :
-    ViewModel() {
-    private val _uiState = MutableStateFlow(PurchaseSuccessResultUiState())
-    val uiState: StateFlow<PurchaseSuccessResultUiState> = _uiState
+class SearchTransactionViewModel @Inject constructor(private val reportRepository: ReportRepository,
+                                                     override val deviceRepository: DeviceRepository
+) :
+    ViewModel(),PrintableViewModel {
+    private val _uiState = MutableStateFlow(SearchTransactionUiState())
+    val uiState: StateFlow<SearchTransactionUiState> = _uiState
 
-    fun search(stan:String) {
+    fun search(stan: String) {
         viewModelScope.launch {
-            Log.d("TAG", "search() called->$stan")
-            val lastTransaction = mainRepository.geTransactionBasedStan(stan)
-            _uiState.update { it.copy(result = lastTransaction) }
+            _uiState.update { it.copy(showProgress = true,isInitState=false) }
+            delay(2000)
+            val searchedTransaction = reportRepository.geTransactionBasedStan(stan)
+            if (searchedTransaction != null)
+                _uiState.update { it.copy(result = searchedTransaction, showProgress = false, showNotFounding = false) }
+            else {
+                _uiState.update { it.copy(showNotFounding =true,showProgress=false) }
+            }
         }
     }
 
+
 }
+data class SearchTransactionUiState(
+    val result: ResponseTransaction? = null,
+    val error: String = "",
+    val showNotFounding: Boolean = false,
+    val showProgress: Boolean = false,val isInitState:Boolean=true
+)
 

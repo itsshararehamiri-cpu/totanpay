@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.Divider
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.drawBehind
@@ -30,6 +31,15 @@ import com.example.totanpay.ui.theme.TotanPayTheme
 import kotlin.math.roundToInt
 
 @Composable
+fun HorizontalDivider(modifier: Modifier = Modifier, isPaperReceipt: Boolean) {
+    androidx.compose.material3.HorizontalDivider(
+        modifier = modifier.padding(top = if (isPaperReceipt) 5.dp else 10.dp),
+        color = if (isPaperReceipt) Color.Black else MaterialTheme.colorScheme.onSurface.copy(alpha = 0.16f),
+        thickness = if (isPaperReceipt) 1.dp else 1.dp
+    )
+}
+
+@Composable
 fun DashedDivider(@ColorRes colorId: Color) {
     val pathEffect = PathEffect.dashPathEffect(floatArrayOf(5f, 5f), 0f)
     Canvas(
@@ -47,9 +57,10 @@ fun DashedDivider(@ColorRes colorId: Color) {
     }
 }
 
+
 @Preview
 @Composable
-fun ShowDashDivider(){
+fun ShowDashDivider() {
     TotanPayTheme {
         DashedDivider(Color.Gray)
     }
@@ -68,24 +79,30 @@ fun DottedDivider(
             .height(1.dp)
     )
 }
+
 @Composable
-fun DottedDividerPrewview(){
+@Preview
+fun DottedDividerPreview() {
     TotanPayTheme {
         DottedDivider()
     }
 }
+
 @Composable
 fun DividerLightGray(
     modifier: Modifier
 ) {
     Divider(modifier = modifier, color = Color.LightGray)
 }
+
 @Composable
-fun DividerLightGrayPrewview(){
+@Preview
+fun DividerLightGrayPreview() {
     TotanPayTheme {
         DividerLightGray(Modifier.fillMaxWidth())
     }
 }
+
 @Preview(showBackground = true)
 @Composable
 fun ReceiptDividerPreview() {
@@ -158,17 +175,19 @@ fun DottedLine(
             }
     )
 }
+
 @Composable
 @Preview
-fun LinePreview(){
+fun LinePreview() {
     TotanPayTheme {
-        Line(modifier=Modifier.fillMaxWidth(1f))
+        Line(modifier = Modifier.fillMaxWidth(1f))
     }
 }
+
 @Composable
 @Preview
-fun DottedLinePreview(){
+fun DottedLinePreview() {
     TotanPayTheme {
-        DottedLine(modifier=Modifier.fillMaxWidth(1f))
+        DottedLine(modifier = Modifier.fillMaxWidth(1f))
     }
 }

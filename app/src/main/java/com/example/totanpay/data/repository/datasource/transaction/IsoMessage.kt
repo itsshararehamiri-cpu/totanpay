@@ -1,5 +1,6 @@
 package com.example.totanpay.data.repository.datasource.transaction
 
+import com.example.totanpay.data.util.toEnglishNumber
 import org.jpos.iso.ISOException
 import org.jpos.iso.ISOMsg
 import org.jpos.iso.ISOUtil
@@ -9,8 +10,7 @@ import java.nio.charset.Charset
 import java.util.Date
 
 class Ltv {
-    private val map = hashMapOf<Int, String>()
-
+     private val map = hashMapOf<Int, String>()
     fun addNode(key: Int, value: String): Ltv {
         map[key] = value
         return this
@@ -26,32 +26,27 @@ class Ltv {
             val len = it.value.length + 1
             s.append(
                 String.format(
-                    "%02d%02X%s", len, it.key, ISOUtil.hexString(
+                    "%02d%02X%s".toEnglishNumber(), len, it.key, ISOUtil.hexString(
                         it.value
                             .toByteArray(charset = Charset.forName("cp1256"))
                     )
                 )
             )
         }
-        return ISOUtil.hex2byte(s.toString())
+        return ISOUtil.hex2byte(s.toString().toEnglishNumber())
     }
 
     fun unpack(msg: ByteArray) {
-        var index: Int = 0
-        println("ssssss->$index")
-        println("ssssss->${msg.size}")
-
+        var index = 0
         while (index < msg.size) {
             val len = msg[index] / 16 * 10 + msg[index] % 16
-            val tag = msg[index + 1].toInt()
+            val tag = msg[index + 1].toUByte().toInt()
             val value = msg.copyOfRange(2 + index, len + index + 1)
                 .toString(charset = Charset.forName("cp1256"))
             index += len + 1
             map[tag] = value
         }
     }
-
-
 }
 
 class IsoMessage : ISOMsg() {
@@ -102,9 +97,8 @@ class IsoMessage : ISOMsg() {
                     this.set(isoMsg.getComponent(field))
                 } catch (e: ISOException) {
                     // it should never happen
-                    println("kkkkkkkkkkk${e.cause}")
-                    println("kkkkkkkkkkk${e.message}")
-
+                    println("cause${e.cause}")
+                    println("message${e.message}")
                 }
             }
         }
@@ -117,23 +111,22 @@ class IsoMessage : ISOMsg() {
         return baos.toString(utf8)
     }
 
-
     fun setDateTime(dateOfTransaction: String, timeOfTransaction: String) {
         this.set(12, timeOfTransaction)
         this.set(13, dateOfTransaction)
     }
 
-
     fun setSerial(serial: String) {
-        field48.addNode(0x01,serial)//"92261946156409"
+        field48.addNode(0x01, serial)//"92261946156409"
     }
 
-
+    fun set99(field99: String) {
+        field48.addNode(0x99, field99)//"92261946156409"
+    }
 
     fun setVersion(version: String) {
         field48.addNode(0x02, version)
     }
-
 
     fun setField48(packer: () -> Unit) {
         packer()
@@ -147,7 +140,6 @@ class IsoMessage : ISOMsg() {
     fun setTerminalId(terminalId: String) {
         this.set(41, terminalId)
     }
-
 
     fun setPinBlock(pinBlock: String) {
         this.set(52, ISOUtil.hex2byte(pinBlock))
@@ -181,6 +173,9 @@ class IsoMessage : ISOMsg() {
         field48.addNode(0x03, terminalLanguage)
     }
 
+    fun setPurchaseId(purchaseId: String) {
+        field48.addNode(0x09, purchaseId)
+    }
 
     fun setTerminalConnectionType(terminalConnectionType: String) {
         field48.addNode(0x15, terminalConnectionType)
@@ -197,21 +192,16 @@ class IsoMessage : ISOMsg() {
     fun setVoucherNo(voucherNo: Int) {
         field48.addNode(0x29, voucherNo.toString())
     }
-
     fun setMobileNumber(mobile: String) {
         field48.addNode(0x8, mobile)
     }
-
     fun setField48(data: ByteArray? = null) {
         if (data == null) {
             field48.unpack(this.getBytes(48))
         } else
             field48.unpack(data)
     }
-
     fun getField48Tag(tag: Int): String? {
         return field48.getNode(tag)
     }
-
-
 }

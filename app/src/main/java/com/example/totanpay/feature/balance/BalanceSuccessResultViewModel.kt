@@ -1,14 +1,15 @@
 package com.example.totanpay.feature.balance
 
-import android.os.Build
-import androidx.annotation.RequiresApi
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.totanpay.data.repository.MainRepository
+import com.example.totanpay.common.PrintableViewModel
+import com.example.totanpay.data.repository.DeviceRepository
+import com.example.totanpay.data.repository.DeviceSettingsRepository
+import com.example.totanpay.data.repository.PrintCustomerSettingsRepository
+import com.example.totanpay.data.repository.PrintStatus
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
 import com.example.totanpay.data.util.getPersianDate
 import com.google.gson.Gson
-import com.urovo.i9000s.api.emv.ContantPara.TransactionResult
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -18,20 +19,36 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class BalanceSuccessResultViewModel @Inject constructor(private val mainRepository: MainRepository) :
-    ViewModel() {
-    private val _uiState = MutableStateFlow(PurchaseSuccessResultUiState())
-    val uiState: StateFlow<PurchaseSuccessResultUiState> = _uiState
+class BalanceSuccessResultViewModel @Inject constructor(
+    private val deviceSettingsRepository: DeviceSettingsRepository,
+    private val printCustomerSettingsRepository: PrintCustomerSettingsRepository,
+    override val deviceRepository: DeviceRepository
+) : ViewModel() , PrintableViewModel {
+    private val _uiState = MutableStateFlow(BalanceSuccessResultUiState())
+    val uiState: StateFlow<BalanceSuccessResultUiState> = _uiState
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    fun init(response: String) {
+    init {
         viewModelScope.launch {
-            val result=Gson().fromJson(response,ResponseTransaction::class.java)
-            _uiState.update { it.copy(result = result.copy(date = getPersianDate(result.date))) }        }
+            _uiState.update { it.copy(playbackSound = deviceSettingsRepository.getPlaybackStatusSound()) }
+        }
     }
 
+    fun init(response: String) {
+        viewModelScope.launch {
+            val result = Gson().fromJson(response, ResponseTransaction::class.java)
+            var printStatus = printCustomerSettingsRepository.getPrintStatus()
+            _uiState.update {
+                it.copy(
+                    result = result.copy(date = getPersianDate(result.date)),
+                    printStatus = printStatus
+                )
+            }
+        }
+    }
 }
-data class PurchaseSuccessResultUiState(
-    val result: ResponseTransaction?=null,
-    val error:String=""
+data class BalanceSuccessResultUiState(
+    val result: ResponseTransaction? = null,
+    val error: String = "",
+    val printStatus: PrintStatus = PrintStatus.ALWAYS_PRINTING,
+    val playbackSound: Boolean = false
 )

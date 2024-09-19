@@ -1,26 +1,40 @@
 <resources>
-    <string name="app_name">TotanPay</string>
+    <string name="app_name">توتان</string>
     <string name="currency">ریال</string>
     <string name="terminal">پایانه</string>
+    <string name="terminal_id">شماره پایانه</string>
     <string name="merchant">پذیرنده</string>
     <string name="rrn_trace">مرجع/پیگیری</string>
     <string name="amount">مبلغ</string>
     <string name="print_customer_receipt">چاپ رسید مشتری</string>
+    <string name="print_merchant_receipt">چاپ رسید پذیرنده</string>
+    <string name="print">چاپ</string>
+    <string name="print_all">چاپ کل</string>
+    <string name="print_sum">چاپ سرجمع</string>
     <string name="purchase">خرید</string>
+    <string name="bill_payment">پرداخت قبض</string>
     <string name="customer_receipt">رسید مشتری</string>
     <string name="cancel">انصراف</string>
-    <string name="plz_swipe_card">لطفا کارت را بکشید</string>
-    <string name="in_processing">در حال پردازش</string>
+    <string name="plz_swipe_card">لطفا کارت را بکشید:</string>
+    <string name="in_processing">در حال انجام تراکنش</string>
+    <string name="in_searching">در حال جستجو</string>
     <string name="reports">گزارشات</string>
     <string name="last_transaction">آخرین تراکنش</string>
     <string name="details_of_transactions">ریز تراکنش ها</string>
     <string name="report_based_on_trace">گزارش بر اساس شماره پیگیری</string>
+    <string name="number_of_all_transactions">تعداد کل تراکنش ها</string>
+    <string name="sum_of_all_transactions">جمع کل تراکنش ها</string>
     <string name="from_date">از تاریخ</string>
     <string name="to_date">تا تاریخ</string>
+    <string name="from_time">از ساعت</string>
+    <string name="to_time">تا ساعت</string>
+
     <string name="trace">شماره پیگیری</string>
+    <string name="today">امروز</string>
     <string name="display_results">مشاهده نتایج</string>
     <string name="supervisor_settings">تنظیمات پشتیبان</string>
     <string name="merchant_settings">تنظیمات پذیرنده</string>
+    <string name="exit">خروج</string>
 
     <string name="settings">تنظیمات</string>
     <string name="connection_settings">تنظیمات ارتباط</string>
@@ -28,8 +42,9 @@
     <string name="configuration">پیکربندی</string>
 
 
-    <string name="enable_and_disable_voice">فعال و غیرفعال کردن صدا</string>
+    <string name="enable_and_disable_voice">فعال سازی صدا</string>
     <string name="choose_theme">انتخاب تم</string>
+    <string name="dark_mode">حالت شب (تاریک) </string>
 
 
     <string name="ip">IP</string>
@@ -45,8 +60,128 @@
     <string name="serial">سریال شارژ</string>
     <string name="code">کد دستوری</string>
 
+    <string name="bill_id">شناسه قبض</string>
+    <string name="payment_id">شناسه پرداخت</string>
+    <string name="in_bill_inquery">در حال استعلام قبض</string>
+    <string name="bill_inquery">استعلام قبض</string>
+    <string name="service_desc">نوع قبض</string>
 
 
     <string name="success_transaction">تراکنش موفق</string>
     <string name="unsuccess_transaction">تراکنش ناموفق</string>
+
+
+    <string name="confirm">تایید</string>
+    <string name="close">بستن</string>
+    <string name="return_back_to_main">بازگشت به صفحه اصلی</string>
+    <string name="return_back">بازگشت</string>
+    <string name="not_found_transaction">تراکنشی یافت نشد.</string>
+    <string name="printer_settings">تنظیمات چاپگر</string>
+    <string name="change_merchant_password">تغییر رمز پذیرنده</string>
+    <string name="account_management">مدیریت حساب ها</string>
+
+    <string name="transaction_type">نوع تراکنش</string>
+    <string name="time">زمان</string>
+    <string name="row1">ردیف </string>
+    <string name="date_time">تاریخ و زمان </string>
+    <string name="show_result">مشاهده نتایج</string>
+
+
+    <string name="password">کلمه عبور</string>
+    <string name="repeat_password">تکرار کلمه عبور</string>
+
+
+    <string name="key_injection_done_successfully">کلیدگذاری با موفقیت انجام شد.</string>
+    <string name="enter_purchase_amount">مبلغ خرید را وارد نمایید:</string>
+    <string name="purchase_with_id">خرید شناسه دار</string>
+    <string name="amount_not_entered">مبلغ وارد نشده است.</string>
+    <string name="purchase_id_not_entered">شناسه خرید وارد نشده است.</string>
+    <string name="configuration_not_completed">پیکربندی انجام نشده است.</string>
+    <string name="please_enter_purchase_id">لطفا شناسه خرید را وارد نمایید:</string>
+    <string name="please_enter_first_card">لطفا  کارت اول را وارد نمایید.</string>
+    <string name="please_enter_second_card">لطفا  کارت دوم را وارد نمایید.</string>
+    <string name="please_remove_first_card">لطفا کارت اول را خارج نمایید.</string>
+    <string name="please_remove_second_card">لطفا کارت دوم را خارج نمایید.</string>
+    <string name="please_enter_first_password">لطفا رمز کارت اول را وارد نمایید:</string>
+    <string name="please_enter_second_password">لطفا رمز کارت دوم را وارد نمایید:</string>
+
+
+    <string name="please_enter_password">لطفا رمز را وارد نمایید:</string>
+
+
+    <string name="bill_id_is_not_valid">شناسه قبض معتبر نیست.</string>
+    <string name="pay_id_is_not_valid">شناسه پرداخت معتبر نیست.</string>
+    <string name="bill_id_is_not_entered">شناسه قبض وارد نشده است.</string>
+    <string name="pay_id_is_not_entered">شناسه پرداخت وارد نشده است.</string>
+    <string name="values_are_not_entered">مقادیر وارد نشده اند.</string>
+    <string name="sleeping_settings_device">تنظیمات خاموشی دستگاه</string>
+    <string name="play_sound">پخش صدا</string>
+
+
+    <string name="are_you_sure_you_want_to_make_changes">آیا از اعمال تغییرات مطمئن هستی؟</string>
+
+    <string name="pos_code">کد کارتخوان</string>
+    <string name="plz_enter_percent">لطفا درصد را وارد نمایید:</string>
+
+    <string name="plz_choose_your_operator">لطفا اپراتور مورد نظر خود را انتخاب نمایید:</string>
+    <string name="select_amount_or_enter_amount">مبلغ شارژ را انتخاب یا وارد نمایید:</string>
+    <string name="select_amount_amount">مبلغ شارژ را انتخاب نمایید:</string>
+    <string name="operator_dont_select">اپراتور انتخاب نشده است.</string>
+    <string name="amount_dont_set">مبلغ تعیین نشده است.</string>
+    <string name="values_dont_set">مقادیر وارد نشده است.</string>
+
+
+    <string name="in_configuration">در حال پیکربندی</string>
+    <string name="configuration_do_successfully">پیکربندی با موفقیت انجام شد.</string>
+    <string name="enter_amount_or_select">مبلغ شارژ را انتخاب یا وارد نمایید:</string>
+    <string name="operator_not_selected">اپراتور انتخاب نشده است.</string>
+    <string name="mobile_not_entered">شماره موبایل وارد نشده است.</string>
+    <string name="enter_your_mobile">شماره موبایل خود را وارد نمایید:</string>
+    <string name="plz_select_operator">لطفا اپراتور مورد نظر خود را انتخاب نمایید:</string>
+
+
+    <string name="there_is_no_transaction_to_perform_please_check_network">امکان انجام تراکنش وجود ندارد لطفا شبکه را کنترل کنید</string>
+
+
+    <string name="balance_transaction_fee">کارمزد عملیات مانده موجودی</string>
+    <string name="switch_is_not_accessible">سوییچ در دسترس نیست</string>
+
+    <string name="final_price_single_value">
+    با احتساب %1$s درصد ارزش افزوده، مبلغ نهایی %2$s ریال می‌باشد.
+</string>
+
+
+    <string name="plz_enter_an_valid_ip">لطفاً یک آدرس IP معتبر وارد کنید.</string>
+    <string name="plz_enter_ip">لطفا ip را وارد کنید.</string>
+    <string name="plz_enter_port">لطفا port را وارد کنید.</string>
+    <string name="plz_enter_nii">لطفا nii را وارد کنید.</string>
+
+    <string name="plz_enter_trace">لطفا شماره پیگیری را وارد کنید.</string>
+    <string name="show_more">نمایش جزئیات</string>
+    <string name="show_sum">نمایش مجموع</string>
+
+    <string name="version_label">نسخه %1$s</string>
+    <string name="mobile_is_not_valid">شماره موبایل معتبر نیست</string>
+    <string name="value_should_be_valid">مقدار باید بین 1 تا 100 باشد</string>
+    <string name="percent_not_entered">مقدار درصد وارد نشده است</string>
+    <string name="length_of_pass_be_four">طول کلمه عبور باید 4 باشد</string>
+    <string name="amount_is_not_valid">مقدار مبلغ معتبر نیست.</string>
+
+    <string name="amount_should_be_smaller_than">مبلغ نباید کمتر از  %1$s  ریال باشد</string>
+
+    <string name="amount_should_be_greater_than">مبلغ نباید بیشتر از  %1$s  ریال باشد</string>
+
+<string name="set_maximum_amount_for_purchase_transaction">تعیین حداکثر مبلغ برای خرید</string>
+    <string name="plz_enter_maximum_amount_for_purchase_transaction">لطفا حداکثر مبلغ برای خرید را وارد کنید</string>
+    <string name="plz_enter_percent_of_tax_irancell_charge">درصد مالیات شارژ ایرانسل را وارد کنید</string>
+<string name="set_percent_of_tax_irancell_charge"> تعیین درصد مالیات شارژ ایرانسل</string>
+    <string name="percent_must_be_in_range">لطفاً عددی بین ۰ تا ۱۰۰ وارد کنید.</string>
+
+    <string name="key_injection_not_done">کلیدگذاری انجام نشده است.</string>
+
+
+
+    <string name="amount_can_not_be_greater_than">
+    مبلغ وارد شده نمی تواند بیشتر از %1$s ریال باشد.
+</string>
 </resources>

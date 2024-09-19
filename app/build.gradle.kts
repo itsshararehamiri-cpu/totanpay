@@ -3,23 +3,21 @@ plugins {
    alias(libs.plugins.jetbrains.kotlin.android)
     alias(libs.plugins.hilt)
     id("kotlin-kapt")
-//   alias(libs.plugins.compose.compiler)
-//    alias(libs.plugins.kotlinAndroidKsp)
-//    alias(libs.plugins.compose.compiler)
+    alias(libs.plugins.compose.compiler)
 
 }
 
 android {
     namespace = "com.example.totanpay"
-    compileSdk = 34
+    compileSdk = 35
 
     defaultConfig {
         applicationId = "com.example.totanpay"
-        minSdk = 24
-        targetSdk = 34
-        versionCode = 1
-        versionName = "1.0"
-
+        minSdk = 21
+        targetSdk = 35
+        versionCode = 5
+        versionName = "1.2.0"
+        multiDexEnabled =true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
             useSupportLibrary = true
@@ -28,12 +26,48 @@ android {
 
     buildTypes {
         release {
-            isMinifyEnabled = false
+            isMinifyEnabled = true
+            isShrinkResources=true
             proguardFiles(
                 getDefaultProguardFile("proguard-android-optimize.txt"),
                 "proguard-rules.pro"
             )
         }
+    }
+    flavorDimensions += listOf("psp", "device")
+   // flavorDimensions += "device"
+    productFlavors {
+        create("pn") {
+            dimension = "psp"
+            applicationIdSuffix = ".pn"
+           // versionNameSuffix = "-pn"
+            isDefault=true
+            resValue("string", "app_name", "پرداخت نوین")
+        }
+        create("fanava") {
+            dimension = "psp"
+            applicationIdSuffix = ".fa"
+           // versionNameSuffix = "-fanava"
+            resValue("string", "app_name", "فناوا")
+        }
+        create("i5000") {
+            dimension = "device"
+        }
+        create("i9000") {
+            dimension = "device"
+        }
+    }
+    sourceSets.getByName("pn") {
+        java.setSrcDirs(listOf("src/pn/java"))
+    }
+    sourceSets.getByName("fanava") {
+        java.setSrcDirs(listOf("src/fanava/java"))
+    }
+    sourceSets.getByName("i5000") {
+        java.setSrcDirs(listOf("src/i5000/java"))
+    }
+    sourceSets.getByName("i9000") {
+        java.setSrcDirs(listOf("src/i9000/java"))
     }
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_1_8
@@ -64,7 +98,9 @@ dependencies {
     implementation(libs.androidx.ui.graphics)
     implementation(libs.androidx.ui.tooling.preview)
     implementation(libs.androidx.material3)
-    implementation(files("E:\\myprojects\\TotanPay\\app\\libs\\urovosdkLibs-v62.aar"))
+    implementation(files("libs\\urovosdkLibs_New_v1.0.13.aar"))
+//    implementation(files("libs\\urovosdkLibs-v62.aar"))
+    //implementation("urovosdkLibs-v62.aar")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)
@@ -99,7 +135,7 @@ dependencies {
     implementation(libs.android.gson)
     kapt("androidx.room:room-compiler:2.6.1")
     implementation("androidx.room:room-runtime:2.6.1")
-    implementation("androidx.room:room-ktx:2.6.1")
+    implementation(libs.androidx.room.ktx)
     implementation(libs.coil.compose)
     implementation(libs.coil.gif)
 //    implementation("io.coil-kt:coil-compose:2.7.0")
@@ -107,7 +143,28 @@ dependencies {
 //    implementation("com.github.samanzamani:PersianDate:1.7.1")
     implementation("com.github.samanzamani:PersianDate:1.7.1")
    // implementation("com.github.samanzamani:PersianDate:1.7.1")
-   // implementation("com.journeyapps:zxing-android-embedded:3.5.0")
+    implementation(libs.androidx.multidex)
+    implementation(libs.slf4j.api)
+//    implementation(libs.logback.android)
+
+    implementation("androidx.work:work-runtime-ktx:2.9.0")
+    implementation("androidx.hilt:hilt-work:1.2.0")
+   // debugImplementation("com.squareup.leakcanary:leakcanary-android:2.14")
+   // implementation(libs.compose.cloudy)
+
+    implementation("com.github.commandiron:WheelPickerCompose:1.1.11")
+    implementation(libs.accompanist.systemuicontroller)
+
+
+
+    implementation(libs.retrofit)
+    implementation(libs.converter.gson)
+    implementation("org.jetbrains.kotlinx:kotlinx-serialization-json:1.6.3")
+    implementation(libs.okhttp)
+    //noinspection UseTomlInstead
+    implementation("com.squareup.okhttp3:logging-interceptor:5.0.0-alpha.1")
+    implementation(libs.android.gson)
+    implementation("com.journeyapps:zxing-android-embedded:3.5.0")
 
 }
 //kapt {

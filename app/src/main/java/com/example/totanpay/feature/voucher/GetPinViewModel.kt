@@ -3,7 +3,9 @@ package com.example.totanpay.feature.voucher
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.totanpay.data.repository.MainRepository
+import com.example.totanpay.data.repository.DeviceRepository
+import com.example.totanpay.data.repository.DeviceSettingsRepository
+import com.example.totanpay.feature.purchase.GetPinUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,38 +14,36 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 @HiltViewModel
-class GetPinViewModel @Inject constructor(private val mainRepository: MainRepository) :
+class GetPinViewModel @Inject constructor(private val deviceSettingsRepository: DeviceSettingsRepository
+,   private val deviceRepository: DeviceRepository
+) :
     ViewModel() {
+
     private val _uiState = MutableStateFlow(GetPinUiState())
     val uiState: StateFlow<GetPinUiState> = _uiState
-
-    init {
-        println("init GetPinViewModel")
-    }
-
     fun getPin(track2: String) {
         viewModelScope.launch {
+            _uiState.update { it.copy(playbackSound=deviceSettingsRepository.getPlaybackStatusSound()) }
             val string: List<String> = track2.split("=")
             val pan = string[0]
-            mainRepository.getPinBlock(
+            deviceRepository.getPinBlock(
                 pan,
                 onError = { println("onError->$it") },
                 onInput = { println("onInput->$it") },
-                onConfirm = {pinBlock->
-                    println("ssssssssssss->${track2}")
-                    println("ssssssssssss->$pan")
-
+                onConfirm = { pinBlock ->
                     viewModelScope.launch {
-                        //mainRepository.purchase("1000",pan, track2, it)
-                        _uiState.update { it.copy(getPin = true,pinBlock=pinBlock) }
+                        _uiState.update { it.copy(getPin = true, pinBlock = pinBlock) }
                     }
                 },
-                onCanecl = { println("onCanecl->") },
-                onTimeOut = { println("onTimeOut->") })
+                onCancel = {
+                    _uiState.update { it.copy(isCancel = true) }
+                },
+                onTimeOut = {
+                    println("onTimeOut->")
+                    _uiState.update { it.copy(isCancel = true) }
+                })
         }
     }
+
 }
 
-data class GetPinUiState(
-    val getPin: Boolean = false,val pinBlock:String=""
-)

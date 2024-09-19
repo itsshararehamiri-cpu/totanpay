@@ -1,32 +1,40 @@
 package com.example.totanpay.data.repository.datasource
 
-import com.example.totanpay.data.entity.TransactionLogEntity
-import com.example.totanpay.data.repository.datasource.model.Merchant
+import com.example.totanpay.data.repository.datasource.transaction.TransactionInQueue
+import com.example.totanpay.data.repository.datasource.transaction.TransactionLog
+import com.example.totanpay.data.repository.datasource.transaction.request.Apportionment
 import com.example.totanpay.data.repository.datasource.transaction.response.BaseTransactionResponse
 
 
 interface MainDataSource {
-    suspend fun getKeyTransaction(
-        serial: String,
-        appVersion: String,
-        nii: String, publicKey: String, hashCode: String
-    )
-
     suspend fun logon(
+        isNetworkAvailable: () -> Boolean,
+        isLoadSettings: () -> Boolean,
         serial: String,
         appVersion: String,
-        nii: String
+        nii: String,
+        terminalLanguage: String,
+        terminalConnectionType: String,
+        posConditionCode: String,
     ): ResponseData<BaseTransactionResponse.LogonTransactionResponse>
 
     suspend fun init(
+        isNetworkAvailable: () -> Boolean,
         terminalId: String,
         serial: String,
         appVersion: String,
-        nii: String
+        nii: String,
+        terminalLanguage: String,
+        acquiringInstitutionIdentificationCode: String,
+        merchantId: String,
+        posConditionCode: String,
+        terminalConnectionType: String
     ): ResponseData<BaseTransactionResponse.InitTransactionResponse>
 
     suspend fun balance(
-        pan: String, terminalId: String,
+        isNetworkAvailable: () -> Boolean,
+        pan: String,
+        terminalId: String,
         terminalLanguage: String,
         terminalConnectionType: String,
         terminalType: String,
@@ -35,10 +43,14 @@ interface MainDataSource {
         merchantId: String,
         currency: String,
         POS: String,
-        serial: String, appVersion: String, nii: String
+        serial: String,
+        appVersion: String,
+        nii: String,
+        posConditionCode: String
     ): ResponseData<BaseTransactionResponse.BalanceTransactionResponse>
 
     suspend fun purchase(
+        isNetworkAvailable: () -> Boolean,
         amount: String,
         pan: String, terminalId: String,
         terminalLanguage: String,
@@ -49,11 +61,17 @@ interface MainDataSource {
         merchantId: String,
         currency: String,
         POS: String,
-        serial: String, appVersion: String, nii: String
+        serial: String,
+        appVersion: String,
+        nii: String,
+        purchaseId: String?,
+        posConditionCode: String,
+        apportionments: List<Apportionment>?
     ): ResponseData<BaseTransactionResponse.PurchaseTransactionResponse>
 
 
     suspend fun voucher(
+        isNetworkAvailable: () -> Boolean,
         amount: String,
         pan: String, terminalId: String,
         terminalLanguage: String,
@@ -65,12 +83,16 @@ interface MainDataSource {
         currency: String,
         POS: String,
         serial: String, appVersion: String, nii: String,
+        productCode: String,
+        posConditionCode: String,
         requestDecryptData: (ByteArray?) -> ByteArray?
     ): ResponseData<BaseTransactionResponse.VoucherTransactionResponse>
-    suspend fun topup(
+
+    suspend fun topUp(
+        isNetworkAvailable: () -> Boolean,
         amount: String,
-        mobile:String,
-        productCode:String,
+        mobile: String,
+        productCode: String,
         pan: String, terminalId: String,
         terminalLanguage: String,
         terminalConnectionType: String,
@@ -80,11 +102,15 @@ interface MainDataSource {
         merchantId: String,
         currency: String,
         POS: String,
-        serial: String, appVersion: String, nii: String,
+        serial: String,
+        appVersion: String,
+        nii: String,
+        posConditionCode: String,
         requestDecryptData: (ByteArray?) -> ByteArray?
-    ): ResponseData<BaseTransactionResponse.TopupTransactionResponse>
+    ): ResponseData<BaseTransactionResponse.TopUpTransactionResponse>
 
-    suspend fun billInquery(
+    suspend fun billInquiry(
+        isNetworkAvailable: () -> Boolean,
         terminalId: String,
         terminalLanguage: String,
         terminalConnectionType: String,
@@ -92,10 +118,14 @@ interface MainDataSource {
         merchantId: String,
         serial: String,
         appVersion: String,
-        nii: String, billID: String, payId: String
-    ): ResponseData<BaseTransactionResponse.BillInqueryTransactionResponse>
+        nii: String,
+        billID: String,
+        payId: String,
+        posConditionCode: String
+    ): ResponseData<BaseTransactionResponse.BillInquiryTransactionResponse>
 
     suspend fun billPay(
+        isNetworkAvailable: () -> Boolean,
         amount: String,
         pan: String,
         track2: String,
@@ -107,24 +137,29 @@ interface MainDataSource {
         merchantId: String,
         serial: String,
         appVersion: String,
-        nii: String, billID: String, payId: String
+        nii: String,
+        billID: String,
+        payId: String,
+        serviceDesc: String?,
+        currency: String,
+        posConditionCode: String,
+        POS: String
     ): ResponseData<BaseTransactionResponse.BillPayTransactionResponse>
 
-    fun storeTerminalId(terminalId: String)
-    fun storeMerchant(merchantId: String?, merchantPhone: String?, merchantName: String?)
+    suspend fun settlementReverse(
+        terminalLanguage: String,
+        terminalConnectionType: String,
+        terminalType: String
+    )
 
-    fun getMerchant(): Merchant
-    fun saveConnectionSettings(ip: String, port: String, nii: String)
-    fun getTerminalId(): String
-    fun getLastTransaction(): TransactionLogEntity?
-    fun geTransactionBasedStan(stan: String): TransactionLogEntity?
-    fun getCurrency(): String
-fun getTerminalConnectionType():String
-    fun getTerminalType():String
+    suspend fun getTransactionInQueue(
+        dateOfTransaction: String,
+        timeOfTransaction: String
+    ): TransactionInQueue?
 
-    fun getNii(): String
-    fun hasConnectionSettings(): Boolean
-    fun getIP(): String
-    fun getPort(): String
-    suspend fun settlementReverse()
+    suspend fun updatePrintStatusOfTransactionInQueue(transactionInQueue: TransactionInQueue?)
+    suspend fun updatePrintStatusOfTransactionInQueue(printStatus: Boolean)
+    suspend fun getLastTxnIsNotPrinted(): TransactionLog?
+    fun loadSettings()
+
 }

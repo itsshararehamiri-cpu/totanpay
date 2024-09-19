@@ -9,14 +9,20 @@ data class ResponseTransaction(
     val merchantId: String,
     val merchantPhone:String,
     val terminalID: String,
-    val transactionType: String,
-    val date: String,
-    val time: String,
+    var  transactionType: String,
+    var date: String,
+    var time: String,
     val issuerName: String,
     val amount: String,
     val availableBalance:String?=null
     ,val maskedPan:String,
     val realBalance:String?=null,val voucherPin:String?=null,
-    val voucherSerial:String?=null
-
-)
+    val voucherSerial:String?=null,
+    val serviceDesc:String?=null,
+    val billType:String?=null,
+    val billId:String?=null,
+    val paymentId:String?=null,
+    val productCode:Int?=null,
+    val mobile:String?=null,
+    val posCode:String?=null,
+    val purchaseId:String?=null,val dateTimeOfServer: String?=null)

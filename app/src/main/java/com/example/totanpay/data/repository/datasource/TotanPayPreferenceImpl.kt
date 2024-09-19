@@ -2,7 +2,7 @@ package com.example.totanpay.data.repository.datasource
 
 import android.content.Context
 import android.content.SharedPreferences
-import com.example.totanpay.data.repository.datasource.model.Merchant
+import com.example.totanpay.data.util.toEnglishNumber
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
@@ -10,13 +10,25 @@ import javax.inject.Singleton
 //@Singleton
 //class TechPayPrefImp @Inject constructor(@ApplicationContext context: Context)
 const val STAN = "stan"
-const val TERMINAL_ID="terminal_id"
-const val MERCHANT_ID="merchant_id"
-const val MERCHANT_PHONE="merchant_phone"
-const val MERCHANT_NAME="merchant_name"
-const val IP="ip"
-const val PORT="port"
-const val NII="nii"
+const val TERMINAL_ID = "terminal_id"
+const val MERCHANT_ID = "merchant_id"
+const val MERCHANT_PHONE = "merchant_phone"
+const val MERCHANT_NAME = "merchant_name"
+const val IP = "ip"
+const val PORT = "port"
+const val NII = "nii"
+const val AQUIRINGINSTITUTIONIDENTIFICATIONCODE = "acquiringinstitutionidentificationcode"
+
+const val MERCHANT_PASS = "merchant_pass"
+
+const val PLAYBACK_STATUS_SOUND = "playback_status_sound"
+const val THEME_IS_DARK="theme_is_dark"
+const val MAXIMUM_AMOUNT_FOR_PURCHASE="maximum_amount_for_purchase"
+const val TAX_FOR_IRANCELL_CHARGE="tax_for_irancell_charge"
+
+const val PRINT_SATUS = "print_status"
+const val MIN_AMOUNT_FOR_PRINT_STATUS = "min_amount_for_print_status"
+
 @Singleton
 class TotanPayPreferenceImpl @Inject constructor(@ApplicationContext context: Context) :
     TotanPayPreference {
@@ -53,7 +65,7 @@ class TotanPayPreferenceImpl @Inject constructor(@ApplicationContext context: Co
 
     override fun getMerchantId(): String {
         return sharedPreferces
-            .getString(MERCHANT_ID, null)?:""
+            .getString(MERCHANT_ID, null) ?: ""
     }
 
     override fun storeMerchantPhone(merchantPhone: String?) {
@@ -63,7 +75,7 @@ class TotanPayPreferenceImpl @Inject constructor(@ApplicationContext context: Co
 
     override fun getMerchantPhone(): String {
         return sharedPreferces
-            .getString(MERCHANT_PHONE, null)?:""
+            .getString(MERCHANT_PHONE, null) ?: ""
     }
 
     override fun storeMerchantName(merchantName: String?) {
@@ -73,7 +85,7 @@ class TotanPayPreferenceImpl @Inject constructor(@ApplicationContext context: Co
 
     override fun getMerchantName(): String {
         return sharedPreferces
-            .getString(MERCHANT_NAME, null)?:""
+            .getString(MERCHANT_NAME, null) ?: ""
     }
 
     override fun storeConnectionSettings(ip: String, port: String, nii: String) {
@@ -87,17 +99,102 @@ class TotanPayPreferenceImpl @Inject constructor(@ApplicationContext context: Co
 
     override fun getIP(): String {
         return sharedPreferces
-            .getString(IP, null)?:""
+            .getString(IP, "78.157.33.210") ?: ""
     }
 
     override fun getNii(): String {
         return sharedPreferces
-            .getString(NII, null)?:""    }
+            .getString(NII, "300") ?: ""
+    }
+
+    override fun setPrintStatus(status: Int) {
+        sharedPreferces.edit()
+            .apply { putInt(PRINT_SATUS, status) }.apply()
+    }
+
+    override fun getPrintStatus(): Int {
+        return sharedPreferces
+            .getInt(PRINT_SATUS, -1)
+    }
+
+    override fun setMinAmountForPrint(minAmount: String) {
+        sharedPreferces.edit()
+            .apply { putString(MIN_AMOUNT_FOR_PRINT_STATUS, minAmount) }.apply()
+    }
+
+    override fun getMinAmountForPrint(): String {
+        return sharedPreferces
+            .getString(MIN_AMOUNT_FOR_PRINT_STATUS, null) ?: ""
+    }
 
     override fun getPort(): String {
         return sharedPreferces
-            .getString(PORT, null)?:""
+            .getString(PORT, "2150") ?: ""
     }
 
 
+    override fun getAcquiringInstitutionIdentificationCode(): String {
+        return sharedPreferces
+            .getString(AQUIRINGINSTITUTIONIDENTIFICATIONCODE, null) ?: ""
+    }
+
+    override fun storeAcquiringInstitutionIdentificationCode(acquiringInstitutionIdentificationCode: String?) {
+        sharedPreferces.edit()
+            .apply {
+                putString(
+                    AQUIRINGINSTITUTIONIDENTIFICATIONCODE,
+                    acquiringInstitutionIdentificationCode
+                )
+            }.apply()
+    }
+
+    override fun setMerchantPassword(pass: String) {
+        sharedPreferces.edit()
+            .apply { putString(MERCHANT_PASS, pass) }.apply()
+    }
+
+    override fun getMerchantPassword(): String? {
+        return sharedPreferces
+            .getString(MERCHANT_PASS, null)
+    }
+
+    override fun setPlaybackStatusSound(status: Boolean) {
+        sharedPreferces.edit()
+            .apply { putBoolean(PLAYBACK_STATUS_SOUND,status) }.apply()
+    }
+
+    override fun getPlaybackStatusSound(): Boolean {
+        return sharedPreferces
+            .getBoolean(PLAYBACK_STATUS_SOUND, false)
+    }
+
+    override fun setThemeIsDark(status: Boolean) {
+        sharedPreferces.edit()
+            .apply { putBoolean(THEME_IS_DARK,status) }.apply()
+    }
+
+    override fun getThemeIsDark(): Boolean {
+        return sharedPreferces
+            .getBoolean(THEME_IS_DARK, false)
+    }
+
+    override fun setMaximumAmount(amount: String) {
+        sharedPreferces.edit()
+            .apply { putString(MAXIMUM_AMOUNT_FOR_PURCHASE, amount.toEnglishNumber()) }.apply()
+    }
+
+    override fun getMaximumAmount(): String {
+        return sharedPreferces
+            .getString(MAXIMUM_AMOUNT_FOR_PURCHASE, "1000000000".toEnglishNumber())?:""
+    }
+
+    override fun setTaxForIrancellCharge(tax: String) {
+        sharedPreferces.edit()
+            .apply { putString(TAX_FOR_IRANCELL_CHARGE, tax.toEnglishNumber()) }.apply()
+    }
+
+    override fun getTaxForIrancellCharge(): String {
+        return sharedPreferces
+            .getString(TAX_FOR_IRANCELL_CHARGE, "9".toEnglishNumber())?:""
+    }
 }

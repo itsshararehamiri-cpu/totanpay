@@ -1,0 +1,29 @@
+{
+	"charge":[
+
+		{
+			"code":12,
+			"cellPrefix":"0913",
+			"operatorName":"همراه اول",
+			"operatorCode":"MCI",
+			"dynamicValue":0,
+			"chargeList":[50000,100000,200000]
+		},
+		{
+			"code":17,
+			"cellPrefix":"0921",
+			"operatorName":"رایتل",
+			"operatorCode":"Rightel",
+			"dynamicValue":0,
+			"chargeList":[10000,50000,100000,200000]
+		},
+		{
+			"code":11,
+			"cellPrefix":"0930",
+			"operatorName":"ایرانسل",
+			"operatorCode":"Irancell",
+			"dynamicValue":0,
+			"chargeList":[50000,100000,200000]
+		}
+	]
+}

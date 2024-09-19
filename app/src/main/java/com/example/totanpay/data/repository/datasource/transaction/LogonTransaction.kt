@@ -3,15 +3,14 @@ package com.example.totanpay.data.repository.datasource.transaction
 import com.example.totanpay.data.repository.datasource.transaction.connection.IConnection
 import com.example.totanpay.data.repository.datasource.transaction.request.LogonTransactionRequest
 import com.example.totanpay.data.repository.datasource.transaction.response.BaseTransactionResponse
-import com.example.totanpay.data.repository.datasource.transaction.response.FaildTransactionResponse
+import com.example.totanpay.data.repository.datasource.transaction.response.FailedTransactionResponse
+import com.example.totanpay.data.util.toEnglishNumber
 
 class LogonTransaction(
     request: LogonTransactionRequest,
-    private val iMacGenerator: IMacGenerator,
-    iConnection: IConnection,
-    saveReverseData: suspend (msg: IsoMessage) -> Unit,
-    saveTransactionLog: suspend (msg: IsoMessage) -> Unit,
-) : BaseTransaction(request, iConnection, saveReverseData, saveReverseData) {
+    private val macGenerator: IMacGenerator,
+    iConnection: IConnection
+) : BaseTransaction(request, iConnection, {}, {}) {
     override val isReversible: Boolean
         get() = false
     override val type: Int
@@ -21,17 +20,19 @@ class LogonTransaction(
 
     override suspend fun buildMessage() {
         with(sendMessage) {
-            mti = "0800"
-            processCode = "920000"
-            stan = request.stan.toString()
-            setDateTime(request.date, request.time)
-            setNii(request.nii)
+            mti = "0800".toEnglishNumber()
+            processCode = "920000".toEnglishNumber()
+            stan = request.stan.toString().toEnglishNumber()
+            setDateTime(request.date.toEnglishNumber(), request.time.toEnglishNumber())
+            setNii(request.nii.toEnglishNumber())
+            set(25, "00".toEnglishNumber())
             setField48 {
-                setSerial(request.serial)
+                setSerial(request.serial.toEnglishNumber())
                 setVersion(request.appVersion)
+                setTerminalLanguage(request.terminalLanguage.toEnglishNumber())
+                setTerminalConnectionType((request as LogonTransactionRequest).terminalConnectionType.toEnglishNumber())
             }
-            this.dump(System.out,">")
-            iMacGenerator?.getMac(this)
+            macGenerator.getMac(this)
         }
     }
 
@@ -41,6 +42,7 @@ class LogonTransaction(
         val pinKey = field62.sliceArray(0..15)
         val macKey = field62.sliceArray(16..31)
         val dataKey = field62.sliceArray(32..47)
+        val dateTimeOfServer = receivedIsoMessage.getField48Tag(0x50) ?: ""
         return BaseTransactionResponse.LogonTransactionResponse(
             pinKey = pinKey,
             dataKey = dataKey,
@@ -52,28 +54,31 @@ class LogonTransaction(
             date = sendMessage.tranDate,
             time = sendMessage.tranTime,
             trace = "",
-            rrn = ""
+            rrn = "", dateTimeOfServer = dateTimeOfServer
         )
-      /*  0, null, null,"","","","",""
-open class TranResp(
-    val respCode: Int,
-    val respMessage: String?,
-    val reasonCode: Int? = null,
-    var date: String,
-    var time: String,
-    var trace: String,
-    val cardIssuer: String? = null,
-    var maskedPan: String? = null,
-    var amount : String? = null,
-    var rrn : String? = null
-)
-      * */
     }
 
-    override suspend fun onFail(receivedIsoMessage: IsoMessage?): FaildTransactionResponse {
-        return FaildTransactionResponse(
-            responseCode=-2, responseMessage="خطا در ارسال تراکنش تسویه-بازگشت", reasonCode=null,
-            date=sendMessage.tranDate, time=sendMessage.tranTime, stan =sendMessage.stan.toInt()
-        )
+    override suspend fun onFail(receivedIsoMessage: IsoMessage?): FailedTransactionResponse {
+        return if (receivedIsoMessage == null) {
+            FailedTransactionResponse(
+                responseCode = -1,
+                responseMessage = "خطا در دریافت اطلاعات",
+                reasonCode = null,
+                date = sendMessage.tranDate,
+                time = sendMessage.tranTime,
+                stan = sendMessage.stan,
+                posCode = null
+            )
+        } else {
+            FailedTransactionResponse(
+                responseCode = receivedIsoMessage.respCode,
+                responseMessage = "",
+                reasonCode = null,
+                date = sendMessage.tranDate,
+                time = sendMessage.tranTime,
+                stan = sendMessage.stan,
+                posCode = receivedIsoMessage.getField48Tag(0x98) ?: "",
+            )
+        }
     }
 }
