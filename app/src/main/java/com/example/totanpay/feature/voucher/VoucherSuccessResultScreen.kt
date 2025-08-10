@@ -60,7 +60,7 @@ fun VoucherSuccessResult(
     CountdownEffect(TIME_TO_FINISH_SUCCESS_RESULT) {
         onBackButtonClicked()
     }
-    if (uiState.result != null)
+    if (uiState.result != null && receiptBitmap==null)
         ReceiptUi(content = {
             VoucherReceiptContent(true, uiState.result, printForCustomer)
         }) {
@@ -71,6 +71,8 @@ fun VoucherSuccessResult(
             viewModel.print(bitmap = receiptBitmap!!, context = context)
             viewModel.changePrintStatus()
             startPrint = false
+            printForCustomer=false
+            receiptBitmap=null
         }
     }
     LaunchedEffect(startPrint) {
@@ -78,6 +80,8 @@ fun VoucherSuccessResult(
             viewModel.print(bitmap = receiptBitmap!!, context = context)
             viewModel.changePrintStatus()
             startPrint = false
+            printForCustomer=false
+            receiptBitmap=null
         }
     }
     if (uiState.result != null) {

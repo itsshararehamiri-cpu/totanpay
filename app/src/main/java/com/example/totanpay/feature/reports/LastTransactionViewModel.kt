@@ -7,7 +7,6 @@ import com.example.totanpay.data.repository.DeviceRepository
 import com.example.totanpay.data.repository.ReportRepository
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -25,7 +24,6 @@ class LastTransactionViewModel @Inject constructor(
 
     init {
         viewModelScope.launch {
-            delay(2000)
             val lastTransaction = reportRepository.getLastTransaction()
             if (lastTransaction != null) {
                 _uiState.update {

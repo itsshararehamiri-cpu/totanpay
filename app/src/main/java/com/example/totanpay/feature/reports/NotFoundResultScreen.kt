@@ -14,7 +14,7 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 
 @Composable
-fun NotFoundResultScreen(onBackClicked: () -> Unit) {
+fun NotFoundResultScreen(title:String,onBackClicked: () -> Unit) {
     BackHandler {
         onBackClicked()
     }
@@ -34,7 +34,7 @@ fun NotFoundResultScreen(onBackClicked: () -> Unit) {
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.background)
     ) {
-        NotFoundTransaction(Modifier.layoutId("not_found_transaction")){
+        NotFoundTransaction(title = title,Modifier.layoutId("not_found_transaction")){
             onBackClicked()
         }
 

@@ -117,7 +117,7 @@ fun LastTransactionReportScreen(
             }
         }
     } else if (!uiState.showProgress) {
-        NotFoundTransaction {
+        NotFoundTransaction(title = stringResource(id = R.string.last_transaction)) {
             onBackButtonClicked()
         }
 
@@ -125,7 +125,7 @@ fun LastTransactionReportScreen(
 }
 
 @Composable
-fun NotFoundTransaction(modifier: Modifier = Modifier, onBackButtonClicked: () -> Unit) {
+fun NotFoundTransaction(title:String,modifier: Modifier = Modifier, onBackButtonClicked: () -> Unit) {
     val context = LocalContext.current
     ConstraintLayout(
         ConstraintSet {
@@ -154,7 +154,7 @@ fun NotFoundTransaction(modifier: Modifier = Modifier, onBackButtonClicked: () -
     ) {
         if (!isSmall(context))
             BackButton(
-                title = stringResource(id = R.string.last_transaction),
+                title =title ,
                 modifier = BackButtonModifier.layoutId("toolBar")
             ) {
                 onBackButtonClicked()
@@ -187,6 +187,6 @@ fun NotFoundTransaction(modifier: Modifier = Modifier, onBackButtonClicked: () -
 @Preview
 fun NotFoundTransactionPreview() {
     TotanPayTheme {
-        NotFoundTransaction {}
+        NotFoundTransaction(title = stringResource(id = R.string.last_transaction)) {}
     }
 }

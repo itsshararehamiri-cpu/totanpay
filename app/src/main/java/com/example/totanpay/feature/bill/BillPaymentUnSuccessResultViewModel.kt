@@ -12,7 +12,6 @@ import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
 import com.example.totanpay.data.util.getPersianDate
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -38,7 +37,6 @@ class BillPaymentUnSuccessResultViewModel @Inject constructor(private val mainRe
     }
     fun printAndConfirm(bitmap: Bitmap, context: Context) {
         viewModelScope.launch {
-            delay(3000)
             mainRepository.print(bitmap, context, onSuccess = {}, onFailed = {})
             mainRepository.settlementReverse()
         }

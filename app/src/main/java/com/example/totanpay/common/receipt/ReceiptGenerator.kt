@@ -398,7 +398,18 @@ fun AddAmount(
             color = textColor,
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontSize = getFontSize(isPaperReceipt,context),
-                fontWeight = if(isSmall(context))FontWeight.Bold else  getFontWeight(isPaperReceipt,context)
+                fontWeight = if(isSmall(context))FontWeight.Bold else {
+                    if (isPaperReceipt)
+                    {
+                        if (isSmall(context)) {
+                            FontWeight.Bold
+                        } else {
+                            FontWeight.Medium
+                        }
+                    } else {
+                        FontWeight.Bold
+                    }
+                }
             ),
             textAlign = TextAlign.Start
         )
@@ -470,7 +481,18 @@ fun AddBalance(
             color = textColor,
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontSize = getFontSize(isPaperReceipt,context),
-                fontWeight =if(isSmall(context)) FontWeight.ExtraBold else getFontWeight(isPaperReceipt,context)
+                fontWeight =if(isSmall(context)) FontWeight.ExtraBold else {
+                    if (isPaperReceipt)
+                    {
+                        if (isSmall(context)) {
+                            FontWeight.Bold
+                        } else {
+                            FontWeight.Medium
+                        }
+                    } else {
+                        FontWeight.Bold
+                    }
+                }
             ),
             textAlign = TextAlign.Start
         )
@@ -542,11 +564,42 @@ fun AddVoucherChargeMSG(
     textColor: Color,
     isPaperReceipt: Boolean = false
 ) {
-    RowReceipt(
-        modifier = modifier,
-        first = "روش شارژ", second = OperatorContainer.getVoucherChargeMSG(productCode),
-        textColor = textColor, isPaperReceipt = isPaperReceipt
-    )
+    val context= LocalContext.current
+    Row(
+        modifier = modifier
+            .fillMaxWidth(),
+    ) {
+        Text(
+            text = "روش شارژ",
+            modifier = Modifier
+                .wrapContentWidth()
+                .padding(end = if (isPaperReceipt) 0.dp else PADDING_SIDE_ROW_RECEIPT)
+                .layoutId("first"),
+            color = textColor,
+            style =
+            MaterialTheme.typography.bodyMedium.copy(
+                fontSize = getFontSize(isPaperReceipt,context),
+                fontWeight = getFontWeight(isPaperReceipt,context)
+            ),
+            textAlign = TextAlign.End
+        )
+        Spacer(modifier = Modifier.weight(1f))
+        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+            Text(
+                text = OperatorContainer.getVoucherChargeMSG(productCode),
+                modifier = Modifier
+                    .wrapContentWidth()
+                    .padding(start = if (isPaperReceipt) 0.dp else PADDING_SIDE_ROW_RECEIPT)
+                    .layoutId("second"),
+                color = textColor,
+                style = MaterialTheme.typography.bodyMedium.copy(
+                    fontSize = getFontSize(isPaperReceipt, context),
+                    fontWeight = getFontWeight(isPaperReceipt, context)
+                ),
+                textAlign = TextAlign.Start
+            )
+        }
+    }
 }
 
 @Composable

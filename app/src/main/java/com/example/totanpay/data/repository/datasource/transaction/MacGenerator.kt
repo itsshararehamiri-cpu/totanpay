@@ -13,7 +13,7 @@ interface IMacGenerator {
 
 class MacGeneratorImpl @Inject constructor(private val device: IDevice) : IMacGenerator {
     override fun getMac(msg: IsoMessage, index: Int): ByteArray {
-        val macField = if (msg.maxField > 64) 128 else 64
+        val macField = (if (msg.maxField > 64) 128 else 64).toString().toEnglishNumber()
         msg.set(macField, "0000000000000000".toEnglishNumber())
         with(msg.pack().dropLast(8).toByteArray()) {
             val mac = device.getMac(this, index)

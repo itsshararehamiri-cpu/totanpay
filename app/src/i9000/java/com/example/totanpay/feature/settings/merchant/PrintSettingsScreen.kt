@@ -46,12 +46,17 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.totanpay.MAXIMUM_AMOUNT_OF_TRANSACTION
 import com.example.totanpay.R
+import com.example.totanpay.common.BackButtonModifier
 import com.example.totanpay.common.mainButtonModifier
 import com.example.totanpay.data.repository.PrintStatus
+import com.example.totanpay.data.repository.datasource.formatAmount
+import com.example.totanpay.data.util.toEnglishNumber
 import com.example.totanpay.ui.component.ConfirmDialog
 import com.example.totanpay.ui.component.PurchasePriceTextInput
 import com.example.totanpay.ui.component.ShowToast
+import com.example.totanpay.ui.component.button.BackButton
 import com.example.totanpay.ui.component.button.MainButton
 import com.example.totanpay.ui.theme.END_PADDING
 import com.example.totanpay.ui.theme.START_PADDING
@@ -66,6 +71,8 @@ fun PrintSettingsScreen(viewModel: PrintingSettingsViewModel, onBackButtonClicke
     var amount: String by remember { mutableStateOf("") }
     var amountHasError: Boolean by remember { mutableStateOf(false) }
     var showToast by remember { mutableStateOf(false) }
+
+    var showAmountIsNotCorrectRangeToast by remember { mutableStateOf(false) }
 
     var showErrorSelectOneOptionToast by remember { mutableStateOf(false) }
 
@@ -137,12 +144,18 @@ fun PrintSettingsScreen(viewModel: PrintingSettingsViewModel, onBackButtonClicke
         }) {
         ConstraintLayout(
             ConstraintSet {
+                val toolBar=createRefFor("toolBar")
                 val noPrinting = createRefFor("noPrinting")
                 val alwaysPrinting = createRefFor("alwaysPrinting")
                 val printingWithMinAmount = createRefFor("printingWithMinAmount")
                 val confirm=createRefFor("confirm")
+                constrain(toolBar) {
+                    top.linkTo(parent.top)
+                    end.linkTo(parent.end)
+                    start.linkTo(parent.start)
+                }
                 constrain(noPrinting) {
-                    top.linkTo(parent.top,40.dp)
+                    top.linkTo(toolBar.bottom,0.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
@@ -165,6 +178,12 @@ fun PrintSettingsScreen(viewModel: PrintingSettingsViewModel, onBackButtonClicke
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background).verticalScroll(scrollState)
         ) {
+            BackButton(
+                title = stringResource(id = R.string.printer_settings), modifier = BackButtonModifier
+                    .layoutId("toolBar")
+            ) {
+                onBackButtonClicked()
+            }
             Box(
                 modifier = Modifier
                     .padding(start = END_PADDING, end = START_PADDING, top = 16.dp)
@@ -188,6 +207,7 @@ fun PrintSettingsScreen(viewModel: PrintingSettingsViewModel, onBackButtonClicke
                 ) {
                     RadioButton(
                         selected = noPrintingValue, onClick = {
+                            amount=""
                             noPrintingValue = !noPrintingValue
                             if (noPrintingValue) {
                                 alwaysPrintingValue = false
@@ -230,6 +250,7 @@ fun PrintSettingsScreen(viewModel: PrintingSettingsViewModel, onBackButtonClicke
                 ) {
                     RadioButton(
                         selected = alwaysPrintingValue, onClick = {
+                            amount=""
                             alwaysPrintingValue = !alwaysPrintingValue
                             if (alwaysPrintingValue) {
                                 noPrintingValue = false
@@ -306,7 +327,7 @@ fun PrintSettingsScreen(viewModel: PrintingSettingsViewModel, onBackButtonClicke
                         .padding(top = 5.dp)
                         .padding(horizontal = 15.dp)
 //                        .height(100.dp)
-                        .fillMaxWidth(),
+                        .fillMaxWidth(), textInputModifier = Modifier,
                         hasError = amountHasError,
                         errorMessage = "مبلغ  را وارد نمایید:",
                         title = "لطفا حداقل مبلغ برای چاپ رسید را تعیین نمایید:",
@@ -316,7 +337,18 @@ fun PrintSettingsScreen(viewModel: PrintingSettingsViewModel, onBackButtonClicke
                             keyboard?.hide()
                         }) {
                         showToast = false
-                        amount = it
+                        showAmountIsNotCorrectRangeToast=false
+                        if(it.isEmpty()){
+                            amount = it
+                        }
+                        else{
+                            if(it.toEnglishNumber().toLong()<= MAXIMUM_AMOUNT_OF_TRANSACTION.toLong()){
+                                amount = it
+                            }
+                            else{
+                                showAmountIsNotCorrectRangeToast=true
+                            }
+                        }
                     }
                 }
             }
@@ -353,6 +385,14 @@ fun PrintSettingsScreen(viewModel: PrintingSettingsViewModel, onBackButtonClicke
                 message = "هیچ گزینه ای انتخاب نشده است"
             ) {
                 showToast = false
+            }
+        }
+        if (showAmountIsNotCorrectRangeToast) {
+            ShowToast(
+                modifier = Modifier.align(Alignment.BottomCenter),
+                message = stringResource(R.string.amount_should_be_greater_than,MAXIMUM_AMOUNT_OF_TRANSACTION.formatAmount())
+            ) {
+                showAmountIsNotCorrectRangeToast = false
             }
         }
         if (showConfirmDialog) {

@@ -26,6 +26,8 @@ import androidx.constraintlayout.compose.layoutId
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.totanpay.R
 import com.example.totanpay.ResultReceiptContainer
+import com.example.totanpay.TIME_TO_FINISH_SUCCESS_RESULT
+import com.example.totanpay.common.CountdownEffect
 import com.example.totanpay.common.PlaybackSoundEffect
 import com.example.totanpay.common.ReceiptResultContainer
 import com.example.totanpay.common.containerReceiptModifier
@@ -94,6 +96,9 @@ fun TopUpUnSuccessResult(
             viewModel.printAndConfirm(bitmap = receiptBitmap!!, context = context)
             startPrint = false
         }
+    }
+    CountdownEffect(TIME_TO_FINISH_SUCCESS_RESULT) {
+        onBackButtonClicked()
     }
     if (uiState.result != null)
     {

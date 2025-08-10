@@ -140,7 +140,7 @@
     <string name="plz_select_operator">لطفا اپراتور مورد نظر خود را انتخاب نمایید:</string>
 
 
-    <string name="there_is_no_transaction_to_perform_please_check_network">امکان انجام تراکنش وجود ندارد لطفا شبکه را کنترل کنید</string>
+    <string name="there_is_no_transaction_to_perform_please_check_network">امکان انجام تراکنش وجود ندارد لطفا اتصال به اینترنت را بررسی نمایید.</string>
 
 
     <string name="balance_transaction_fee">کارمزد عملیات مانده موجودی</string>

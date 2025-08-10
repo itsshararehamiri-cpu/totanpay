@@ -1,6 +1,4 @@
 package com.example.totanpay.data.repository
-
-import android.util.Log
 import com.example.totanpay.data.repository.datasource.ReportLocalDataSource
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
 import com.example.totanpay.data.repository.datasource.transaction.TransactionType
@@ -54,6 +52,7 @@ class ReportRepositoryImpl @Inject constructor(
         }
 
     }
+
     override suspend fun getDetailsTransaction(
         fromDate: PersianDate?,
         toDate: PersianDate?,
@@ -63,20 +62,18 @@ class ReportRepositoryImpl @Inject constructor(
     ): List<ResponseTransaction>? {
         return withContext(ioDispatcher) {
             val jsonObject = JSONObject(selectedTransactions)
-            val purchaseIsSelected =
-                jsonObject.getString("purchaseType") == "has"
-            val billPayIsSelected =
-                jsonObject.getString("billPayType") == "has"
-            val voucherIsSelected =
-                jsonObject.getString("voucherType") == "has"
+            val purchaseIsSelected = jsonObject.getString("purchaseType") == "has"
+            val billPayIsSelected = jsonObject.getString("billPayType") == "has"
+            val voucherIsSelected = jsonObject.getString("voucherType") == "has"
             val topUpIsSelected = jsonObject.getString("topupType") == "has"
             var toAmountTemp = "-1"
-            if (toAmount == "-1")
-                toAmountTemp = dataSource.getMaximumAmountOfTransactions().toString()
+            if (toAmount == "-1") toAmountTemp =
+                dataSource.getMaximumAmountOfTransactions().toString()
+            else toAmountTemp =
+                if (toAmount.isNullOrEmpty()) dataSource.getMaximumAmountOfTransactions()
+                    .toString() else toAmount
             val detailsTransactions =
-                if (fromDate != null && toDate != null && !fromAmount.isNullOrEmpty()
-                    && !toAmount.isNullOrEmpty() && !selectedTransactions.isNullOrEmpty()
-                ) dataSource.getDetailsTransaction(
+                if (fromDate != null && toDate != null && !fromAmount.isNullOrEmpty() && !toAmount.isNullOrEmpty() && !selectedTransactions.isNullOrEmpty()) dataSource.getDetailsTransaction(
                     fromDate = ((fromDate.time / 1000)..(toDate.time / 1000)).first,
                     toDate = ((fromDate.time / 1000)..(toDate.time / 1000)).last,
                     fromAmount = fromAmount,

@@ -87,7 +87,10 @@ fun NavGraphBuilder.billNavigation(
                 onGetTrack2 = {
                     navController.navigate("$GET_PIN_BILL/$it/$amount/$billId/$paymentId")
                 }) {
-                navController.popBackStack(MainRoute.MenuRoute.route, inclusive = false)
+               // navController.popBackStack(MainRoute.MenuRoute.route, inclusive = false)
+                navController.navigate(MainRoute.MenuRoute.route) {
+                    popUpTo(MainRoute.MenuRoute.route) { inclusive = true }
+                }
             }
         }
         composable(

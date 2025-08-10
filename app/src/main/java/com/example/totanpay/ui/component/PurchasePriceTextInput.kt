@@ -22,24 +22,29 @@ import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
-import com.example.totanpay.common.textFieldModifier
 import com.example.totanpay.data.util.isNotNumber
 import com.example.totanpay.ui.priceFilter
 
 @Composable
-fun PurchasePriceTextInput(
+fun PurchasePriceTextInput( textInputModifier: Modifier,
     modifier: Modifier,
     title: String,
     trailerTitle: String,
     value: String,
     errorMessage: String = "",
     hasError: Boolean,
-    isSmall:Boolean=false,
+    isSmall: Boolean = false,
     onDone: () -> Unit,
     onValueChange: (String) -> Unit
 ) {
     val textFieldValue = TextFieldValue(text = value, selection = TextRange(value.length))
-    TextInputContainer(modifier = modifier, title = title, hasError = hasError, errorMessage,isSmall=isSmall) {
+    TextInputContainer(
+        modifier = modifier,
+        title = title,
+        hasError = hasError,
+        errorMessage,
+        isSmall = isSmall
+    ) {
         ConstraintLayout(
             ConstraintSet {
                 val trailer = createRefFor("trailer")
@@ -62,33 +67,35 @@ fun PurchasePriceTextInput(
                 .background(MaterialTheme.colorScheme.surface)
         ) {
             TextField(
-                modifier = Modifier
-                    .textFieldModifier(isSmall = isSmall)
+                modifier =
+                    textInputModifier
                     .layoutId("textField")
-                    .background(MaterialTheme.colorScheme.surface)
-,                value = textFieldValue,
+                    .background(MaterialTheme.colorScheme.surface),
+                value = textFieldValue,
                 onValueChange = {
                     if (!it.text.trim().isNotNumber())
                         onValueChange(it.text.trim())
                 },
                 colors = TextFieldDefaults.colors().copy(
-                        focusedContainerColor = MaterialTheme.colorScheme.surface,
-                        focusedTextColor = MaterialTheme.colorScheme.onSurface,
-                        unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
-                        focusedIndicatorColor = MaterialTheme.colorScheme.surface,
-                        unfocusedContainerColor = MaterialTheme.colorScheme.surface,
-                        unfocusedIndicatorColor = Transparent,
-                        disabledContainerColor = MaterialTheme.colorScheme.surface
-                    ),
+                    focusedContainerColor = MaterialTheme.colorScheme.surface,
+                    focusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    unfocusedTextColor = MaterialTheme.colorScheme.onSurface,
+                    focusedIndicatorColor = MaterialTheme.colorScheme.surface,
+                    unfocusedContainerColor = MaterialTheme.colorScheme.surface,
+                    unfocusedIndicatorColor = Transparent,
+                    disabledContainerColor = MaterialTheme.colorScheme.surface
+                ),
                 keyboardOptions = KeyboardOptions(
                     keyboardType = KeyboardType.Number,
-                    imeAction = ImeAction.Done
+                    imeAction = ImeAction.Done,
+                    autoCorrectEnabled = false,
+                    showKeyboardOnFocus = false
                 ),
                 keyboardActions = KeyboardActions(onDone = {
                     onDone()
                 }),
                 singleLine = true,
-                textStyle = MaterialTheme.typography.bodyMedium .copy(
+                textStyle = MaterialTheme.typography.bodyMedium.copy(
                     textDirection = TextDirection.Ltr,
                     color = MaterialTheme.colorScheme.onSurface
                 ),

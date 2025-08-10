@@ -1,7 +1,6 @@
 package com.example.totanpay.data.repository.datasource.transaction.api
 
 
-import android.util.Log
 import com.example.totanpay.data.repository.datasource.mask
 import com.example.totanpay.data.repository.datasource.model.Merchant
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
@@ -10,7 +9,6 @@ import com.example.totanpay.data.repository.datasource.transaction.TransactionTy
 import com.example.totanpay.data.repository.datasource.transaction.response.BaseTransactionResponse
 import com.example.totanpay.data.repository.util.extractPanFromTrack2
 import com.example.totanpay.data.util.formatTime
-import com.google.gson.Gson
 
 fun BaseTransactionResponse.PurchaseTransactionResponse.toPurchaseSuccessResponse(
     merchant: Merchant,

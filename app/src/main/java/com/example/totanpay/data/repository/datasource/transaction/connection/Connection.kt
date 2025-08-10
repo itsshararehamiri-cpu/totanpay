@@ -3,7 +3,6 @@ package com.example.totanpay.data.repository.datasource.transaction.connection
 import android.util.Log
 import com.example.totanpay.data.repository.datasource.transaction.IsoMessage
 import org.jdom.Element
-import org.jpos.iso.Channel
 import org.jpos.iso.ISOChannel
 import org.jpos.iso.ISOPackager
 import org.jpos.iso.channel.NACChannel
@@ -27,6 +26,7 @@ class Connection : IConnection {
         this.ip = ip
         this.port = port
         channel = NACChannel(ip, port, packager, header)
+        Log.d(TAG, "init() called with: ip = $ip, port = $port")
     }
 
     override fun start() {

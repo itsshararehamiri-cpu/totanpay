@@ -18,7 +18,6 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color.Companion.Red
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.totanpay.ui.theme.Dimensions.MARGIN_TOP_TEXTFIELD_WITH_TITLE
 
 @Composable

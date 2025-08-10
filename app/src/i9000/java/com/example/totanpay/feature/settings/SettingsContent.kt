@@ -9,6 +9,10 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.BlurredEdgeTreatment
@@ -34,21 +38,17 @@ import com.example.totanpay.ui.theme.Dimensions.TOTAN_ICON_SIZE
 fun SettingsContent(
     uiState: SettingsUiState,
     onBackClicked: () -> Unit,
-    onMerchantSettingsClicked: () -> Unit,
-    onSupervisorSettingsClicked: () -> Unit,
-    onConfirmExitPassword: () -> Unit,
-    onReportsClicked: () -> Unit,
-    hideMerchantPasswordDialog: () -> Unit,
-    hideSupervisorPasswordDialog: () -> Unit,
-    hideReportPasswordDialog: () -> Unit,
-    hideExitPasswordDialog: () -> Unit,
     validateSupervisorPassword: (String) -> Unit,
     validateMerchantPassword: (String) -> Unit,
     validateReportPassword: (String) -> Unit,
     validateExitPassword: (String) -> Unit
 ) {
     val scrollState = rememberScrollState()
-    val context= LocalContext.current
+    val context = LocalContext.current
+    var showExitPasswordDialog: Boolean by remember { mutableStateOf(false) }
+    var showSupervisorPasswordDialog: Boolean by remember { mutableStateOf(false) }
+    var showMerchantPasswordDialog: Boolean by remember { mutableStateOf(false) }
+    var showReportPasswordDialog: Boolean by remember { mutableStateOf(false) }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -67,7 +67,7 @@ fun SettingsContent(
                     start.linkTo(parent.start)
                 }
                 constrain(supervisorSettings) {
-                    top.linkTo(toolBar.bottom,if(isSmall(context)) 20.dp else 30.dp)
+                    top.linkTo(toolBar.bottom, if (isSmall(context)) 20.dp else 30.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
@@ -109,7 +109,7 @@ fun SettingsContent(
                 isSmall = isSmall(context = context),
                 title = stringResource(id = R.string.supervisor_settings)
             ) {
-                onSupervisorSettingsClicked()
+                showSupervisorPasswordDialog=true
             }
             SettingsItem(
                 modifier = Modifier
@@ -120,7 +120,7 @@ fun SettingsContent(
                 isSmall = isSmall(context = context),
                 title = stringResource(id = R.string.merchant_settings)
             ) {
-                onMerchantSettingsClicked()
+                showMerchantPasswordDialog=true
             }
             SettingsItem(
                 modifier = Modifier
@@ -131,7 +131,7 @@ fun SettingsContent(
                 isSmall = isSmall(context = context),
                 title = stringResource(id = R.string.reports)
             ) {
-                onReportsClicked()
+              showReportPasswordDialog=true
             }
             ExitItem(
                 modifier = Modifier
@@ -141,49 +141,49 @@ fun SettingsContent(
                 isSmall = isSmall(context = context),
                 title = stringResource(id = R.string.exit)
             ) {
-                onConfirmExitPassword()
+                showExitPasswordDialog=true
             }
         }
-            Image(
-                painter = painterResource(id = R.drawable.totan),
-                contentDescription = "",
-                modifier = Modifier
-                    .size(TOTAN_ICON_SIZE)
-                    .align(Alignment.BottomCenter)
-            )
-        if (uiState.showExitPasswordDialog) {
+        Image(
+            painter = painterResource(id = R.drawable.totan),
+            contentDescription = "",
+            modifier = Modifier
+                .size(TOTAN_ICON_SIZE)
+                .align(Alignment.BottomCenter)
+        )
+        if (showExitPasswordDialog) {
             EnterPasswordBottomDialog(modifier = Modifier.align(Alignment.BottomCenter),
                 errorMessage = uiState.existPasswordError,
                 onConfirmButtonClicked = {
                     validateExitPassword(it)
                 },
                 onCancelButtonClicked = {
-                    hideExitPasswordDialog()
+                    showExitPasswordDialog = false
                 })
         }
-        if (uiState.showSupervisorPasswordDialog) {
+        if (showSupervisorPasswordDialog) {
             EnterPasswordBottomDialog(modifier = Modifier.align(Alignment.BottomCenter),
                 errorMessage = uiState.supervisorPasswordError,
                 onCancelButtonClicked = {
-                    hideSupervisorPasswordDialog()
+                    showSupervisorPasswordDialog=false
                 }) {
                 validateSupervisorPassword(it)
             }
         }
-        if (uiState.showMerchantPasswordDialog) {
+        if (showMerchantPasswordDialog) {
             EnterPasswordBottomDialog(modifier = Modifier.align(Alignment.BottomCenter),
                 errorMessage = uiState.merchantPasswordError,
                 onCancelButtonClicked = {
-                    hideMerchantPasswordDialog()
+                    showMerchantPasswordDialog=false
                 }) {
                 validateMerchantPassword(it)
             }
         }
-        if (uiState.showReportPasswordDialog) {
+        if (showReportPasswordDialog) {
             EnterPasswordBottomDialog(modifier = Modifier.align(Alignment.BottomCenter),
                 errorMessage = uiState.reportPasswordError,
                 onCancelButtonClicked = {
-                    hideReportPasswordDialog()
+                    showReportPasswordDialog=false
                 }) {
                 validateReportPassword(it)
             }

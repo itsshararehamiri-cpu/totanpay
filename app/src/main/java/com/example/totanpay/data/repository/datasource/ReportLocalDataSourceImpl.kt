@@ -1,6 +1,5 @@
 package com.example.totanpay.data.repository.datasource
 
-import android.util.Log
 import com.example.totanpay.data.dao.TransactionLogDao
 import com.example.totanpay.data.entity.toTransaction
 import com.example.totanpay.data.repository.datasource.transaction.TransactionLog
@@ -72,7 +71,7 @@ class ReportLocalDataSourceImpl @Inject constructor(
         voucherIsSelected: Boolean,
         topupIsSelected: Boolean
     ): List<TransactionLog>? {
-        var transactionTypes: MutableList<Int> = mutableListOf<Int>()
+        var transactionTypes: MutableList<Int> = mutableListOf()
         if (purchaseIsSelected)
             transactionTypes.add(TransactionType.PURCHASE.tag)
         if (voucherIsSelected)
@@ -101,28 +100,25 @@ class ReportLocalDataSourceImpl @Inject constructor(
         voucherIsSelected: Boolean,
         topupIsSelected: Boolean
     ): List<TransactionLog>? {
-        Log.d(
-            "TAG",
-            "getDetailsTransaction() called with: fromDate = $fromDate, toDate = $toDate, fromAmount = $fromAmount, toAmount = $toAmount, purchaseIsSelected = $purchaseIsSelected, billPayIsSelected = $billPayIsSelected, voucherIsSelected = $voucherIsSelected, topupIsSelected = $topupIsSelected"
-        )
         var transactionTypes: MutableList<Int> = mutableListOf<Int>()
-        if (purchaseIsSelected)
+        if (purchaseIsSelected) {
             transactionTypes.add(TransactionType.PURCHASE.tag)
+            transactionTypes.add(TransactionType.PURCHASEWITHID.tag)
+        }
         if (voucherIsSelected)
             transactionTypes.add(TransactionType.VOUCHER.tag)
         if (billPayIsSelected)
             transactionTypes.add(TransactionType.BILL_PAY.tag)
         if (topupIsSelected)
             transactionTypes.add(TransactionType.TOPUP.tag)
-
         return transactionLogDao.getInRangeDate(
             fromDate,
             toDate,
-            fromAmount = fromAmount.toEnglishNumber().toLong(),
-            toAmount = toAmount.toEnglishNumber().toLong(),
+            fromAmount = fromAmount.toLong(),
+            toAmount = toAmount.toLong(),
             transactionTypes as List<Int>
         )?.map {
-            it?.toTransaction()!! // TODO:
+            it?.toTransaction()!!
         }
     }
 

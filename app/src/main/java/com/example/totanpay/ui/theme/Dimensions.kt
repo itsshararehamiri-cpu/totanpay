@@ -84,7 +84,7 @@ object Dimensions {
     val largePadding = 24.dp
     val buttonHeight = 48.dp
     val cardSize = 120.dp
-    val FONT_SIZE_PAPER_RECEIPT = 7.sp
+    val FONT_SIZE_PAPER_RECEIPT = 8.sp
     val FONT_SIZE_UNSUCCESS_PAPER_RECEIPT = 10.sp
     val FONT_SIZE_RECEIPT = 14.sp
     val FONT_SIZE_UNSUCCESS_RECEIPT = 16.sp

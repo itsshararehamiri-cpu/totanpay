@@ -8,6 +8,7 @@ import android.os.Build
 import android.os.Bundle
 import android.os.RemoteException
 import android.util.Log
+import com.example.totanpay.data.util.toEnglishNumber
 import com.urovo.sdk.insertcard.InsertCardHandlerImpl
 import com.urovo.sdk.magcard.MagCardReaderImpl
 import com.urovo.sdk.magcard.listener.MagCardListener
@@ -49,7 +50,7 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
             masterKey,
             null
         )
-        writeMacKey(masterKey,INDEX_WK)
+        writeMacKey(masterKey, INDEX_WK)
     }
 
     override fun isInjectMaster(): Boolean {
@@ -70,7 +71,7 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
     }
 
     override fun getMac(data: ByteArray, index: Int): ByteArray {
-        val result = pinPad.calcMAC(index, data, 0x11)
+        val result = pinPad.calcMAC(index.toString().toEnglishNumber().toInt(), data, 0x11)
         return result
     }
 
@@ -111,15 +112,18 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
         onCancel: () -> Unit, onTimeOut: () -> Unit
     ) {
         val pinPadBundle = Bundle()
-        pinPadBundle.putString("cardNo", pan)
+        pinPadBundle.putString("cardNo", pan.toEnglishNumber())
         pinPadBundle.putBoolean("sound", true)
         pinPadBundle.putBoolean("bypass", true)
-        pinPadBundle.putString("supportPinLen", "0,4")
+        pinPadBundle.putString("supportPinLen", "0,4".toEnglishNumber())
         pinPadBundle.putBoolean("customization", false)
         pinPadBundle.putBoolean("FullScreen", true)
         pinPadBundle.putBoolean("onlinePin", true)
         pinPadBundle.putInt("PINKeyNo", INDEX_PIN)
-        pinPadBundle.putLong("timeOutMS", (30 * 1000).toLong())
+        pinPadBundle.putLong(
+            "timeOutMS",
+            (30 * 1000).toLong().toString().toEnglishNumber().toLong()
+        )
         pinPadBundle.putString("message", "رمز کارت خود را وارد نمایید:")
         pinPadBundle.putString("infoLocation", "CENTER")
         pinPadBundle.putBoolean("randomKeyboard", false)
@@ -139,7 +143,7 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
 
             override fun onConfirm(p0: ByteArray?, p1: Boolean) {
                 if (p0 != null)
-                    onConfirm(String(p0))
+                    onConfirm(String(p0).toEnglishNumber())
             }
 
             override fun onConfirm_dukpt(p0: ByteArray?, p1: ByteArray?) {
@@ -157,7 +161,7 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
             }
 
             override fun onError(p0: Int) {
-                onError("CODE $p0")
+                onError("CODE ${p0}")
             }
         })
 
@@ -171,9 +175,8 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
         //return "92261946155760"
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-            //  "92261946155760"
-             "98282013260916"
-         //   Build.getSerial()
+             "92261946155760"
+           // Build.getSerial()
         } else {
             DeviceManager().deviceId
         }
@@ -418,7 +421,7 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
             mInnerScanner.startScan(
                 context,
                 bundle,
-                FRONT,
+                if (model.contains("i9100/W")) com.urovo.sdk.scanner.utils.Constant.CameraID.BACK else FRONT,
                 40,
                 object : ScannerListener {
                     override fun onSuccess(data: String?, byData: ByteArray) {

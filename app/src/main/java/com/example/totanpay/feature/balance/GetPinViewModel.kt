@@ -37,7 +37,10 @@ class GetPinViewModel @Inject constructor(private val deviceSettingsRepository: 
                 onCancel = {
                     _uiState.update { it.copy(isCancel = true) }
                     println("onCancel->") },
-                onTimeOut = { println("onTimeOut->") })
+                onTimeOut = {
+                    _uiState.update { it.copy(isCancel = true) }
+                    println("onTimeOut->")
+                })
         }
     }
 }

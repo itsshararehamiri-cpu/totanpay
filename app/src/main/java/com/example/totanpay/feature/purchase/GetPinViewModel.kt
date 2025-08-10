@@ -47,5 +47,6 @@ data class GetPinUiState(
     val getPin: Boolean = false,
     val pinBlock: String = "",
     val isCancel: Boolean = false,
-    val playbackSound: Boolean = false
+    val playbackSound: Boolean = false,
+    val isTimeOut:Boolean=false
 )

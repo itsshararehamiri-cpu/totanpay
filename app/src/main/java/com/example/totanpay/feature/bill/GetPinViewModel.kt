@@ -37,7 +37,9 @@ class GetPinViewModel @Inject constructor(private val mainRepository: MainReposi
                 onCancel = {
                     _uiState.update { it.copy(isCancel = true) }
                     println("onCancel->") },
-                onTimeOut = { println("onTimeOut->") })
+                onTimeOut = {
+                    _uiState.update { it.copy(isTimeOut = true) }
+                    println("onTimeOut->") })
         }
     }
 }

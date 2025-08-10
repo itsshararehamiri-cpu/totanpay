@@ -2,13 +2,7 @@ package com.example.totanpay.util;
 
 import android.provider.Settings;
 import android.content.Context;
-import android.util.Log;
-
-
-import com.google.gson.Gson;
-
 import java.util.TimeZone;
-
 public class TimeSettingsChecker {
 
     public static boolean isAutoDateTimeEnabled(Context context) {

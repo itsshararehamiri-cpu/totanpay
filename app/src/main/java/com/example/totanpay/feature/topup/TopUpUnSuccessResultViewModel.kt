@@ -43,7 +43,6 @@ class TopUpUnSuccessResultViewModel @Inject constructor(
 
     fun printAndConfirm(bitmap: Bitmap, context: Context) {
         viewModelScope.launch {
-            delay(3000)
             mainRepository.print(bitmap, context, onSuccess = {}, onFailed = {})
             mainRepository.settlementReverse()
         }

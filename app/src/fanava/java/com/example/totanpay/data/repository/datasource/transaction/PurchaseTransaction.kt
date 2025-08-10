@@ -1,12 +1,10 @@
 package com.example.totanpay.data.repository.datasource.transaction
 
 
-import android.util.Log
 import com.example.totanpay.data.repository.datasource.transaction.connection.IConnection
 import com.example.totanpay.data.repository.datasource.transaction.request.PurchaseTransactionRequest
 import com.example.totanpay.data.repository.datasource.transaction.response.BaseTransactionResponse
 import com.example.totanpay.data.repository.datasource.transaction.response.FailedTransactionResponse
-import com.google.gson.Gson
 import org.jpos.iso.ISOUtil
 
 class PurchaseTransaction(
@@ -115,7 +113,8 @@ class PurchaseTransaction(
             responseMessage,
              if (receivedIsoMessage.hasField(38)) {
                 receivedIsoMessage.getString(38)
-            } else request.stan.toString(),
+            } else
+                request.stan.toString(),
         )
         return BaseTransactionResponse.PurchaseTransactionResponse(
             amount = sendMessage.getString(4),
@@ -126,12 +125,15 @@ class PurchaseTransaction(
             date = sendMessage.tranDate,
             time = sendMessage.tranTime,
             maskedPan = request.pan,
-            trace = if (receivedIsoMessage.hasField(38)) {
+            trace =
+                if (receivedIsoMessage.hasField(38)) {
                 receivedIsoMessage.getString(38)
-            } else request.stan.toString(),
+            } else
+                request.stan.toString()
+            ,
             rrn = receivedIsoMessage.rrn,
             posCode = receivedIsoMessage.getField48Tag(0x98) ?: "",
-            purchaseId=  request.purchaseId,dateTimeOfServer = ltv.getNode(0x50)?.toString(),
+            purchaseId=  request.purchaseId,dateTimeOfServer = ltv.getNode(0x50),
         )
 
     }

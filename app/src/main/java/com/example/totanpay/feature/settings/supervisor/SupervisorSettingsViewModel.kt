@@ -8,7 +8,6 @@ import com.example.totanpay.data.repository.ConfigurationRepository
 import com.example.totanpay.data.repository.DeviceRepository
 import com.example.totanpay.data.repository.MainRepository
 import com.example.totanpay.data.repository.datasource.ResponseData
-import com.example.totanpay.data.util.formatTime
 import com.example.totanpay.data.util.getPersianDate
 import com.example.totanpay.data.util.timeToForm
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -55,7 +54,7 @@ class SupervisorSettingsViewModel @Inject constructor(
                             )
                         )
                     }
-                    delay(4000)
+                    delay(2000)
                     _uiState.update {
                         it.copy(
                             showConfigurationIsSucceed = false,
@@ -70,7 +69,7 @@ class SupervisorSettingsViewModel @Inject constructor(
                                 showConfigurationLoading = false
                             )
                         }
-                        delay(3000)
+                        delay(2000)
                         _uiState.update { it.copy(error = "", showConfigurationLoading = false) }
                     } else {
                         _uiState.update {
@@ -79,7 +78,7 @@ class SupervisorSettingsViewModel @Inject constructor(
                                 showConfigurationLoading = false
                             )
                         }
-                        delay(3000)
+                        delay(2000)
                         _uiState.update { it.copy(error = "", showConfigurationLoading = false) }
                     }
 

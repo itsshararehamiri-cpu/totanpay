@@ -1,6 +1,5 @@
 package com.example.totanpay.data.repository
 
-import android.util.Log
 import com.example.totanpay.data.repository.datasource.MerchantLocalDataSource
 import com.example.totanpay.data.util.HMACSHA512
 import com.example.totanpay.data.repository.datasource.MerchantSettingsLocalDataSource

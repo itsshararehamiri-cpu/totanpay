@@ -2,6 +2,7 @@ package com.example.totanpay
 
 import android.content.Context
 import android.graphics.Bitmap
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.totanpay.data.repository.DeviceRepository
@@ -16,6 +17,8 @@ import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+const val MAXIMUM_AMOUNT_OF_TRANSACTION = "2000000000"
+
 @HiltViewModel
 class MenuViewModel @Inject constructor(
     private val merchantSettingsRepository: MerchantSettingsRepository,
@@ -27,6 +30,14 @@ class MenuViewModel @Inject constructor(
 
     fun init(context: Context) {
         viewModelScope.launch {
+            _uiState.update {
+                it.copy(
+                    merchantName = mainRepository.getMerchant()?.merchantName ?: "",
+                    terminalId = mainRepository.getTerminalId() ?: "",
+                    showProgress = false
+                )
+            }
+            _uiState.update { it.copy(showBatteryStatusMessage = false) }
             deviceRepository.enableHome()
             if (isNetworkAvailable(context)) {
                 val isConfigured = mainRepository.isConfigured()
@@ -56,34 +67,16 @@ class MenuViewModel @Inject constructor(
     }
 
     fun purchase(context: Context) {
-//        viewModelScope.launch {
-//            if (isNetworkAvailable(context)) {
-//                val isConfigured = mainRepository.isConfigured()
-//                if (isConfigured) {
-//                    if (deviceRepository.batteryIsEnough()) {
-//                        _uiState.update { it.copy(purchase = true) }
-//                    } else {
-//                        _uiState.update { it.copy(showBatteryStatusMessage = true) }
-//                    }
-//                } else {
-//                    _uiState.update { it.copy(configurationIsNotCompletedMessage = "پیکربندی انجام نشده است") }
-//                }
-//            } else {
-//                _uiState.update { it.copy(showInternetIsNotAvailableMessage = true) }
-//            }
-//        }
         viewModelScope.launch {
+            _uiState.update { it.copy(showBatteryStatusMessage = false) }
             if (isNetworkAvailable(context)) {
                 val isConfigured = mainRepository.isConfigured()
                 if (isConfigured) {
                     if (deviceRepository.batteryIsEnough()) {
-                        if (!merchantSettingsRepository.needToApportionments())
-                        {
+                        if (!merchantSettingsRepository.needToApportionments()) {
                             deviceRepository.disableHome()
-
                             _uiState.update { it.copy(purchase = true) }
-                        }
-                        else {
+                        } else {
                             _uiState.update { it.copy(showMessageNeedToSetApportionment = true) }
                         }
                     } else {
@@ -98,6 +91,7 @@ class MenuViewModel @Inject constructor(
 
     fun balance(context: Context) {
         viewModelScope.launch {
+            _uiState.update { it.copy(showBatteryStatusMessage = false) }
             if (isNetworkAvailable(context)) {
                 val isConfigured = mainRepository.isConfigured()
                 if (isConfigured) {
@@ -116,21 +110,20 @@ class MenuViewModel @Inject constructor(
 
     fun voucher(context: Context) {
         viewModelScope.launch {
+            _uiState.update { it.copy(showBatteryStatusMessage = false) }
             if (isNetworkAvailable(context)) {
                 val isConfigured = mainRepository.isConfigured()
                 if (isConfigured) {
                     if (deviceRepository.batteryIsEnough()) {
-                        if (!merchantSettingsRepository.needToApportionments())
-                        {
+                        if (!merchantSettingsRepository.needToApportionments()) {
                             deviceRepository.disableHome()
 
                             _uiState.update { it.copy(voucher = true) }
-                        }
-                        else {
+                        } else {
                             _uiState.update { it.copy(showMessageNeedToSetApportionment = true) }
                         }
                     } else {
-                        _uiState.update { it.copy(showBatteryStatusMessage = false) }
+                        _uiState.update { it.copy(showBatteryStatusMessage = true) }
                     }
                 } else {
                     _uiState.update { it.copy(configurationIsNotCompletedMessage = "پیکربندی انجام نشده است") }
@@ -142,17 +135,16 @@ class MenuViewModel @Inject constructor(
     }
 
     fun topUp(context: Context) {
+        _uiState.update { it.copy(showBatteryStatusMessage = false) }
         viewModelScope.launch {
             if (isNetworkAvailable(context)) {
                 val isConfigured = mainRepository.isConfigured()
                 if (isConfigured) {
                     if (deviceRepository.batteryIsEnough()) {
-                        if (!merchantSettingsRepository.needToApportionments())
-                        {
+                        if (!merchantSettingsRepository.needToApportionments()) {
                             deviceRepository.disableHome()
                             _uiState.update { it.copy(topUp = true) }
-                        }
-                        else {
+                        } else {
                             _uiState.update { it.copy(showMessageNeedToSetApportionment = true) }
                         }
                     } else {
@@ -167,17 +159,16 @@ class MenuViewModel @Inject constructor(
 
     fun billPay(context: Context) {
         viewModelScope.launch {
+            _uiState.update { it.copy(showBatteryStatusMessage = false) }
             if (isNetworkAvailable(context)) {
                 val isConfigured = mainRepository.isConfigured()
                 if (isConfigured) {
                     if (deviceRepository.batteryIsEnough()) {
-                        if (!merchantSettingsRepository.needToApportionments())
-                        {
+                        if (!merchantSettingsRepository.needToApportionments()) {
                             deviceRepository.disableHome()
 
                             _uiState.update { it.copy(billPay = true) }
-                        }
-                        else {
+                        } else {
                             _uiState.update { it.copy(showMessageNeedToSetApportionment = true) }
                         }
                     } else {
@@ -223,23 +214,12 @@ class MenuViewModel @Inject constructor(
         }
     }
 
-    fun showGetExitPasswordDialog() {
-        viewModelScope.launch {
-            _uiState.update { it.copy(showExitPasswordDialog = true, existPasswordError = "") }
-        }
-    }
-
-    fun hideGetExitPasswordDialog() {
-        viewModelScope.launch {
-            _uiState.update { it.copy(showExitPasswordDialog = false) }
-        }
-    }
-
     fun checkExistPassword(enteredPass: String) {
         viewModelScope.launch {
+            _uiState.update { it.copy(existPasswordError = "") }
             if (merchantSettingsRepository.merchantPasswordIsValid(enteredPass)) {
                 deviceRepository.enableHome()
-                _uiState.update { it.copy(showExitPasswordDialog = false, isExit = true) }
+                _uiState.update { it.copy(isExit = true) }
             } else {
                 _uiState.update { it.copy(existPasswordError = "رمز اشتباه است.") }
             }
@@ -270,7 +250,8 @@ data class MenuUiState(
     val showProgress: Boolean = false,
     val showInternetIsNotAvailableMessage: Boolean = false,
     val showSwitchIsNotAvailableMessage: Boolean = false,
-    val showExitPasswordDialog: Boolean = false, val existPasswordError: String = "",
+    val existPasswordError: String = "",
     val isExit: Boolean = false,
-    val showMessageNeedToSetApportionment:Boolean=false,
-    val maximumAmountForPurchaseTransaction:String="2000000000")
+    val showMessageNeedToSetApportionment: Boolean = false,
+    val maximumAmountForPurchaseTransaction: String = MAXIMUM_AMOUNT_OF_TRANSACTION
+)

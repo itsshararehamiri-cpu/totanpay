@@ -1,6 +1,5 @@
 package com.example.totanpay.feature.settings.supervisor
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.totanpay.data.repository.IccCardRepository

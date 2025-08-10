@@ -1,6 +1,5 @@
 package com.example.totanpay.data.repository.datasource.transaction
 
-import android.util.Log
 import com.example.totanpay.data.repository.datasource.transaction.connection.IConnection
 import com.example.totanpay.data.repository.datasource.transaction.request.GetKeyTransactionRequest
 import com.example.totanpay.data.repository.datasource.transaction.response.BaseTransactionResponse

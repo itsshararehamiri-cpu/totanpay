@@ -27,8 +27,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
@@ -74,9 +77,6 @@ fun MenuScreen(
     var receiptBitmap: Bitmap? by remember { mutableStateOf(null) }
     var purchaseIdValue: String? by remember { mutableStateOf(null) }
     var amountValue: String by remember { mutableStateOf("") }
-    BackHandler {
-        viewModel.showGetExitPasswordDialog()
-    }
     LaunchedEffect(Unit) {
         viewModel.init(context)
     }
@@ -108,7 +108,11 @@ fun MenuScreen(
     }
     LaunchedEffect(receiptBitmap) {
         if (receiptBitmap != null)
-            viewModel.print(bitmap = receiptBitmap!!, context = context, onSuccess = {}, onFailed = {})
+            viewModel.print(
+                bitmap = receiptBitmap!!,
+                context = context,
+                onSuccess = {},
+                onFailed = {})
     }
     LaunchedEffect(uiState.purchase) {
         if (uiState.purchase) {
@@ -138,7 +142,8 @@ fun MenuScreen(
         if (uiState.isExit)
             (context as MainActivity).finish()
     }
-    MenuContent(uiState = uiState,
+    MenuContent(
+        uiState = uiState,
         onPurchaseSelected = { amount, purchaseId ->
             amountValue = amount
             purchaseIdValue = purchaseId
@@ -163,10 +168,14 @@ fun MenuScreen(
         },
         hideSwitchIsNotAvailableMessage = {
             viewModel.hideSwitchIsNotAvailableMessage()
-        },  hideExitPasswordDialog = { viewModel.hideGetExitPasswordDialog() },validateExitPassword = {
+        }, hideExitPasswordDialog = {
+            //   viewModel.hideGetExitPasswordDialog()
+        },
+
+        validateExitPassword = {
             viewModel.checkExistPassword(it)
         },
-        hideMessageNeedToSetApportionment={
+        hideMessageNeedToSetApportionment = {
             viewModel.hideMessageNeedToSetApportionment()
         })
 }
@@ -186,9 +195,9 @@ fun MenuContent(
     hideSwitchIsNotAvailableMessage: () -> Unit,
     validateExitPassword: (String) -> Unit,
     hideExitPasswordDialog: () -> Unit,
-    hideMessageNeedToSetApportionment:()->Unit
+    hideMessageNeedToSetApportionment: () -> Unit
 
-    ) {
+) {
     var amount: String by remember { mutableStateOf("") }
     var amountHasError: Boolean by remember { mutableStateOf(false) }
     var showToast by remember { mutableStateOf(false) }
@@ -198,11 +207,23 @@ fun MenuContent(
     var showPurchaseIdIsNotEnteredToast by remember { mutableStateOf(false) }
     var showPurchaseIdBottomDialog by remember { mutableStateOf(false) }
     var purchaseId: String by remember { mutableStateOf("") }
+    var showExitPasswordDialog: Boolean by remember { mutableStateOf(false) }
+
     val keyboard = LocalSoftwareKeyboardController.current
+    val focusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+    BackHandler {
+        showExitPasswordDialog = true
+    }
     LaunchedEffect(showPurchaseIdBottomDialog) {
         if (showPurchaseIdBottomDialog) {
             keyboard?.hide()
         }
+    }
+    LaunchedEffect(Unit) {
+        focusManager.clearFocus()
+        focusRequester.freeFocus()
+        keyboard?.hide()
     }
     Box(modifier = Modifier.fillMaxSize()) {
         ConstraintLayout(
@@ -296,19 +317,20 @@ fun MenuContent(
                 painter = painterResource(
                     id = if (BuildConfig.FLAVOR == "pn") R.drawable.padakht_novin_logo else R.drawable.fanava_logo
                 ),
-                contentDescription = "")
+                contentDescription = ""
+            )
             Text(
                 text = uiState.merchantName,
                 modifier = Modifier.layoutId("merchantName"),
                 color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.bodyMedium .copy(fontSize = 13.sp)
+                style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp)
             )
             if (uiState.merchantName.isNotEmpty()) {
                 Text(
                     text = stringResource(id = R.string.terminal_id),
                     modifier = Modifier.layoutId("terminalIdTitle"),
                     color = MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
-                    style = MaterialTheme.typography.bodySmall .copy(fontSize = 13.sp)
+                    style = MaterialTheme.typography.bodySmall.copy(fontSize = 13.sp)
                 )
                 Text(
                     text = uiState.terminalId,
@@ -330,40 +352,37 @@ fun MenuContent(
                     .wrapContentHeight()
                     .layoutId("purchaseBox")
             ) {
-                PurchaseContainer(modifier = Modifier.fillMaxWidth(),
+                PurchaseContainer(textInputModifier=Modifier.focusRequester(focusRequester),
+                    modifier = Modifier.fillMaxWidth(),
                     amountHasError = amountHasError,
                     amount = amount,
                     onChangeAmountVale = {
-                        if(it.isNotEmpty())
-                        {
-                            if(it.toEnglishNumber().toLong()<=uiState.maximumAmountForPurchaseTransaction.toLong()){
+                        if (it.isNotEmpty()) {
+                            if (it.toEnglishNumber()
+                                    .toLong() <= uiState.maximumAmountForPurchaseTransaction.toLong()
+                            ) {
                                 amount = it
+                            } else {
+                                showAmountIsNotCorrectRangeToast = true
                             }
-                            else{
-                                showAmountIsNotCorrectRangeToast=true
-                            }
-                        }
-                        else{
+                        } else {
                             amount = it.toEnglishNumber()
                         }
                     },
                     onPurchaseSelected = { amount, purchaseId ->
-                        showAmountMustBeGreaterThanToast=false
-                        if(amount.isNullOrEmpty())
-                        {
+                        keyboard?.hide()
+                        showAmountMustBeGreaterThanToast = false
+                        if (amount.isEmpty()) {
                             if (purchaseId)
-                                showPurchaseIdBottomDialog=true
-                            else  onPurchaseSelected(amount, "")
-                        }
-                        else{
-                            if(amount.toEnglishNumber().toLong()<1000)
-                            {
-                                showAmountMustBeGreaterThanToast=true
-                            }
-                            else{
+                                showPurchaseIdBottomDialog = true
+                            else onPurchaseSelected(amount, "")
+                        } else {
+                            if (amount.toEnglishNumber().toLong() < 1000) {
+                                showAmountMustBeGreaterThanToast = true
+                            } else {
                                 if (purchaseId)
-                                    showPurchaseIdBottomDialog=true
-                                else  onPurchaseSelected(amount, "")
+                                    showPurchaseIdBottomDialog = true
+                                else onPurchaseSelected(amount, "")
                             }
                         }
                     },
@@ -384,7 +403,10 @@ fun MenuContent(
                 if (showAmountIsNotCorrectRangeToast) {
                     ShowToast(
                         modifier = Modifier.align(Alignment.BottomCenter),
-                        message = stringResource(R.string.amount_should_be_greater_than,"2000000000".formatAmount())
+                        message = stringResource(
+                            R.string.amount_should_be_greater_than,
+                            MAXIMUM_AMOUNT_OF_TRANSACTION.formatAmount()
+                        )
                     ) {
                         showAmountIsNotCorrectRangeToast = false
                     }
@@ -392,7 +414,10 @@ fun MenuContent(
                 if (showAmountMustBeGreaterThanToast) {
                     ShowToast(
                         modifier = Modifier.align(Alignment.BottomCenter),
-                        message = stringResource(R.string.amount_should_be_smaller_than,"1000".formatAmount())
+                        message = stringResource(
+                            R.string.amount_should_be_smaller_than,
+                            "1000".formatAmount()
+                        )
                     ) {
                         showAmountMustBeGreaterThanToast = false
                     }
@@ -492,42 +517,51 @@ fun MenuContent(
         val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
         if (showPurchaseIdBottomDialog) {
             ModalBottomSheet(
-                onDismissRequest = {    purchaseId = ""
-                    showPurchaseIdBottomDialog = false },
+                onDismissRequest = {
+                    purchaseId = ""
+                    showPurchaseIdBottomDialog = false
+                },
                 sheetState = bottomSheetState,
                 containerColor = MaterialTheme.colorScheme.background
             ) {
-            PurchaseIdBottomDialog(
-                Modifier
-                    .fillMaxWidth(),
-                onConfirmButtonClicked = {
-                    purchaseId = it
-                    showPurchaseIdBottomDialog = false
-                    if (amount.isNotEmpty() && purchaseId.isNotEmpty()) {
-                        onPurchaseSelected(amount.toEnglishNumber(), purchaseId.toEnglishNumber())
-                    }
-                },
-                onCancelButtonClicked = {
-                    purchaseId = ""
-                    showPurchaseIdBottomDialog = false
-                })
+                PurchaseIdBottomDialog(
+                    Modifier
+                        .fillMaxWidth(),
+                    onConfirmButtonClicked = {
+                        purchaseId = it
+                        showPurchaseIdBottomDialog = false
+                        if (amount.isNotEmpty() && purchaseId.isNotEmpty()) {
+                            onPurchaseSelected(
+                                amount.toEnglishNumber(),
+                                purchaseId.toEnglishNumber()
+                            )
+                        }
+                    },
+                    onCancelButtonClicked = {
+                        purchaseId = ""
+                        showPurchaseIdBottomDialog = false
+                    })
             }
         }
-        if (uiState.showExitPasswordDialog) {
-            EnterPasswordBottomDialog(modifier = Modifier.align(Alignment.BottomCenter),
+        if (showExitPasswordDialog) {
+            EnterPasswordBottomDialog(
+                modifier = Modifier.align(Alignment.BottomCenter),
                 errorMessage = uiState.existPasswordError,
                 onConfirmButtonClicked = {
                     validateExitPassword(it)
                 },
                 onCancelButtonClicked = {
-                    hideExitPasswordDialog()
+                    showExitPasswordDialog = false
                 })
         }
         if (uiState.showMessageNeedToSetApportionment) {
-            SettingsDataTimeDialog(titleMessage =  "لطفا به قسمت مدیریت حساب ها بروید و سهم هر شماره حساب را تعیین کنید.", onDismiss = {
-            }, onConfirmButtonClicked = {
-                hideMessageNeedToSetApportionment()
-            })
+            SettingsDataTimeDialog(
+                titleMessage = "لطفا به قسمت مدیریت حساب ها بروید و سهم هر شماره حساب را تعیین کنید.",
+                onDismiss = {
+                },
+                onConfirmButtonClicked = {
+                    hideMessageNeedToSetApportionment()
+                })
         }
     }
 }
@@ -546,6 +580,9 @@ fun MainScreenPreview() {
             onSettingsClicked = {},
             onHideConfigurationIsNotCompletedMessage = {},
             hideInternetIsNotAvailableMessage = {},
-            hideSwitchIsNotAvailableMessage = {}, hideExitPasswordDialog = {}, validateExitPassword = {}, hideMessageNeedToSetApportionment = {})
+            hideSwitchIsNotAvailableMessage = {},
+            hideExitPasswordDialog = {},
+            validateExitPassword = {},
+            hideMessageNeedToSetApportionment = {})
     }
 }

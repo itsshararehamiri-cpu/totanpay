@@ -54,6 +54,7 @@ class TopUpTransaction(
                 setVersion(request.appVersion)
                 setProductCode(request.productCode)
                 setMobileNumber(request.mobile)
+                setTerminalLanguage(request.terminalLanguage)
             }
             setCurrency(request.currency)
             setPinBlock(request.pinBlock)
@@ -77,8 +78,12 @@ class TopUpTransaction(
             null,
             null,
             request.mobile,
-            request.productCode?.toInt(),null, if (receivedIsoMessage.hasField(38)) receivedIsoMessage.getString(38)
-                .toString() else request.stan.toString(),
+            request.productCode?.toInt(),null, if (receivedIsoMessage.hasField(38)){
+                receivedIsoMessage.getString(38)
+                    .toString()
+            } else {
+                request.stan.toString()
+            },
         )
         return BaseTransactionResponse.TopUpTransactionResponse(
             responseCode = 0,

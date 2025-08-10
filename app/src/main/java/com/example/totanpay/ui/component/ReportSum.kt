@@ -73,7 +73,7 @@ fun ReportSum(
             )
             AddSumOfAllTransactions(
                 modifierRowReceipt,
-                sum = sumOfAllTransactions.formatAmount(),
+                sum = sumOfAllTransactions,
                 textColor = firstColor,
                 isPaperReceipt = isPaperReceipt
             )

@@ -38,54 +38,57 @@ import com.example.totanpay.ui.theme.Green50
 import com.example.totanpay.ui.theme.TotanPayTheme
 
 @Composable
-fun PurchaseContainer(
+fun PurchaseContainer(textInputModifier: Modifier,
     modifier: Modifier,
     amountHasError: Boolean,
     amount: String,
     onChangeAmountVale: (String) -> Unit,
     onPurchaseSelected: (String, Boolean) -> Unit,
     onChangeAmountHaseError: (Boolean) -> Unit,
-    onShowToastChangeValue: (Boolean) -> Unit) {
+    onShowToastChangeValue: (Boolean) -> Unit
+) {
     var purchaseIdIsEnabled by remember { mutableStateOf(false) }
     val keyboard = LocalSoftwareKeyboardController.current
     ConstraintLayout(
         ConstraintSet {
             val purchasePriceTextInput = createRefFor("purchasePriceTextInput")
             val switchContainer = createRefFor("switchContainer")
-            val confirm=createRefFor("confirm")
+            val confirm = createRefFor("confirm")
 
             constrain(purchasePriceTextInput) {
-                top.linkTo(parent.top,10.dp)
+                top.linkTo(parent.top, 10.dp)
                 end.linkTo(parent.end, 0.dp)
                 start.linkTo(parent.start, 0.dp)
-                width= Dimension.fillToConstraints
+                width = Dimension.fillToConstraints
             }
 
             constrain(switchContainer) {
                 top.linkTo(purchasePriceTextInput.bottom)
                 end.linkTo(parent.end, 0.dp)
                 start.linkTo(parent.start, 0.dp)
-                width= Dimension.fillToConstraints
+                width = Dimension.fillToConstraints
 
             }
             constrain(confirm) {
                 top.linkTo(switchContainer.bottom)
                 end.linkTo(parent.end, 0.dp)
                 start.linkTo(parent.start, 0.dp)
-                width= Dimension.fillToConstraints
+                width = Dimension.fillToConstraints
 
             }
-        }, modifier = modifier.wrapContentHeight()
-        .background(
-            color = MaterialTheme.colorScheme.surface,
-            shape = RoundedCornerShape(16.dp)
-        )
-        .padding(bottom = 10.dp)) {
-
-        PurchasePriceTextInput(
+        }, modifier = modifier
+            .wrapContentHeight()
+            .background(
+                color = MaterialTheme.colorScheme.surface,
+                shape = RoundedCornerShape(16.dp)
+            )
+            .padding(bottom = 10.dp)
+    ) {
+        PurchasePriceTextInput(textInputModifier=textInputModifier,
             modifier = Modifier
                 .padding(start = 10.dp, end = 10.dp, top = 0.dp)
-                .fillMaxWidth().layoutId("purchasePriceTextInput"),
+                .fillMaxWidth()
+                .layoutId("purchasePriceTextInput"),
             hasError = amountHasError,
             errorMessage = stringResource(R.string.enter_purchase_amount),
             title = stringResource(R.string.enter_purchase_amount),
@@ -102,7 +105,8 @@ fun PurchaseContainer(
             modifier = Modifier
                 .padding(start = 18.dp, end = 18.dp)
                 .padding(top = 10.dp)
-                .fillMaxWidth().layoutId("switchContainer"),
+                .fillMaxWidth()
+                .layoutId("switchContainer"),
             horizontalArrangement = Arrangement.Absolute.SpaceEvenly,
             verticalAlignment = Alignment.CenterVertically
         ) {
@@ -125,9 +129,11 @@ fun PurchaseContainer(
             )
         }
         MainButton(
-            Modifier.
-            mainButtonModifier(isSmall = isSmall(context = LocalContext.current) ).layoutId("confirm")
+            Modifier
+                .mainButtonModifier(isSmall = isSmall(context = LocalContext.current))
+                .layoutId("confirm")
         ) {
+            keyboard?.hide()
             if (amount.isNotEmpty()) {
                 if (!purchaseIdIsEnabled) {
                     onPurchaseSelected(amount, false)
@@ -146,7 +152,8 @@ fun PurchaseContainer(
 @Preview
 fun PurchaseContainerPreview() {
     TotanPayTheme {
-        PurchaseContainer(modifier = Modifier.fillMaxWidth(),
+        PurchaseContainer(textInputModifier=Modifier,
+            modifier = Modifier.fillMaxWidth(),
             amountHasError = false,
             amount = "1000",
             onChangeAmountVale = {

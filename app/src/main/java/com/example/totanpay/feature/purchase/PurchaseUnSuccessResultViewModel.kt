@@ -2,7 +2,6 @@ package com.example.totanpay.feature.purchase
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.media.session.PlaybackState
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.totanpay.data.repository.DeviceSettingsRepository
@@ -12,7 +11,6 @@ import com.example.totanpay.data.util.getPersianDate
 import com.example.totanpay.util.convertPurchaseResultToJsonObject
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -38,7 +36,7 @@ class PurchaseUnSuccessResultViewModel @Inject constructor(private val mainRepos
         viewModelScope.launch {
             val responseTransaction = Gson().fromJson(response, ResponseTransaction::class.java)
             _uiState.update {
-                it.copy(autoPrint = responseTransaction.responseCode == "-1",
+                it.copy(autoPrint =( responseTransaction.responseCode == "-1"),
                     result = responseTransaction.copy(
                         date = getPersianDate(
                             responseTransaction.date
@@ -56,10 +54,7 @@ class PurchaseUnSuccessResultViewModel @Inject constructor(private val mainRepos
     }
     fun printAndConfirm(bitmap: Bitmap, context: Context) {
         viewModelScope.launch {
-            delay(3000)
-            println("printAndConfirm")
             mainRepository.print(bitmap, context, onSuccess = {}, onFailed = {})
-            //mainRepository.settlementReverse()
         }
     }
 }

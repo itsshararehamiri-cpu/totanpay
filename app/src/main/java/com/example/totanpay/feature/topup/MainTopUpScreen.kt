@@ -1,6 +1,5 @@
 package com.example.totanpay.feature.topup
 
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -16,14 +15,12 @@ import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
@@ -40,6 +37,7 @@ import com.example.totanpay.data.repository.datasource.formatAmount
 import com.example.totanpay.data.repository.datasource.transaction.TransactionType
 import com.example.totanpay.data.util.getAllCharges
 import com.example.totanpay.data.util.isNotNumber
+import com.example.totanpay.data.util.isValidPhoneNumber
 import com.example.totanpay.ui.ListModifier
 import com.example.totanpay.ui.TextInputModifier
 import com.example.totanpay.ui.component.MobileTextInput
@@ -74,10 +72,12 @@ fun MainTopUpScreen(
     var prices: List<String> by remember {
         mutableStateOf(listOf())
     }
-    val focusManager = LocalFocusManager.current
     val keyboard = LocalSoftwareKeyboardController.current
     val context = LocalContext.current
+    val focusManager = LocalFocusManager.current
     BackHandler {
+        focusManager.clearFocus(true)
+        keyboard?.hide()
         onBackButton()
     }
     Box(modifier = Modifier.fillMaxSize()) {
@@ -153,13 +153,14 @@ fun MainTopUpScreen(
                 value = phoneNumberValue,
                 hasError = mobileHasError,
                 onValueChange = {
+                    mobileHasError = false
                     if (it.length <= 11 && !it.trim().isNotNumber()) {
                         phoneNumberValue = it
                     }
                 },
                 isSmall = false,
                 onNextClicked = {
-                    focusManager.moveFocus(FocusDirection.Next)
+                    keyboard?.hide()
                 })
             val operators: List<Operator>? = getAllCharges(context = context)
             LazyRow(
@@ -179,29 +180,31 @@ fun MainTopUpScreen(
                 }
             }
             if (selectedOperator != null) {
-                PriceTextInput(modifier = TextInputModifier.layoutId("amountInput"),
-                    errorMessage = amountError,
-                    title = stringResource(R.string.enter_amount_or_select),
-                    trailerTitle = stringResource(id = R.string.currency),
-                    value = amountValue,
-                    hasError = amountHasError,
-                    onNextClicked = {
-                        keyboard?.hide()
-                    }) {
-                    amountError = ""
-                    amountHasError = false
-                    if (it.isNotEmpty()) {
-                        if (it.toLong() <= 1000000)
-                            amountValue = it
-                        else {
-                            amountError = context.getString(R.string.amount_can_not_be_greater_than,"1000000".formatAmount())
-                            amountHasError = true
-                        }
-                    }
-                    else{
-                        amountValue=""
-                    }
-                }
+//                PriceTextInput(modifier = TextInputModifier.layoutId("amountInput"),
+//                    errorMessage = amountError,
+//                    title = stringResource(R.string.enter_amount_or_select),
+//                    trailerTitle = stringResource(id = R.string.currency),
+//                    value = amountValue,
+//                    hasError = amountHasError,
+//                    onNextClicked = {
+//                        keyboard?.hide()
+//                    }) {
+//                    amountError = ""
+//                    amountHasError = false
+//                    if (it.isNotEmpty()) {
+//                        if (it.toLong() <= 1000000)
+//                            amountValue = it
+//                        else {
+//                            amountError = context.getString(
+//                                R.string.amount_can_not_be_greater_than,
+//                                "1000000".formatAmount()
+//                            )
+//                            amountHasError = true
+//                        }
+//                    } else {
+//                        amountValue = ""
+//                    }
+//                }
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     verticalArrangement = Arrangement.spacedBy(16.dp),
@@ -214,6 +217,8 @@ fun MainTopUpScreen(
                             title = prices[item],
                             modifier = Modifier.height(40.dp)
                         ) {
+                            amountError = ""
+                            amountHasError = false
                             selectedOption = it
                             amountValue = it
                         }
@@ -229,11 +234,18 @@ fun MainTopUpScreen(
                     if (((selectedOperator!!.code == 12 || selectedOperator!!.code == 11) && amountValue.toLong() in 50000L..1000000L) ||
                         (selectedOperator!!.code == 17 && amountValue.toLong() in 10000L..1000000L)
                     ) {
-                        onConfirm(
-                            phoneNumberValue,
-                            amountValue,
-                            Gson().toJson(selectedOperator).toString()
-                        )
+                        if (isValidPhoneNumber(phoneNumberValue))
+                        {
+                            onConfirm(
+                                phoneNumberValue,
+                                amountValue,
+                                Gson().toJson(selectedOperator).toString()
+                            )
+                        }
+                        else{
+                            mobileHasError = true
+                            mobileError = context.getString(R.string.mobile_is_not_valid)
+                        }
                     } else {
                         amountHasError = true
                         amountError = context.getString(R.string.amount_is_not_valid)

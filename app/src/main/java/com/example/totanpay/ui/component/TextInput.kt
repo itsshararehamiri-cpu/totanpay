@@ -28,6 +28,7 @@ import com.example.totanpay.ui.theme.TotanPayTheme
 @Composable
 fun TextInput(
     modifier: Modifier,
+    textInputModifier: Modifier=Modifier,
     title: String,
     value: String,
     hasError: Boolean = false,
@@ -59,7 +60,7 @@ fun TextInput(
                 .background(MaterialTheme.colorScheme.surface)
         ) {
             TextField(
-                modifier =Modifier.textFieldModifier(isSmall=isSmall)   .layoutId("textField")
+                modifier =textInputModifier.textFieldModifier(isSmall=isSmall)   .layoutId("textField")
                     .background(MaterialTheme.colorScheme.surface),
                 value = textFieldValue,
                 onValueChange = {
@@ -75,7 +76,7 @@ fun TextInput(
                         disabledContainerColor = MaterialTheme.colorScheme.surface
                     ),
                 keyboardOptions = KeyboardOptions(
-                    keyboardType = KeyboardType.Number, imeAction = ImeAction.Next
+                    keyboardType = KeyboardType.Number, imeAction = ImeAction.Next, showKeyboardOnFocus = false, autoCorrectEnabled = false
                 ),
                 keyboardActions = KeyboardActions(onNext = {
                     onNextClicked()
@@ -99,7 +100,7 @@ fun TextInputPreview() {
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
         ) {
-            TextInput(modifier = TextInputModifier,
+            TextInput(modifier = TextInputModifier,textInputModifier=Modifier,
                 title = "تایید",
                 hasError = true,
                 errorMessage = "09",

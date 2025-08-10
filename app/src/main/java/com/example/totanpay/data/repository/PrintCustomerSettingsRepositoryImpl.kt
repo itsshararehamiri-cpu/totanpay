@@ -10,6 +10,7 @@ class PrintCustomerSettingsRepositoryImpl @Inject constructor(
         printCustomerSettingsLocalDataSource.setPrinStatus(status)
         if (amount != null)
             printCustomerSettingsLocalDataSource.setMinimumAmountForPrint(amount)
+        else     printCustomerSettingsLocalDataSource.setMinimumAmountForPrint("")
     }
 
     override fun getPrintStatus(): PrintStatus {

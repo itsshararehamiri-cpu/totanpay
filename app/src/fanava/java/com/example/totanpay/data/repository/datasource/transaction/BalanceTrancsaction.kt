@@ -64,8 +64,12 @@ class BalanceTransaction(
             balance = balance,
             currency = receivedIsoMessage.getString(49) ?: "",
             rrn = receivedIsoMessage.rrn ?: "",
-            trace = if (receivedIsoMessage.hasField(38)) receivedIsoMessage.getString(38)
-                .trim() else request.stan.toString(),
+            trace = if (receivedIsoMessage.hasField(38)) {
+                receivedIsoMessage.getString(38)
+                    .trim()
+            } else {
+                request.stan.toString()
+            },
             availableBalance = availableBalance,
             issuerName = cardIssuer,
             date = sendMessage.tranDate,

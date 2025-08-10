@@ -1,6 +1,5 @@
 package com.example.totanpay.data.util
 
-import android.util.Log
 import saman.zamani.persiandate.PersianDate
 import java.text.SimpleDateFormat
 import java.util.Date

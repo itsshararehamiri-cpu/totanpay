@@ -5,7 +5,6 @@ import com.example.totanpay.data.repository.datasource.transaction.connection.IC
 import com.example.totanpay.data.repository.datasource.transaction.request.BaseTransactionRequest
 import com.example.totanpay.data.repository.datasource.transaction.response.BaseTransactionResponse
 import com.example.totanpay.data.repository.datasource.transaction.response.FailedTransactionResponse
-import org.jpos.iso.ISOUtil
 import org.jpos.iso.packager.ISO87BPackager
 
 
@@ -38,7 +37,6 @@ abstract class BaseTransaction(
     private suspend fun send(): IsoMessage? {
         try {
             connection.use { conn ->
-                println(" before start")
                 try {
                     conn.start()
                 } catch (e: Exception) {
@@ -48,12 +46,10 @@ abstract class BaseTransaction(
                     m.set(39, "-5")
                     return m
                 }
-                println(" after start")
                 if (isReversible) saveReverseData(sendMessage)
                 if (needReport) saveTransactionLog(sendMessage)
-                println(" before send")
-                Log.i("TAG", "sendMessage: ->${ISOUtil.hexString(sendMessage.pack())}")
                 try {
+                    sendMessage.dump(System.out,"sssen?")
                     conn.send(sendMessage)
                 } catch (e: Exception) {
                     Log.d("TAG", "send: ${e.cause}")
@@ -62,14 +58,11 @@ abstract class BaseTransaction(
                     m.set(39, "-6")
                     return m
                 }
-                println(" after send")
-                Log.i("TranBase", "before receive: ${sendMessage.getDump()}")
                 val receiveMsg: IsoMessage? = conn.receive()
-                Log.i("TranBase", "after receive: ${receiveMsg?.getDump()}")
                 if (receiveMsg?.hasField(48) == true) {
                     receiveMsg.setField48()
                 }
-                Log.i("TranBase", "Receivee: ${receiveMsg?.getDump()}")
+                receiveMsg?.dump(System.out,"hhhh")
                 return receiveMsg
             }
         } catch (e: Exception) {

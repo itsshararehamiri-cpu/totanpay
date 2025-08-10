@@ -768,7 +768,9 @@ class MainDataSourceImpl @Inject constructor(
             if (serialVoucher != null) transaction?.serialVoucher = serialVoucher
             if (mobileNumber != null) transaction?.mobileNumber = mobileNumber
             if (operatorCode != null) transaction?.operatorCode = operatorCode
-            if (trace != null) transaction?.stan = trace
+            if (trace != null){
+                transaction?.stan = trace.trim()
+            }
             if (transaction != null)
                 update(transaction)
         }

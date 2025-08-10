@@ -34,4 +34,8 @@ fun GetPinScreen(
         if (uiState.isCancel)
             onCancel()
     }
+    LaunchedEffect(uiState.isTimeOut) {
+        if (uiState.isTimeOut)
+            onCancel()
+    }
 }

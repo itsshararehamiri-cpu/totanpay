@@ -49,7 +49,6 @@
 //import com.example.totanpay.ui.theme.DeepBlue
 //import com.example.totanpay.ui.theme.Dimensions.PSP_LOGO_hEIGHT_RECEPINT
 //import com.example.totanpay.ui.theme.MARGIN_SIDE
-//import kotlinx.coroutines.delay
 //
 //@Composable
 //fun ReadCardContent(

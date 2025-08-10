@@ -1,5 +1,6 @@
 package com.example.totanpay.feature.settings
 
+import androidx.compose.ui.res.stringResource
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavGraphBuilder
 import androidx.navigation.NavHostController
@@ -8,6 +9,7 @@ import androidx.navigation.compose.navigation
 import androidx.navigation.navArgument
 import androidx.navigation.navOptions
 import com.example.totanpay.MainRoute
+import com.example.totanpay.R
 import com.example.totanpay.feature.reports.DetailsTransactionReportScreen
 import com.example.totanpay.feature.reports.LastTransactionReportScreen
 import com.example.totanpay.feature.reports.MenuReportScreen
@@ -284,7 +286,7 @@ fun NavGraphBuilder.settingNavigation(
             )
         }
         composable(route = "not_found_result") {
-            NotFoundResultScreen(onBackClicked = {
+            NotFoundResultScreen(title = stringResource(id = R.string.details_of_transactions),onBackClicked = {
                 navController.navigate(
                     "transactionBasedOnTransactionReport"
                 ) {

@@ -29,16 +29,15 @@ fun TopUpReceiptContent(
     isPaperReceipt: Boolean,
     result: ResponseTransaction?, printForCustomer: Boolean
 ) {
-    val context= LocalContext.current
+    val context = LocalContext.current
 
     Column(
         modifier =
-        Modifier.containerReceiptModifier(isPaperReceipt,context)
+        Modifier.containerReceiptModifier(isPaperReceipt, context)
     ) {
         val firstColor = if (isPaperReceipt) Color.Black else MaterialTheme.colorScheme.onSurface
         val modifierRowReceipt = Modifier.rowReceiptModifier(isPaperReceipt)
-        if (!isPaperReceipt)
-        {
+        if (!isPaperReceipt) {
             AddPSPLog(
                 modifier = Modifier.fillMaxWidth(),
                 color = firstColor,
@@ -64,12 +63,13 @@ fun TopUpReceiptContent(
             isPaperReceipt = isPaperReceipt
         )
         if (!result.mobile.isNullOrEmpty())
-            AddMobile(
-                modifier = Modifier.rowReceiptWithPSPLogoModifier(isPaperReceipt),
-                result.mobile,
-                isPaperReceipt = isPaperReceipt,
-                textColor = firstColor,
-            )
+            if (printForCustomer)
+                AddMobile(
+                    modifier = Modifier.rowReceiptWithPSPLogoModifier(isPaperReceipt),
+                    result.mobile,
+                    isPaperReceipt = isPaperReceipt,
+                    textColor = firstColor,
+                )
         AddMerchantIdTerminalId(
             modifier = modifierRowReceipt,
             merchantId = result.merchantId,
@@ -99,11 +99,12 @@ fun TopUpReceiptContent(
             isPaperReceipt = isPaperReceipt
         )
         AddAmount(
-            modifier = modifierRowReceipt, result.amount, if(isPaperReceipt) Color.Black else Green60,
+            modifier = modifierRowReceipt,
+            result.amount,
+            if (isPaperReceipt) Color.Black else Green60,
             isPaperReceipt = isPaperReceipt
         )
-        if (isPaperReceipt)
-        {
+        if (isPaperReceipt) {
             AddPSPLog(
                 modifier = Modifier.fillMaxWidth(),
                 color = firstColor,

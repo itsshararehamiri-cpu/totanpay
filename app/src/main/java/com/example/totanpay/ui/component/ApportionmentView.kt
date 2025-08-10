@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -26,7 +27,7 @@ import com.example.totanpay.common.isSmall
 import com.example.totanpay.data.repository.datasource.transaction.request.Apportionment
 import com.example.totanpay.ui.theme.Blue30
 import com.example.totanpay.ui.theme.Blue40
-import com.example.totanpay.ui.theme.DarkPurpule
+import com.example.totanpay.ui.theme.DeepBlue
 import com.example.totanpay.ui.theme.TotanPayTheme
 
 @Composable
@@ -61,14 +62,14 @@ fun ApportionmentView(
                         modifier = Modifier.size(24.dp),
                         contentDescription = "",
                         colorFilter = ColorFilter.tint(if(isSmall(context = LocalContext.current))
-                            Blue30 else DarkPurpule),
+                            Blue30 else DeepBlue),
                     )
                     Text(
                         text = "${apportionment.amount} %",
                         color = if(isSmall(context = LocalContext.current))
-                            Blue40 else DarkPurpule,
+                            Blue40 else DeepBlue,
                         textAlign = TextAlign.End,
-                        style = MaterialTheme.typography.labelLarge
+                        style = MaterialTheme.typography.labelLarge.copy(fontWeight = FontWeight.Bold, fontSize = 13.sp)
                     )
                 }
             } else {

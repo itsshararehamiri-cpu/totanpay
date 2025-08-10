@@ -144,7 +144,7 @@ fun TransactionBasedOnTraceReportContent(
             ) {
                 hasError = false
                 if (trace.isNotEmpty())
-                    onConfirm(trace)
+                    onConfirm(trace.trim())
                 else {
                     hasError = true
                 }
@@ -208,7 +208,7 @@ fun TransactionBasedOnTraceReportContent(
             }
         }
         if (uiState.showNotFounding && !uiState.showProgress) {
-            NotFoundTransaction(modifier = Modifier.layoutId("notFound")){
+            NotFoundTransaction(title = stringResource(id = R.string.report_based_on_trace),modifier = Modifier.layoutId("notFound")){
                 onBackClicked()
             }
         }

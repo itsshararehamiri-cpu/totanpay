@@ -1,9 +1,7 @@
 package com.example.totanpay.feature.purchase
 
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.totanpay.data.repository.MainRepository
 import com.example.totanpay.data.repository.PurchaseRepository
 import com.example.totanpay.data.repository.datasource.ResponseData
 import com.google.gson.Gson

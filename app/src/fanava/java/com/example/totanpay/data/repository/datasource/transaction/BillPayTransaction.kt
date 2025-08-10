@@ -105,7 +105,9 @@ class BillPayTransaction(
             rrn = receivedIsoMessage.rrn ?: "",
             trace = if (receivedIsoMessage.hasField(38)) {
                 receivedIsoMessage.getString(38)
-            } else request.stan.toString(),
+            } else {
+                request.stan.toString()
+            },
             date = sendMessage.tranDate,
             time = sendMessage.tranTime,
             issuerName = cardIssuer,

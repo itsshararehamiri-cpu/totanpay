@@ -3,7 +3,6 @@ package com.example.totanpay.common
 import android.content.Context
 import android.os.Build
 import android.util.DisplayMetrics
-import android.util.Log
 import com.example.totanpay.MainActivity
 
 fun isSmall(context:Context):Boolean{

@@ -59,7 +59,7 @@ fun TopUpSuccessResult(
     CountdownEffect(TIME_TO_FINISH_SUCCESS_RESULT) {
         onBackButtonClicked()
     }
-    if (uiState.result != null)
+    if (uiState.result != null && receiptBitmap==null)
         ReceiptUi(content = {
             TopUpReceiptContent(true, uiState.result, printForCustomer)
         }) {
@@ -73,6 +73,7 @@ fun TopUpSuccessResult(
             startPrint = false
             printCount++
             printForCustomer = false
+            receiptBitmap=null
         }
     }
     LaunchedEffect(receiptBitmap) {

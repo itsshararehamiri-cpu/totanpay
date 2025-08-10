@@ -1,7 +1,6 @@
 package com.example.totanpay.data.repository
 
 import android.content.Context
-import android.util.Log
 import com.example.totanpay.data.Operator
 import com.example.totanpay.data.repository.datasource.ConnectionSettingsDataSource
 import com.example.totanpay.data.repository.datasource.LocalTaxDataSource

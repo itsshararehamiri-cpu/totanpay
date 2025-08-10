@@ -90,7 +90,7 @@ fun SplashScreen(onShow: () -> Unit) {
     }
     LaunchedEffect(navigate) {
         if (navigate) {
-            delay(3000)
+            delay(2000)
             onShow()
         }
     }

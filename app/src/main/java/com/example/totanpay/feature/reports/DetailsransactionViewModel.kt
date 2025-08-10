@@ -9,7 +9,6 @@ import com.example.totanpay.data.repository.ReportRepository
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
 import com.example.totanpay.ui.getPersianDateFrom
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -37,8 +36,6 @@ class DetailsTransactionViewModel @Inject constructor(
     ) {
         viewModelScope.launch {
             _uiState.update { it.copy(showProgress = true) }
-            delay(1000)
-
             val transactions = reportRepository.getDetailsTransaction(
                 fromDate, toDate, fromAmount, toAmount, selectedTransactions
             )

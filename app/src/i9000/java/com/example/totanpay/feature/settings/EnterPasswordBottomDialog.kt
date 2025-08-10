@@ -38,15 +38,13 @@ import com.example.totanpay.ui.theme.MARGIN_SIDE
 @Composable
 fun EnterPasswordBottomDialog(
     modifier: Modifier,
-    errorMessage: String = "",
+    errorMessage: String ,
     onCancelButtonClicked: () -> Unit,
     onConfirmButtonClicked: (String) -> Unit
 ) {
-    var showToast by remember { mutableStateOf(false) }
+    var error by remember { mutableStateOf("") }
     LaunchedEffect(errorMessage) {
-        if (errorMessage.isNotEmpty()) {
-            showToast = true
-        }
+        error = errorMessage
     }
     ModalBottomSheet(
         onDismissRequest = { onCancelButtonClicked() },
@@ -64,9 +62,6 @@ fun EnterPasswordBottomDialog(
             mutableStateOf("")
         }
         var value4: String by remember {
-            mutableStateOf("")
-        }
-        var enteredCode: String by remember {
             mutableStateOf("")
         }
         var showError1 by remember {
@@ -132,8 +127,9 @@ fun EnterPasswordBottomDialog(
                 }
 
                 Keypad(
-                    Modifier.padding(horizontal = MARGIN_SIDE)
-                        .padding(top=45.dp)
+                    Modifier
+                        .padding(horizontal = MARGIN_SIDE)
+                        .padding(top = 45.dp)
                         .fillMaxWidth(), onKeyClicked = {
                         if (value1.isEmpty()) {
                             value1 = it
@@ -165,8 +161,12 @@ fun EnterPasswordBottomDialog(
                         showError2 = value2.isEmpty()
                         showError3 = value3.isEmpty()
                         showError4 = value4.isEmpty()
+                        error=""
                         if (value1.isNotEmpty() && value2.isNotEmpty() && value3.isNotEmpty() && value4.isNotEmpty()) {
                             onConfirmButtonClicked("$value1$value2$value3$value4")
+                        }
+                        else{
+                            error="رمز وارد نشده است"
                         }
 
                     })
@@ -181,12 +181,14 @@ fun EnterPasswordBottomDialog(
                     onCancelButtonClicked()
                 }
             }
-            if (showToast) {
+            if (error.isNotEmpty()) {
                 ShowToast(
-                    modifier = Modifier.padding(top = 80.dp).align(Alignment.Center),
-                    message = errorMessage
+                    modifier = Modifier
+                        .padding(top = 80.dp)
+                        .align(Alignment.Center),
+                    message = error
                 ) {
-                    showToast = false
+                    error=""
                 }
             }
         }

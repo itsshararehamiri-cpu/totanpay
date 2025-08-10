@@ -105,15 +105,18 @@ fun PurchaseUnSuccessResult(
             startPrint = true
         }
     }
-    if (receiptBitmap != null && startPrint) {
-        viewModel.printAndConfirm(bitmap = receiptBitmap!!, context = context)
-        startPrint = false
+   LaunchedEffect(startPrint,receiptBitmap) {
+        if (receiptBitmap != null && startPrint) {
+            viewModel.printAndConfirm(bitmap = receiptBitmap!!, context = context)
+            startPrint = false
+        }
     }
     CountdownEffect(TIME_TO_FINISH_SUCCESS_RESULT) {
         onBackButtonClicked()
     }
     if (uiState.result != null) {
-        ReceiptResultContainer(printTitle = stringResource(id = R.string.print_customer_receipt),
+        ReceiptResultContainer(
+            printTitle = stringResource(id = R.string.print_customer_receipt),
             onPrintButtonClicked = {
                 startPrint = true
             },
@@ -129,6 +132,7 @@ fun PurchaseUnSuccessResult(
         }
     }
 }
+
 @Composable
 fun UnSuccessReceiptContent(isPaperReceipt: Boolean, result: ResponseTransaction?) {
     val context = LocalContext.current
@@ -244,7 +248,8 @@ fun UnSuccessReceiptContent(isPaperReceipt: Boolean, result: ResponseTransaction
                     text = " مبلغ  طی 72 ساعت به حساب شما باز خواهد گشت",
                     textAlign = TextAlign.Center,
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = getFontSize(isPaperReceipt, context)),
+                        fontSize = getFontSize(isPaperReceipt, context)
+                    ),
                     modifier = modifierRowReceipt
                         .wrapContentWidth()
                         .align(Alignment.CenterHorizontally),

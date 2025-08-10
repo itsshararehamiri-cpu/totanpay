@@ -28,7 +28,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import com.example.totanpay.R
@@ -75,7 +74,7 @@ fun PriceTextInput(
                 .background(MaterialTheme.colorScheme.surface)
         ) {
             TextField(
-                modifier = Modifier.textFieldModifier(isSmall=isSmall)   .layoutId("textField")
+                modifier = Modifier.textFieldModifier(isSmall=isSmall) .layoutId("textField")
                     .background(MaterialTheme.colorScheme.surface),
                 value = textFieldValue,
                 onValueChange = {

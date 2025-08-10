@@ -14,7 +14,7 @@ val Red = Color(0XFFED1C22)//ff1234
 val Red100 = Color(0XFFfc4736)
 //val DarkRed = Color(0XFFFF383F)//ff1234
 val Green50 = Color(0xFF15A852)
-val Green60 = Color(0xFF06722B)
+val Green60 = Color(0xFF00B978)
 
 val Blackk=Color(0XFF030303)
 val DarkBlue=Color(0XFF003F6D)

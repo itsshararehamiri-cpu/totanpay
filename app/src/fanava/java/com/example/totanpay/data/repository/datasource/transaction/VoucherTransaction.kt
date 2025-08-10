@@ -96,9 +96,12 @@ class VoucherTransaction(
             indentBytes4Decrypt(decData),
             voucherSerial,
             null,
-            sendMessage.operatorCode.toInt(), "",    if (receivedIsoMessage.hasField(38)) {
+            sendMessage.operatorCode.toInt(), "",
+            if (receivedIsoMessage.hasField(38)) {
                 receivedIsoMessage.getString(38)
-            } else request.stan.toString(),
+            } else{
+                request.stan.toString()
+            },
         )
         return BaseTransactionResponse.VoucherTransactionResponse(
             responseCode = 0,
@@ -106,7 +109,9 @@ class VoucherTransaction(
             reasonCode = null,
             rrn = receivedIsoMessage.rrn ?: "",
             trace = if (receivedIsoMessage.hasField(38)) receivedIsoMessage.getString(38)
-                .toString() else request.stan.toString(),
+                .toString() else{
+                    request.stan.toString()
+            },
             date = sendMessage.tranDate,
             time = sendMessage.tranTime,
             issuerName = cardIssuer,

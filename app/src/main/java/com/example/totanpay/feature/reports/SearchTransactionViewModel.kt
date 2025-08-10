@@ -7,7 +7,6 @@ import com.example.totanpay.data.repository.DeviceRepository
 import com.example.totanpay.data.repository.ReportRepository
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -26,7 +25,6 @@ class SearchTransactionViewModel @Inject constructor(private val reportRepositor
     fun search(stan: String) {
         viewModelScope.launch {
             _uiState.update { it.copy(showProgress = true,isInitState=false) }
-            delay(2000)
             val searchedTransaction = reportRepository.geTransactionBasedStan(stan)
             if (searchedTransaction != null)
                 _uiState.update { it.copy(result = searchedTransaction, showProgress = false, showNotFounding = false) }

@@ -24,8 +24,8 @@ fun DateHeader(dateTransaction: String, isPaperReceipt: Boolean = false) {
         modifier = Modifier
             .padding(
                 top = 3.dp,
-                start = if (isPaperReceipt) 0.dp else 7.dp,
-                end = if (isPaperReceipt) 0.dp else 7.dp
+                start = if (isPaperReceipt) 3.dp else 7.dp,
+                end = if (isPaperReceipt) 3.dp else 7.dp
             )
             .fillMaxWidth()
             .padding(top = 3.dp),

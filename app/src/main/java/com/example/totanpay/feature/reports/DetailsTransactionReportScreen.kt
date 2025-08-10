@@ -21,7 +21,8 @@ fun DetailsTransactionReportScreen(
     BackHandler {
         onBackClicked()
     }
-    DetailTransactionReportContent(onBackButtonClicked = { onBackClicked() }) { fromDateValue, toDateValue, fromAmount, toAmount, selectedTransactions ->
+    DetailTransactionReportContent(onBackButtonClicked = { onBackClicked() }) { fromDateValue, toDateValue,
+                                                                                fromAmount, toAmount, selectedTransactions ->
         onSearchTransaction(
             fromDateValue,
             toDateValue,

@@ -1,5 +1,6 @@
 package com.example.totanpay.feature.bill
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -17,6 +18,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusDirection
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
@@ -59,6 +62,25 @@ fun MainBillScreen(
 
     var showToast by remember { mutableStateOf(false) }
     var showErrorMessage by remember { mutableStateOf("") }
+    val focusManager = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
+    val context = LocalContext.current
+    val billIdFocusRequester = remember { FocusRequester() }
+    val payIdFocusRequester = remember { FocusRequester() }
+    BackHandler {
+        billIdFocusRequester.freeFocus()
+        payIdFocusRequester.freeFocus()
+        focusManager.clearFocus(true)
+        keyboard?.hide()
+        onBackClicked()
+    }
+    LaunchedEffect(Unit) {
+        billIdFocusRequester.freeFocus()
+        payIdFocusRequester.freeFocus()
+        focusManager.clearFocus(force = true)
+        keyboard?.hide()
+
+    }
     LaunchedEffect(uiState) {
         if (uiState.barcode.isNotEmpty()) {
             if (uiState.barcode.length == 26) {
@@ -67,9 +89,6 @@ fun MainBillScreen(
             }
         }
     }
-    val focusManager = LocalFocusManager.current
-    val keyboard = LocalSoftwareKeyboardController.current
-    val context = LocalContext.current
     Box(modifier = Modifier.fillMaxSize()) {
         ConstraintLayout(
             ConstraintSet {
@@ -112,6 +131,9 @@ fun MainBillScreen(
                 title = stringResource(id = R.string.bill_payment), modifier = BackButtonModifier
                     .layoutId("toolBar")
             ) {
+
+                focusManager.clearFocus(true)
+                keyboard?.hide()
                 onBackClicked()
             }
             Box(modifier = Modifier
@@ -138,7 +160,7 @@ fun MainBillScreen(
                 )
             }
 
-            TextInput(
+            TextInput(textInputModifier = Modifier.focusRequester(billIdFocusRequester),
                 modifier = TextInputModifier
                     .layoutId("billId"),
                 hasError = billIdHasError, errorMessage = billIdError,
@@ -152,7 +174,7 @@ fun MainBillScreen(
                 onNextClicked = {
                     focusManager.moveFocus(FocusDirection.Next)
                 })
-            TextInput(
+            TextInput(textInputModifier = Modifier.focusRequester(payIdFocusRequester),
                 modifier = TextInputModifier
                     .layoutId("payId"),
                 hasError = payIdHasError, errorMessage = payIdError,
@@ -164,7 +186,8 @@ fun MainBillScreen(
                     keyboard?.hide()
                 })
             MainButton(
-                modifier=Modifier.mainButtonModifier(isSmall = false)
+                modifier=Modifier
+                    .mainButtonModifier(isSmall = false)
                     .layoutId("confirm")
             ) {
                 billIdHasError=false

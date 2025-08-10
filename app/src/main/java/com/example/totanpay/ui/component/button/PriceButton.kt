@@ -50,19 +50,33 @@ fun PriceButton(
             )
             .clip(RoundedCornerShape(8.dp))
     ) {
-        Image(
-            modifier = Modifier
-                .padding(start = 10.dp)
-                .size(28.dp)
-                .align(Alignment.CenterVertically),
-            painter = painterResource(
-                id = if (selected) R.drawable.ic_selected_price else
-                    R.drawable.ic_unselected_amount
-            ),
-            contentDescription = title,
-            colorFilter = if (selected) ColorFilter.tint(MaterialTheme.colorScheme.primary)
-            else ColorFilter.tint(MaterialTheme.colorScheme.outlineVariant.copy(alpha = 0.7f))
-        )
+        if(!selected){
+            Image(
+                modifier = Modifier
+                    .padding(start = 10.dp)
+                    .size(28.dp)
+                    .align(Alignment.CenterVertically),
+                painter = painterResource(
+                    id =
+                        R.drawable.ic_unselected_amount
+                ),
+                contentDescription = title,
+                colorFilter =  ColorFilter.tint(MaterialTheme.colorScheme.primary)
+            )
+        }
+        else{
+            Image(
+                modifier = Modifier
+                    .padding(start = 10.dp)
+                    .size(28.dp)
+                    .align(Alignment.CenterVertically),
+                painter = painterResource(
+                    id =  R.drawable.ic_selected_price
+                ),
+                contentDescription = title,
+                colorFilter =  ColorFilter.tint(MaterialTheme.colorScheme.primary)
+            )
+        }
         Spacer(Modifier.weight(1f))
         Text(
             modifier = Modifier

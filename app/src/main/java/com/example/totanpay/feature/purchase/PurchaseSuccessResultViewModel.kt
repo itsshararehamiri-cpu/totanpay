@@ -2,7 +2,6 @@ package com.example.totanpay.feature.purchase
 
 import android.content.Context
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.totanpay.common.ResultTransactionUiState

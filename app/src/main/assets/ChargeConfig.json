@@ -15,7 +15,7 @@
 			"operatorName":"رایتل",
 			"operatorCode":"Rightel",
 			"dynamicValue":0,
-			"chargeList":[10000,50000,100000,200000]
+			"chargeList":[50000,100000,200000]
 		},
 		{
 			"code":11,

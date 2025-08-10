@@ -44,7 +44,6 @@ import com.example.totanpay.common.PlaybackSoundEffect
 import com.example.totanpay.data.util.formatAmount
 import com.example.totanpay.ui.CancelButtonModifier
 import com.example.totanpay.ui.component.CancelButton
-import com.example.totanpay.ui.component.ShowErrorMessage
 import com.example.totanpay.ui.component.ShowToast
 import com.example.totanpay.ui.theme.DeepBlue
 import com.example.totanpay.ui.theme.Dimensions.PSP_LOGO_hEIGHT_RECEPINT
@@ -232,7 +231,7 @@ fun ReadCardContent(
                         style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold)
                     )
                     Text(
-                        text = "1440".formatAmount(),
+                        text = "1800".formatAmount(),
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier,
                         style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold)
