@@ -6,7 +6,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -15,10 +14,8 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.platform.LocalLayoutDirection
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.DpSize
-import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -26,9 +23,9 @@ import androidx.constraintlayout.compose.ConstraintSet
 import com.commandiron.wheel_picker_compose.WheelTimePicker
 import com.commandiron.wheel_picker_compose.core.TimeFormat
 import com.commandiron.wheel_picker_compose.core.WheelPickerDefaults
+import com.example.totanpay.R
 import com.example.totanpay.common.mainButtonModifier
 import com.example.totanpay.ui.component.button.MainButton
-import com.example.totanpay.ui.theme.TotanPayTheme
 import java.time.LocalTime
 
 @Composable
@@ -42,14 +39,13 @@ fun SelectWheelTimePicker(isSmall:Boolean,onTimeSelected: (String) -> Unit) {
     }
 
     if (rangeError) {
-        Toast.makeText(context, "بازه انتخابی درست نمی باشد", Toast.LENGTH_SHORT).show()
+        Toast.makeText(context, stringResource(R.string.select_range_is_not_correct), Toast.LENGTH_SHORT).show()
     }
     Box(
         modifier = Modifier
             .fillMaxSize()
             .background(MaterialTheme.colorScheme.surface)
     ) {
-        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
             ConstraintLayout(
                 ConstraintSet {
                     val timePicker = createRefFor("timePicker")
@@ -97,14 +93,7 @@ fun SelectWheelTimePicker(isSmall:Boolean,onTimeSelected: (String) -> Unit) {
                     onTimeSelected(time.toString())
                 }
             }
-        }
+
     }
 }
 
-@Composable
-@Preview
-fun SelectWheelTimePickerPreview() {
-    TotanPayTheme {
-         SelectWheelTimePicker(isSmall = false, onTimeSelected = {})
-    }
-}

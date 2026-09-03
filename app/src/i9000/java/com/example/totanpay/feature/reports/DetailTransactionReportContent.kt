@@ -30,6 +30,7 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -83,6 +84,7 @@ fun DetailTransactionReportContent(
     val focusManager = LocalFocusManager.current
     val keyboard = LocalSoftwareKeyboardController.current
 
+    val context= LocalContext.current
     BackHandler {
         onBackButtonClicked()
     }
@@ -324,25 +326,25 @@ fun DetailTransactionReportContent(
                     style = MaterialTheme.typography.bodyLarge
                 )
                 TransactionTypeCheckbox(modifier = Modifier.layoutId("purchase"),
-                    title = TransactionType.PURCHASE.title,
+                    title =context.getString( TransactionType.PURCHASE.title),
                     isChecked = purchaseIsSelected,
                     onCheckedChange = {
                         purchaseIsSelected = it
                     })
                 TransactionTypeCheckbox(modifier = Modifier.layoutId("voucher"),
-                    title = TransactionType.VOUCHER.title,
+                    title = context.getString(TransactionType.VOUCHER.title),
                     isChecked = voucherIsSelected,
                     onCheckedChange = {
                         voucherIsSelected = it
                     })
                 TransactionTypeCheckbox(modifier = Modifier.layoutId("topup"),
-                    title = TransactionType.TOPUP.title,
+                    title = context.getString(TransactionType.TOPUP.title),
                     isChecked = topUpIsSelected,
                     onCheckedChange = {
                         topUpIsSelected = it
                     })
                 TransactionTypeCheckbox(modifier = Modifier.layoutId("billPay"),
-                    title = TransactionType.BILL_PAY.title,
+                    title = context.getString(TransactionType.BILL_PAY.title),
                     isChecked = billPayIsSelected,
                     onCheckedChange = {
                         billPayIsSelected = it
@@ -389,7 +391,7 @@ fun DetailTransactionReportContent(
                         .layoutId("fromAmount"),
                     hasError = false,
                     errorMessage = "",
-                    title = "از مبلغ",
+                    title = stringResource(R.string.from_amount),
                     trailerTitle = stringResource(id = R.string.currency),
                     value = fromAmountValue,
                     onNextClicked = {
@@ -404,7 +406,7 @@ fun DetailTransactionReportContent(
                         .layoutId("toAmount"),
                     hasError = false,
                     errorMessage = "",
-                    title = "تا مبلغ",
+                    title = stringResource(R.string.to_amount),
                     trailerTitle = stringResource(id = R.string.currency),
                     value = toAmountValue,
                     onNextClicked = {
@@ -483,21 +485,11 @@ fun DetailTransactionReportContent(
         if (showToast) {
             ShowToast(
                 modifier = Modifier.align(Alignment.BottomCenter),
-                message = "هیچ تراکنشی انتخاب نشده است!"
+                message = stringResource(R.string.no_transactions_selected)
             ) {
                 showToast = false
             }
         }
     }
 
-}
-
-
-@Composable
-@Preview
-fun DetailTransactionReportContentPreview() {
-    TotanPayTheme {
-        DetailTransactionReportContent(onBackButtonClicked = {}) { from, to, fromAmount, toAmount, selectedTransactions ->
-        }
-    }
 }

@@ -91,9 +91,7 @@ fun ApportionmentContent(
                     .padding(PaddingValues(top = 10.dp, bottom = 10.dp))
                     .align(Alignment.TopCenter)
             ) {
-                items(uiState.apportionments, key = {
-                    it.IBAN
-                }) {
+                items(uiState.apportionments) {
                     ApportionmentView(it, onAddApportionment = {
                         showAddAmountDialog = true
                         selectedApportioment = it
@@ -114,7 +112,7 @@ fun ApportionmentContent(
         if (showToast) {
             ShowToast(
                 modifier = Modifier.align(Alignment.Center),
-                message = if (showToast) "کلمه عبور تعیین نشده است."
+                message = if (showToast) stringResource(R.string.no_password_has_been_set)
                 else ""
             ) {
                 showToast = false
@@ -144,7 +142,7 @@ fun ApportionmentContent(
         if (uiState.showErrorInPercent) {
             ShowToast(
                 modifier = Modifier.align(Alignment.Center),
-                message = if (uiState.showErrorInPercent) "جمع درصدها باید برابر با 100 باشد."
+                message = if (uiState.showErrorInPercent)stringResource(R.string.the_total_of_percentages_must_be_equal_to_on_houndred)
                 else ""
             ) {
                 // showToast = false

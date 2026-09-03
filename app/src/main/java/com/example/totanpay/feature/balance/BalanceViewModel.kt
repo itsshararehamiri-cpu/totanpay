@@ -2,7 +2,7 @@ package com.example.totanpay.feature.balance
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.totanpay.data.repository.BalanceRepository
+import com.example.totanpay.data.repository.balance.BalanceRepository
 import com.example.totanpay.data.repository.datasource.ResponseData
 import com.example.totanpay.data.repository.datasource.TotanPayException
 import com.google.gson.Gson
@@ -30,6 +30,8 @@ class BalanceViewModel @Inject constructor(private val balanceRepository: Balanc
                     )
                 }
             } else {
+                if(result.data!=null)
+                {
                     _uiState.update {
                         it.copy(
                             response = Gson().toJson(result.data),
@@ -37,6 +39,10 @@ class BalanceViewModel @Inject constructor(private val balanceRepository: Balanc
                             isSuccessful = false
                         )
                     }
+                }
+                else{
+                    _uiState.update { it.copy(connectionError = true) }
+                }
             }
         }
     }
@@ -46,5 +52,6 @@ data class BalanceUiState(
     val response: String = "",
     val isSuccessful: Boolean = false,
     val isUnSuccessful: Boolean = false,
+    val connectionError: Boolean=false
 
     )

@@ -90,24 +90,3 @@ fun TextInput(
         }
     }
 }
-
-@Composable
-@Preview
-fun TextInputPreview() {
-    TotanPayTheme {
-        Column(
-            Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-            TextInput(modifier = TextInputModifier,textInputModifier=Modifier,
-                title = "تایید",
-                hasError = true,
-                errorMessage = "09",
-                value = "183698798", isSmall = false,
-                onNextClicked = {},
-                onValueChange = {})
-        }
-
-    }
-}

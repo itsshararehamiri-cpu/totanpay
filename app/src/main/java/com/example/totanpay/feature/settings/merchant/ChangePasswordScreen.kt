@@ -29,12 +29,3 @@ fun ChangeMerchantPasswordScreen(
         viewModel.setMerchantPassword(it)
     }
 }
-
-
-@Composable
-@Preview
-fun SleepingModeDeviceScreenPreview() {
-    TotanPayTheme {
-        // ChangeMerchantPasswordScreen(){}
-    }
-}

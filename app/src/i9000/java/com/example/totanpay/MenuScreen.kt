@@ -2,6 +2,11 @@ package com.example.totanpay
 
 import android.graphics.Bitmap
 import androidx.activity.compose.BackHandler
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
+import androidx.compose.animation.slideInVertically
+import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -11,6 +16,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.CircularProgressIndicator
@@ -21,6 +27,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -35,7 +42,6 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -53,13 +59,14 @@ import com.example.totanpay.feature.purchase.UnSuccessReceiptContent
 import com.example.totanpay.feature.settings.EnterPasswordBottomDialog
 import com.example.totanpay.feature.topup.TopUpReceiptContent
 import com.example.totanpay.feature.voucher.VoucherReceiptContent
+import com.example.totanpay.receipt.ReceiptType
 import com.example.totanpay.receipt.ReceiptUi
 import com.example.totanpay.ui.component.ShowToast
 import com.example.totanpay.ui.component.button.HamburgerButton
 import com.example.totanpay.ui.component.compound.MenuItem
 import com.example.totanpay.ui.component.compound.PurchaseContainer
+import com.example.totanpay.ui.component.dialog.PrintConfirmDialog
 import com.example.totanpay.ui.component.dialog.SettingsDataTimeDialog
-import com.example.totanpay.ui.theme.TotanPayTheme
 
 @Composable
 fun MenuScreen(
@@ -73,30 +80,44 @@ fun MenuScreen(
     onBackClicked: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isFarsiSelected = LocalLanguageState.current.isFarsiSelected.value
     val context = LocalContext.current
     var receiptBitmap: Bitmap? by remember { mutableStateOf(null) }
     var purchaseIdValue: String? by remember { mutableStateOf(null) }
     var amountValue: String by remember { mutableStateOf("") }
+    val hasSettleAdvice by viewModel.hasSettleAdvice.collectAsState()
     LaunchedEffect(Unit) {
         viewModel.init(context)
     }
     if (uiState.lastTransactionIsNotPrinted != null) {
         ReceiptUi(content = {
-            if (uiState.lastTransactionIsNotPrinted!!.responseCode == "00") {
+            if (uiState.lastTransactionIsNotPrinted!!.responseCode == "00" || uiState.lastTransactionIsNotPrinted!!.responseCode == "0") {
                 if (uiState.lastTransactionIsNotPrinted!!.transactionType == TransactionType.PURCHASE.title) {
-                    ReceiptContent(true, uiState.lastTransactionIsNotPrinted!!, true)
+                    ReceiptContent(
+                        true,
+                        uiState.lastTransactionIsNotPrinted!!,
+                        ReceiptType.CUSTOMER_RECEIPT
+                    )
                 }
                 if (uiState.lastTransactionIsNotPrinted!!.transactionType == TransactionType.VOUCHER.title) {
-                    VoucherReceiptContent(true, uiState.lastTransactionIsNotPrinted, true)
+                    VoucherReceiptContent(
+                        true,
+                        uiState.lastTransactionIsNotPrinted,
+                        ReceiptType.CUSTOMER_RECEIPT
+                    )
                 }
                 if (uiState.lastTransactionIsNotPrinted!!.transactionType == TransactionType.TOPUP.title) {
-                    TopUpReceiptContent(true, uiState.lastTransactionIsNotPrinted, true)
+                    TopUpReceiptContent(
+                        true,
+                        uiState.lastTransactionIsNotPrinted,
+                        ReceiptType.CUSTOMER_RECEIPT
+                    )
                 }
                 if (uiState.lastTransactionIsNotPrinted!!.transactionType == TransactionType.BILL_PAY.title) {
                     BillPaymentReceiptContent(
                         isPaperReceipt = true,
                         result = uiState.lastTransactionIsNotPrinted,
-                        true
+                        receiptType = ReceiptType.CUSTOMER_RECEIPT
                     )
                 }
             } else {
@@ -106,13 +127,16 @@ fun MenuScreen(
             receiptBitmap = it
         }
     }
+    var errorInPrint by remember { mutableStateOf("") }
     LaunchedEffect(receiptBitmap) {
         if (receiptBitmap != null)
             viewModel.print(
                 bitmap = receiptBitmap!!,
                 context = context,
                 onSuccess = {},
-                onFailed = {})
+                onFailed = {
+                    errorInPrint = it
+                })
     }
     LaunchedEffect(uiState.purchase) {
         if (uiState.purchase) {
@@ -142,8 +166,21 @@ fun MenuScreen(
         if (uiState.isExit)
             (context as MainActivity).finish()
     }
+    if (errorInPrint.isNotEmpty()) {
+        ShowToast(
+            modifier = Modifier//.align(Alignment.BottomCenter),
+            , message = errorInPrint
+        ) {
+            errorInPrint = ""
+        }
+    }
     MenuContent(
+        isFarsiSelected = isFarsiSelected,
         uiState = uiState,
+        hasSettleAdvice,
+        sendAdviceReverse = {
+            viewModel.sendAdviceReverse()
+        },
         onPurchaseSelected = { amount, purchaseId ->
             amountValue = amount
             purchaseIdValue = purchaseId
@@ -173,17 +210,25 @@ fun MenuScreen(
         },
 
         validateExitPassword = {
-            viewModel.checkExistPassword(it)
+            viewModel.checkExistPassword(it, context)
         },
         hideMessageNeedToSetApportionment = {
             viewModel.hideMessageNeedToSetApportionment()
+        }, onCancelTransaction = {
+            viewModel.cancelTransaction()
+        },
+        onContinueTransaction = {
+            viewModel.continueTransaction()
         })
 }
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun MenuContent(
+    isFarsiSelected: Boolean,
     uiState: MenuUiState,
+    hasSettleAdvice: Boolean,
+    sendAdviceReverse: () -> Unit,
     onPurchaseSelected: (String, String) -> Unit,
     onBalanceSelected: () -> Unit,
     onBillPaySelected: () -> Unit,
@@ -195,7 +240,9 @@ fun MenuContent(
     hideSwitchIsNotAvailableMessage: () -> Unit,
     validateExitPassword: (String) -> Unit,
     hideExitPasswordDialog: () -> Unit,
-    hideMessageNeedToSetApportionment: () -> Unit
+    hideMessageNeedToSetApportionment: () -> Unit,
+    onContinueTransaction:()-> Unit,
+    onCancelTransaction:()-> Unit
 
 ) {
     var amount: String by remember { mutableStateOf("") }
@@ -212,6 +259,7 @@ fun MenuContent(
     val keyboard = LocalSoftwareKeyboardController.current
     val focusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
+    val context = LocalContext.current
     BackHandler {
         showExitPasswordDialog = true
     }
@@ -239,6 +287,7 @@ fun MenuContent(
                 val voucherBox = createRefFor("voucherBox")
                 val topUpBox = createRefFor("topUpBox")
                 val progress = createRefFor("progress")
+
                 constrain(hamburgerButton) {
                     top.linkTo(parent.top, 20.dp)
                     end.linkTo(parent.end, 20.dp)
@@ -320,7 +369,7 @@ fun MenuContent(
                 contentDescription = ""
             )
             Text(
-                text = uiState.merchantName,
+                text = if (isFarsiSelected) uiState.merchantName else uiState.englishMerchantName,
                 modifier = Modifier.layoutId("merchantName"),
                 color = MaterialTheme.colorScheme.onBackground,
                 style = MaterialTheme.typography.bodyMedium.copy(fontSize = 13.sp)
@@ -352,7 +401,8 @@ fun MenuContent(
                     .wrapContentHeight()
                     .layoutId("purchaseBox")
             ) {
-                PurchaseContainer(textInputModifier=Modifier.focusRequester(focusRequester),
+                PurchaseContainer(
+                    textInputModifier = Modifier.focusRequester(focusRequester),
                     modifier = Modifier.fillMaxWidth(),
                     amountHasError = amountHasError,
                     amount = amount,
@@ -438,10 +488,11 @@ fun MenuContent(
                         onBillPaySelected()
                     }
                     .layoutId("billPayBox"),
-                backgroundImageId = R.drawable.main_item_background_to_left,
+                backgroundImageId = if (isFarsiSelected)
+                    R.drawable.main_item_background_to_left else R.drawable.main_item_background_to_right,
                 iconId = R.drawable.ic_bill,
                 backgroundIconId = R.drawable.background_bill,
-                title = TransactionType.BILL_PAY.title
+                title = context.getString(TransactionType.BILL_PAY.title)
             )
             MenuItem(
                 modifier = Modifier
@@ -450,10 +501,11 @@ fun MenuContent(
                         onBalanceSelected()
                     }
                     .layoutId("balanceBox"),
-                backgroundImageId = R.drawable.main_item_background_to_right,
+                backgroundImageId = if (isFarsiSelected)
+                    R.drawable.main_item_background_to_right else R.drawable.main_item_background_to_left,
                 iconId = R.drawable.ic_balance,
                 backgroundIconId = R.drawable.background_balance,
-                title = TransactionType.BALANCE.title
+                title = context.getString(TransactionType.BALANCE.title)
             )
 
 
@@ -464,10 +516,11 @@ fun MenuContent(
                         onTopUpSelected()
                     }
                     .layoutId("topUpBox"),
-                backgroundImageId = R.drawable.main_item_background_to_left,
+                backgroundImageId = if (isFarsiSelected)
+                    R.drawable.main_item_background_to_left else R.drawable.main_item_background_to_right,
                 iconId = R.drawable.ic_topup,
                 backgroundIconId = R.drawable.background_topup,
-                title = TransactionType.TOPUP.title
+                title = context.getString(TransactionType.TOPUP.title)
             )
             MenuItem(
                 modifier = Modifier
@@ -476,11 +529,34 @@ fun MenuContent(
                         onVoucherSelected()
                     }
                     .layoutId("voucherBox"),
-                backgroundImageId = R.drawable.main_item_background_to_right,
+                backgroundImageId = if (isFarsiSelected)
+                    R.drawable.main_item_background_to_right
+                else R.drawable.main_item_background_to_left,
                 iconId = R.drawable.ic_voucher,
                 backgroundIconId = R.drawable.background_voucher,
-                title = TransactionType.VOUCHER.title
+                title = context.getString(TransactionType.VOUCHER.title)
             )
+        }
+        if (hasSettleAdvice) {
+            //Box(modifier = Modifier.layoutId("syncBanner")) {
+            AnimatedVisibility(
+                enter = fadeIn() + slideInVertically { it / 2 },
+                exit = fadeOut() + slideOutVertically { it / 2 },
+                visible = hasSettleAdvice,
+                modifier = Modifier
+                    .statusBarsPadding()
+                    .fillMaxWidth()
+                    .align(Alignment.TopCenter)
+            ) {
+                SettlementBanner(
+                    // count = uiState.pendingDataCount,
+                    isSyncing = uiState.isSyncing,
+                    onActionClicked = {
+                        sendAdviceReverse()
+                    }
+                )
+            }
+            //}
         }
         if (uiState.showInternetIsNotAvailableMessage) {
             ShowToast(
@@ -509,9 +585,19 @@ fun MenuContent(
         if (uiState.showBatteryStatusMessage) {
             ShowToast(
                 modifier = Modifier.align(Alignment.BottomCenter),
-                message = "امکان چاپ وجود ندارد"
+                message = stringResource(R.string.unable_to_print)
             ) {
 
+            }
+        }
+        if (uiState.showPrinterError) {
+            PrintConfirmDialog(
+                isVisible = uiState.showPrinterError,
+                message = uiState.printerError,
+                onDismiss = {
+                    onCancelTransaction()
+                }) {
+                onContinueTransaction()
             }
         }
         val bottomSheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true)
@@ -556,33 +642,12 @@ fun MenuContent(
         }
         if (uiState.showMessageNeedToSetApportionment) {
             SettingsDataTimeDialog(
-                titleMessage = "لطفا به قسمت مدیریت حساب ها بروید و سهم هر شماره حساب را تعیین کنید.",
+                titleMessage = stringResource(R.string.please_go_to_account_management_section_and_determine_share_of_each_account_number),
                 onDismiss = {
                 },
                 onConfirmButtonClicked = {
                     hideMessageNeedToSetApportionment()
                 })
         }
-    }
-}
-
-@Composable
-@Preview
-fun MainScreenPreview() {
-    TotanPayTheme {
-        MenuContent(
-            uiState = MenuUiState(),
-            onPurchaseSelected = { _, _ -> },
-            onBalanceSelected = {},
-            onVoucherSelected = {},
-            onTopUpSelected = {},
-            onBillPaySelected = {},
-            onSettingsClicked = {},
-            onHideConfigurationIsNotCompletedMessage = {},
-            hideInternetIsNotAvailableMessage = {},
-            hideSwitchIsNotAvailableMessage = {},
-            hideExitPasswordDialog = {},
-            validateExitPassword = {},
-            hideMessageNeedToSetApportionment = {})
     }
 }

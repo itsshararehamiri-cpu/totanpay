@@ -144,17 +144,3 @@ fun ConfirmDialog(isSmall:Boolean,
         }
     }
 }
-
-@Composable
-@Preview
-fun ConfirmDialogPreview() {
-    TotanPayTheme {
-        Column(
-            Modifier
-                .fillMaxSize()
-                .background(Color.White)
-        ) {
-            ConfirmDialog(isSmall = true, onConfirmButtonClicked = {}, onCancelButtonClicked = {})
-        }
-    }
-}

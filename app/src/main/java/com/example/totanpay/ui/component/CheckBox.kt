@@ -43,14 +43,4 @@ fun TransactionTypeCheckbox(
     }
 }
 
-@Preview(showBackground = true)
-@Composable
-fun PreviewSimpleCheckbox() {
-    Column(modifier = Modifier.background(MaterialTheme.colorScheme.background)) {
-        TransactionTypeCheckbox("خرید", modifier
-        = Modifier.wrapContentSize(), isChecked = false){
 
-        }
-
-    }
-}

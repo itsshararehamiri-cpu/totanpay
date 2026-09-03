@@ -82,7 +82,7 @@ fun TransactionRow(
     ) {
 
         Text(
-            text = transaction.transactionType,
+            text = context.getString(transaction.transactionType),
             modifier = Modifier.layoutId("type"),
             color = textColor, style = MaterialTheme.typography.titleSmall.copy(
                 fontSize =  getFontSize(isPaperReceipt,context),
@@ -136,18 +136,4 @@ fun TransactionRow(
         )
     }
 }
-@Composable
-@Preview
-fun TransactionRowPreview() {
-    TotanPayTheme {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-//            TransactionRow(index = 1,
-//              transaction =  null
-//            )
-        }
-    }
-}
+

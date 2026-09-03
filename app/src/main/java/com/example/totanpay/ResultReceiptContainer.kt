@@ -17,7 +17,8 @@ import com.example.totanpay.common.resultLogoMoifier
 import com.example.totanpay.ui.component.ResultLogo
 
 @Composable
-fun ResultReceiptContainer(modifier:Modifier,isPaperReceipt:Boolean,isSuccess:Boolean, content: @Composable () -> Unit){
+fun ResultReceiptContainer(modifier:Modifier,isPaperReceipt:Boolean,isSuccess:Boolean,
+                           content: @Composable () -> Unit){
 
     Box(
         modifier = modifier.ReceiptResultModifier(isPaperReceipt)

@@ -6,7 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.totanpay.data.Operator
 import com.example.totanpay.data.repository.MainRepository
-import com.example.totanpay.data.repository.TopUpRepository
+import com.example.totanpay.data.repository.topup.TopUpRepository
 import com.example.totanpay.data.repository.datasource.ResponseData
 import com.example.totanpay.feature.purchase.PurchaseUiState
 import com.google.gson.Gson
@@ -32,7 +32,13 @@ class TopUpViewModel @Inject constructor(private val topUpRepository: TopUpRepos
                 _uiState.update { it.copy(response = Gson().toJson(result.data), isSuccessful = true) }
             }
             else{
-                _uiState.update { it.copy(response = Gson().toJson(result.data), isUnSuccessful = true) }
+                if(result.data!=null)
+                {
+                    _uiState.update { it.copy(response = Gson().toJson(result.data), isUnSuccessful = true) }
+                }
+                else{
+                    _uiState.update { it.copy(connectionError = true) }
+                }
             }
         }
     }

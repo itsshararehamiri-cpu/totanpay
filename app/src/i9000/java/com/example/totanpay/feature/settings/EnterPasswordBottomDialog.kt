@@ -21,6 +21,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -43,6 +44,7 @@ fun EnterPasswordBottomDialog(
     onConfirmButtonClicked: (String) -> Unit
 ) {
     var error by remember { mutableStateOf("") }
+    val context= LocalContext.current
     LaunchedEffect(errorMessage) {
         error = errorMessage
     }
@@ -166,7 +168,7 @@ fun EnterPasswordBottomDialog(
                             onConfirmButtonClicked("$value1$value2$value3$value4")
                         }
                         else{
-                            error="رمز وارد نشده است"
+                            error=context.getString(R.string.password_not_entered)
                         }
 
                     })

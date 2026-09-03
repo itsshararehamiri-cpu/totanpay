@@ -19,6 +19,7 @@ import androidx.compose.ui.unit.dp
 import com.example.totanpay.R
 import com.example.totanpay.common.isSmall
 import com.example.totanpay.common.receipt.AddPSPLog
+import com.example.totanpay.common.receipt.AddSumOfAllTransactions
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
 import com.example.totanpay.ui.component.report.DateHeader
 import com.example.totanpay.ui.component.report.HeaderRow
@@ -27,7 +28,8 @@ import com.example.totanpay.ui.theme.Black
 
 @Composable
 fun ReportAll(
-    results: List<ResponseTransaction>
+    results: List<ResponseTransaction>,
+    sumOfTransactions: String
 ) {
     val isPaperReceipt = true
     val firstColor = Black
@@ -84,6 +86,13 @@ fun ReportAll(
                 }
             }
         }
+        if(isPaperReceipt)
+        AddSumOfAllTransactions(
+            Modifier,
+            sum = sumOfTransactions,
+            textColor = firstColor,
+            isPaperReceipt = isPaperReceipt
+        )
         if (isPaperReceipt) {
             AddPSPLog(
                 modifier = Modifier.fillMaxWidth(),

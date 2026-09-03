@@ -18,6 +18,7 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
+import com.example.totanpay.LocalLanguageState
 import com.example.totanpay.R
 import com.example.totanpay.ui.theme.Red
 
@@ -30,6 +31,8 @@ fun ExitItem(
     isSmall:Boolean,
     onItemClicked: () -> Unit
 ) {
+    val isRtl= LocalLanguageState.current.isFarsiSelected.value
+
     Box(
         modifier = modifier
             .fillMaxWidth()
@@ -66,8 +69,10 @@ fun ExitItem(
             )
             Spacer(modifier = Modifier.weight(1f))
             Image(
-                painter = painterResource(id = R.drawable.ic_arrow_left_gray),
+                painter = painterResource(id =if (isRtl) R.drawable.ic_arrow_left_gray
+                else R.drawable.ic_arrow_right),
                 contentDescription = "",
+
                 modifier = modifier
                     .padding(end = 26.dp)
                     .size(24.dp), colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f))

@@ -1,6 +1,7 @@
 package com.example.totanpay.data.repository.datasource.transaction
 
 import android.util.Log
+import com.example.totanpay.R
 import com.example.totanpay.data.repository.datasource.transaction.connection.IConnection
 import com.example.totanpay.data.repository.datasource.transaction.request.LogonTransactionRequest
 import com.example.totanpay.data.repository.datasource.transaction.response.BaseTransactionResponse
@@ -11,7 +12,7 @@ class LogonTransaction(
     request: LogonTransactionRequest,
     private val macGenerator: IMacGenerator,
     iConnection: IConnection
-) : BaseTransaction(request, iConnection, {}, {}) {
+) : BaseTransaction(request, iConnection, {}, {},{true}) {
     override val isReversible: Boolean
         get() = false
     override val type: Int
@@ -33,38 +34,67 @@ class LogonTransaction(
                 setTerminalLanguage(request.terminalLanguage.toEnglishNumber())
                 setTerminalConnectionType((request as LogonTransactionRequest).terminalConnectionType.toEnglishNumber())
             }
-            macGenerator.getMac(this)
+            if ((request as LogonTransactionRequest).enableMac)
+                macGenerator.getMac(this)
         }
     }
 
 
     override suspend fun onSuccess(receivedIsoMessage: IsoMessage): BaseTransactionResponse {
-        try {
-            val field62 = receivedIsoMessage.getBytes(62)
-            val pinKey: ByteArray? = field62.sliceArray(0..15)
-            val macKey: ByteArray? = field62.sliceArray(16..31)
-            val dataKey: ByteArray? = field62.sliceArray(32..47)
+        return try {
+            val field62: ByteArray? = receivedIsoMessage.getBytes(62)
+            val pinKey: ByteArray? = field62?.sliceArray(0..15)
+            val macKey: ByteArray? = field62?.sliceArray(16..31)
+            val dataKey: ByteArray? = field62?.sliceArray(32..47)
             val dateTimeOfServer = receivedIsoMessage.getField48Tag(0x50) ?: ""
-            if (field62 != null && pinKey != null && macKey != null && dataKey != null && dateTimeOfServer.isNotEmpty() && receivedIsoMessage.getString(64)!=null)
-            {
-                return BaseTransactionResponse.LogonTransactionResponse(
-                    pinKey = pinKey,
-                    dataKey = dataKey,
-                    macKey = macKey,
-                    terminalId = receivedIsoMessage.getString(41),
-                    responseCode = 0,
-                    responseMessage = null,
-                    null,
-                    date = sendMessage.tranDate,
-                    time = sendMessage.tranTime,
-                    trace = "",
-                    rrn = "", dateTimeOfServer = dateTimeOfServer
-                )
-            }
-            else {
-               return FailedTransactionResponse(
-                    responseCode = -1,
-                    responseMessage = "خطا در فرمت اطلاعات",
+            if (field62 != null && pinKey != null && macKey != null && dataKey != null && dateTimeOfServer.isNotEmpty()
+            ) {
+                if ((request as LogonTransactionRequest).enableMac) {
+                    if (receivedIsoMessage.getString(
+                            64
+                        ) != null
+                    ) {
+                        BaseTransactionResponse.LogonTransactionResponse(
+                            pinKey = pinKey,
+                            dataKey = dataKey,
+                            macKey = macKey,
+                            terminalId = receivedIsoMessage.getString(41),
+                            responseCode = 0,
+                            responseMessage = null,
+                            null,
+                            date = sendMessage.tranDate,
+                            time = sendMessage.tranTime,
+                            trace = "",
+                            rrn = "", dateTimeOfServer = dateTimeOfServer
+                        )
+                    } else FailedTransactionResponse(
+                        responseCode = -3,
+                        responseMessage = ResponseMessageContainer.RC_3.messageId,
+                        reasonCode = null,
+                        date = sendMessage.tranDate,
+                        time = sendMessage.tranTime,
+                        stan = sendMessage.stan,
+                        posCode = null
+                    )
+                } else {
+                    BaseTransactionResponse.LogonTransactionResponse(
+                        pinKey = pinKey,
+                        dataKey = dataKey,
+                        macKey = macKey,
+                        terminalId = receivedIsoMessage.getString(41),
+                        responseCode = 0,
+                        responseMessage = null,
+                        null,
+                        date = sendMessage.tranDate,
+                        time = sendMessage.tranTime,
+                        trace = "",
+                        rrn = "", dateTimeOfServer = dateTimeOfServer
+                    )
+                }
+            } else {
+                FailedTransactionResponse(
+                    responseCode = -3,
+                    responseMessage = ResponseMessageContainer.RC_3.messageId,
                     reasonCode = null,
                     date = sendMessage.tranDate,
                     time = sendMessage.tranTime,
@@ -73,12 +103,9 @@ class LogonTransaction(
                 )
             }
         } catch (e: Exception) {
-            Log.d("TAG", "onSuccess: ${e.cause}")
-            Log.d("TAG", "onSuccess: ${e.localizedMessage}")
-
-            return FailedTransactionResponse(
-                responseCode = -1,
-                responseMessage = "خطا در دریافت اطلاعات",
+            FailedTransactionResponse(
+                responseCode = -3,
+                responseMessage = ResponseMessageContainer.RC_3.messageId,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,
@@ -92,7 +119,7 @@ class LogonTransaction(
         return if (receivedIsoMessage == null) {
             FailedTransactionResponse(
                 responseCode = -1,
-                responseMessage = "خطا در دریافت اطلاعات",
+                responseMessage = ResponseMessageContainer.RC_1.messageId,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,
@@ -100,14 +127,20 @@ class LogonTransaction(
                 posCode = null
             )
         } else {
+            var dateTimeOfServer: String? = null
+            if (receivedIsoMessage.getBytes(48) != null) {
+                val ltv: Ltv = Ltv().also { it.unpack(receivedIsoMessage.getBytes(48)) }
+                dateTimeOfServer = ltv?.getNode(0x50)
+            }
             FailedTransactionResponse(
                 responseCode = receivedIsoMessage.respCode,
-                responseMessage = "",
+                responseMessage = R.string.empty_message,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,
                 stan = sendMessage.stan,
                 posCode = receivedIsoMessage.getField48Tag(0x98) ?: "",
+                dateTimeOfServer = dateTimeOfServer
             )
         }
     }

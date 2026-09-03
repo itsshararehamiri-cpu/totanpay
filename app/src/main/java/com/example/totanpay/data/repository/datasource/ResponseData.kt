@@ -14,14 +14,14 @@ sealed class ResponseData<out T>(
 
 
 
-open class TotanPayException(val messageError:String?=null, val type:Type=Type.NORMAL){
+open class TotanPayException(val messageError:Int?=null, val type:Type=Type.NORMAL){
     enum class Type{
        NORMAL,DISCONNECT,LOAD_SETTINGS,SWITCH_CONNECTION
     }
 }//switchConnectionErrorMessage
- fun getNetworkIsNotAvailableMessage(): TotanPayException {
-    return  TotanPayException(type = TotanPayException.Type.DISCONNECT)
-}
-fun getExceptionFromMessage(message:String?): TotanPayException {
-    return  TotanPayException(type = TotanPayException.Type.NORMAL, messageError = message)
-}
+// fun getNetworkIsNotAvailableMessage(): TotanPayException {
+//    return  TotanPayException(type = TotanPayException.Type.DISCONNECT)
+//}
+//fun getExceptionFromMessage(message:String?): TotanPayException {
+//    return  TotanPayException(type = TotanPayException.Type.NORMAL, messageError = message)
+//}

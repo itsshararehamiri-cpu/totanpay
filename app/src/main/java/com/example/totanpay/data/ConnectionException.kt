@@ -1,5 +1,8 @@
 package com.example.totanpay.data
-object ConnectionException: Exception() {
-    override val message: String
-        get() = "امکان انجام تراکنش وجود ندارد لطفا اینترنت را بررسی کنید"
+
+import com.example.totanpay.R
+
+object ConnectionException {
+     val message: Int
+        get() = R.string.no_internet
 }

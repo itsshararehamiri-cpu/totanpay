@@ -14,11 +14,13 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.totanpay.LocalLanguageState
 import com.example.totanpay.R
 import com.example.totanpay.ui.theme.END_PADDING
 
 @Composable
 fun BackButton(title: String, modifier: Modifier, onBackButtonClicked: () -> Unit) {
+    val rtl= LocalLanguageState.current
     Row(
         modifier = modifier
             .clickable { onBackButtonClicked() }, verticalAlignment = Alignment.CenterVertically
@@ -28,7 +30,8 @@ fun BackButton(title: String, modifier: Modifier, onBackButtonClicked: () -> Uni
                 .align(Alignment.CenterVertically)
                 .padding(start = END_PADDING, top = 20.dp)
                 .size(28.dp),
-            painter = painterResource(id = R.drawable.ic_arrow_back),
+            painter = painterResource(id = if(rtl.isFarsiSelected.value)R.drawable.ic_arrow_back
+            else R.drawable.ic_arrow_left),
             contentDescription = "back_button",
             colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
         )
@@ -39,9 +42,4 @@ fun BackButton(title: String, modifier: Modifier, onBackButtonClicked: () -> Uni
                 .padding(start = 3.dp, top = 20.dp),
         )
     }
-}
-@Composable
-@Preview
-fun BackButtonPreview() {
-
 }

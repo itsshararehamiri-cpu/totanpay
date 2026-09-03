@@ -1,5 +1,6 @@
 package com.example.totanpay.data.repository.datasource.transaction.response
 
+import com.example.totanpay.R
 import com.example.totanpay.data.repository.datasource.mask
 import com.example.totanpay.data.repository.datasource.model.Merchant
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
@@ -10,7 +11,7 @@ import com.example.totanpay.data.util.formatTime
 fun BaseTransactionResponse.WorkingKeyExchangeTransactionResponse.toResponseTransaction(): ResponseTransaction {
     return ResponseTransaction(
         responseCode = this.responseCode.toString(),
-        responseMessage = this.responseMessage ?: "",
+        responseMessage = this.responseMessage ?: R.string.empty_message,
         rrn = this.rrn ?: "",
         trace = this.trace,
         merchantName = "",
@@ -23,7 +24,7 @@ fun BaseTransactionResponse.WorkingKeyExchangeTransactionResponse.toResponseTran
         issuerName = "",
         amount = "",
         availableBalance = null, maskedPan = "",
-        realBalance = null, voucherPin = null
+        realBalance = null, voucherPin = null, englishMerchantName = ""
     )
 }
 
@@ -35,7 +36,7 @@ fun BaseTransactionResponse.LogonTransactionResponse.toResponseTransaction(): Re
         }else {
             ResponseMessageContainer.valueOfLabel(
                 this.responseCode.toString()
-            ).message
+            ).messageId
         },
         rrn = this.rrn ?: "",
         trace = this.trace,
@@ -49,6 +50,6 @@ fun BaseTransactionResponse.LogonTransactionResponse.toResponseTransaction(): Re
         issuerName = "",
         amount = "",
         availableBalance = null, maskedPan = "",
-        realBalance = null, voucherPin = null
+        realBalance = null, voucherPin = null, englishMerchantName = ""
     )
 }

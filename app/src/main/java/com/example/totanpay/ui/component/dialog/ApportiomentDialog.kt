@@ -131,10 +131,3 @@ fun ApportiomentDialog(
     }
 }
 
-@Composable
-@Preview
-fun ApportiomentDialogPreview() {
-    TotanPayTheme {
-        ApportiomentDialog(onConfirmButtonClicked = {}, onCancelButtonClicked = {})
-    }
-}

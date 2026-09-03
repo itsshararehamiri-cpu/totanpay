@@ -22,7 +22,7 @@ data class TransactionLogEntity(
     var rrn: String?,
     var issuer: String?,
     var responseCode: Int?,
-    var responseMsg: String?,
+    var responseMsg: Int?,
     var billId: String? = null,
     var payId: String? = null,
     var serviceDesc: String? = null,

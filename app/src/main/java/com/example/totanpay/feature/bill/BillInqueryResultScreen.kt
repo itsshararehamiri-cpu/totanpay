@@ -28,7 +28,7 @@ fun BillInquiryResultScreen(
             billId = billId,
             paymentId = paymentId,
             serviceDesc = uiState.result!!.serviceDesc,
-            billType = uiState.result!!.billType,
+            englishServiceDesc = uiState.result!!.englishServiceDesc,
             onPayment = {
                 onPayment(billId, paymentId, uiState.result!!.amount ?: "")
             },

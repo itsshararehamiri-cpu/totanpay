@@ -20,6 +20,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import com.example.totanpay.R
@@ -82,20 +83,10 @@ fun PriceButton(
             modifier = Modifier
                 .padding(end = 8.dp)
                 .align(Alignment.CenterVertically),
-            text = "${title.formatAmount()}ریال",
+            text = stringResource(R.string.amount_with_currency,
+                title.formatAmount()),
             color = MaterialTheme.colorScheme.onBackground,style = MaterialTheme.typography.bodyMedium
         )
     }
 }
 
-@Composable
-@Preview
-fun PriceButtonPreview() {
-    TotanPayTheme {
-        PriceButton(
-            title = "ایرانسل", modifier = Modifier
-                .fillMaxWidth()
-                .height(50.dp)
-        ) {}
-    }
-}

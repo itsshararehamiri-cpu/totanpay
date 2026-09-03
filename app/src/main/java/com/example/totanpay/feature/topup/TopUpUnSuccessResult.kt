@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -17,13 +18,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.layoutId
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.totanpay.LocalLanguageState
 import com.example.totanpay.R
 import com.example.totanpay.ResultReceiptContainer
 import com.example.totanpay.TIME_TO_FINISH_SUCCESS_RESULT
@@ -50,7 +53,6 @@ import com.example.totanpay.ui.theme.Dimensions.LINE_HEIGHT_PAPER_RECEIPT
 import com.example.totanpay.ui.theme.Dimensions.LINE_HEIGHT_RECEIPT
 import com.example.totanpay.ui.theme.Dimensions.MARGIN_TOP_ROW_PAGER_RECEIPT
 import com.example.totanpay.ui.theme.Dimensions.MARGIN_TOP_ROW_RECEIPT
-import com.example.totanpay.ui.theme.TotanPayTheme
 
 @Composable
 fun TopUpUnSuccessResult(
@@ -60,20 +62,22 @@ fun TopUpUnSuccessResult(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
+    val isFarsi= LocalLanguageState.current.isFarsiSelected.value
     var receiptBitmap: Bitmap? by remember {
         mutableStateOf(null)
     }
     var startPrint by remember {
-        mutableStateOf(false)
+        mutableStateOf(true)
     }
     PlaybackSoundEffect(uiState.playbackSound, R.raw.unsuccessfultransaction)
-
     BackHandler {
         onBackButtonClicked()
     }
     if (uiState.result != null)
         ReceiptUi(content = {
-            UnSuccessReceiptContent(true, uiState.result)
+            CompositionLocalProvider(LocalLayoutDirection provides if(isFarsi)LayoutDirection.Rtl else LayoutDirection.Ltr) {
+                UnSuccessReceiptContent(true, uiState.result)
+            }
         }) {
             receiptBitmap = it
         }
@@ -102,11 +106,18 @@ fun TopUpUnSuccessResult(
     }
     if (uiState.result != null)
     {
-        ReceiptResultContainer(printTitle =
+        ReceiptResultContainer(showCustomerPrintButton = false,
+            showMerchantPrintButton = false,
+            printTitle =
         stringResource(id = R.string.print_customer_receipt),
-            onPrintButtonClicked = {
+            errorInPrint = uiState.errorInPrint,
+            onCustomerPrintButtonClicked = {
                 startPrint = true
-            }, onBackButtonClicked = { onBackButtonClicked() }) {
+            }, onMerchantPrintButtonClicked = {},
+            clearPrintErrorMessage = {
+                viewModel.clearErrorMessage()
+            },
+            onBackButtonClicked = { onBackButtonClicked() }) {
                 ResultReceiptContainer(
                     isPaperReceipt = false,
                     modifier = Modifier.layoutId("receipt"), isSuccess = false
@@ -137,11 +148,12 @@ fun UnSuccessReceiptContent(isPaperReceipt: Boolean, result: ResponseTransaction
             modifier = Modifier.rowReceiptWithPSPLogoModifier(isPaperReceipt),
             merchantName = result!!.merchantName,
             merchantPhone = result.merchantPhone,
+            englishMerchantName = result.englishMerchantName,
             textColor = firstColor, isPaperReceipt = isPaperReceipt
         )
         AddTypeDateTime(
             modifier = modifierRowReceipt,
-            type = TransactionType.TOPUP.title,
+            type = context.getString(TransactionType.TOPUP.title),
             date = result.date,
             time = result.time,
             textColor = firstColor, isPaperReceipt = isPaperReceipt
@@ -177,8 +189,8 @@ fun UnSuccessReceiptContent(isPaperReceipt: Boolean, result: ResponseTransaction
         )
         if (result.responseCode != "-1") {
             Text(
-                text = "${stringResource(id = R.string.unsuccess_transaction)} - ${result.responseCode}",
-                textAlign = TextAlign.Center,
+                text = if(result.responseCode.toInt()>0)"${stringResource(id = R.string.unsuccess_transaction)} - ${result.responseCode}"
+                else stringResource(id = R.string.unsuccess_transaction),                textAlign = TextAlign.Center,
                 style =
                 MaterialTheme.typography.bodyMedium.copy(
                     fontSize = getFontSizeUnSuccess(isPaperReceipt,context), fontWeight = FontWeight.Bold
@@ -188,24 +200,37 @@ fun UnSuccessReceiptContent(isPaperReceipt: Boolean, result: ResponseTransaction
                     .align(Alignment.CenterHorizontally),
                 color = firstColor.copy(alpha = 0.72f),
             )
-            Text(
-                text = result.responseMessage,
-                style =
-                MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = getFontSize(isPaperReceipt,context), fontWeight = FontWeight.Bold,
-                    lineHeight = if (isPaperReceipt) LINE_HEIGHT_PAPER_RECEIPT else LINE_HEIGHT_RECEIPT
-                ),
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .padding(top = if (isPaperReceipt) 0.dp else 4.dp)
-                    .fillMaxWidth()
-                    .padding(top = if (isPaperReceipt) MARGIN_TOP_ROW_PAGER_RECEIPT else MARGIN_TOP_ROW_RECEIPT),
-                color = firstColor, textAlign = TextAlign.Center
-            )
+            result.responseMessage?.let {
+                Text(
+                    text = stringResource(it),
+                    style =
+                        MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = getFontSize(isPaperReceipt,context), fontWeight = FontWeight.Bold,
+                            lineHeight = if (isPaperReceipt) LINE_HEIGHT_PAPER_RECEIPT else LINE_HEIGHT_RECEIPT
+                        ),
+                    modifier = Modifier
+                        .align(Alignment.CenterHorizontally)
+                        .padding(top = if (isPaperReceipt) 0.dp else 4.dp)
+                        .fillMaxWidth()
+                        .padding(top = if (isPaperReceipt) MARGIN_TOP_ROW_PAGER_RECEIPT else MARGIN_TOP_ROW_RECEIPT),
+                    color = firstColor, textAlign = TextAlign.Center
+                )
+            }
         } else {
+//            Text(
+//                text = "${stringResource(id = R.string.amount)} ${result.amount}",
+//                textAlign = TextAlign.Center,
+//                modifier = modifierRowReceipt
+//                    .fillMaxWidth()
+//                    .align(Alignment.CenterHorizontally),
+//                color = firstColor.copy(alpha = 0.72f),
+//                style =
+//                MaterialTheme.typography.bodyMedium.copy(
+//                    fontSize = getFontSize(isPaperReceipt,context), fontWeight = FontWeight.Bold
+//                ),
+//            )
             Text(
-                text = "${stringResource(id = R.string.amount)} ${result.amount}",
-                textAlign = TextAlign.Center,
+                text = stringResource(R.string.receipt_payback_message_part1), textAlign = TextAlign.Center,
                 modifier = modifierRowReceipt
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally),
@@ -216,18 +241,7 @@ fun UnSuccessReceiptContent(isPaperReceipt: Boolean, result: ResponseTransaction
                 ),
             )
             Text(
-                text = "در صورت کسر وجه از حساب شما", textAlign = TextAlign.Center,
-                modifier = modifierRowReceipt
-                    .fillMaxWidth()
-                    .align(Alignment.CenterHorizontally),
-                color = firstColor.copy(alpha = 0.72f),
-                style =
-                MaterialTheme.typography.bodyMedium.copy(
-                    fontSize = getFontSize(isPaperReceipt,context), fontWeight = FontWeight.Bold
-                ),
-            )
-            Text(
-                text = " مبلغ  طی 72 ساعت به حساب شما باز خواهد گشت", textAlign = TextAlign.Center,
+                text = stringResource(R.string.receipt_payback_message_part2), textAlign = TextAlign.Center,
                 modifier = modifierRowReceipt
                     .fillMaxWidth()
                     .align(Alignment.CenterHorizontally),
@@ -236,6 +250,39 @@ fun UnSuccessReceiptContent(isPaperReceipt: Boolean, result: ResponseTransaction
                 MaterialTheme.typography.bodyMedium.copy(
                     fontSize =getFontSize(isPaperReceipt,context), fontWeight = FontWeight.Bold
                 ),
+            )
+            Text(
+                text = stringResource(R.string.receipt_payback_message_part3), textAlign = TextAlign.Center,
+                modifier = modifierRowReceipt
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally),
+                color = firstColor.copy(alpha = 0.72f),
+                style =
+                    MaterialTheme.typography.bodyMedium.copy(
+                        fontSize =getFontSize(isPaperReceipt,context), fontWeight = FontWeight.Bold
+                    ),
+            )
+            Text(
+                text = stringResource(R.string.receipt_payback_message_part4_s), textAlign = TextAlign.Center,
+                modifier = modifierRowReceipt
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally),
+                color = firstColor.copy(alpha = 0.72f),
+                style =
+                    MaterialTheme.typography.bodyMedium.copy(
+                        fontSize =getFontSize(isPaperReceipt,context), fontWeight = FontWeight.Bold
+                    ),
+            )
+            Text(
+                text = stringResource(R.string.receipt_payback_message_part5_s), textAlign = TextAlign.Center,
+                modifier = modifierRowReceipt
+                    .fillMaxWidth()
+                    .align(Alignment.CenterHorizontally),
+                color = firstColor.copy(alpha = 0.72f),
+                style =
+                    MaterialTheme.typography.bodyMedium.copy(
+                        fontSize =getFontSize(isPaperReceipt,context), fontWeight = FontWeight.Bold
+                    ),
             )
         }
         if (isPaperReceipt) {
@@ -249,28 +296,4 @@ fun UnSuccessReceiptContent(isPaperReceipt: Boolean, result: ResponseTransaction
 }
 
 
-@Composable
-@Preview
-fun UnSuccessReceiptContentPreveiw() {
-    TotanPayTheme {
-        UnSuccessReceiptContent(
-            true, result = ResponseTransaction(
-                responseCode = "-1",
-                responseMessage = "خطا",
-                rrn = "1",
-                trace = "2",
-                merchantName = "تست",
-                merchantId = "3",
-                merchantPhone = "0214236598",
-                terminalID = "2",
-                transactionType = "خرید",
-                date = "1403/10/08",
-                time = "10:22",
-                issuerName = "صادرات",
-                amount = "10000",
-                availableBalance = "10000", maskedPan = "6037********78",
-                realBalance = "13", voucherPin = "12"
-            )
-        )
-    }
-}
+

@@ -46,6 +46,7 @@ import com.example.totanpay.ui.component.dialog.MessageDialog
 
 @Composable
 fun KeyInjectionScreen(viewModel: KeyInjectionViewModel, onBackClicked: () -> Unit) {
+    val context=LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     var firstPinKey by remember {
         mutableStateOf("")
@@ -231,10 +232,10 @@ fun KeyInjectionScreen(viewModel: KeyInjectionViewModel, onBackClicked: () -> Un
                     }
                 }, onTikKeyClicked = {
                     if (isFirstPinKey) {
-                        viewModel.verifyFirstPin(firstPinKey.trim())
+                        viewModel.verifyFirstPin(firstPinKey.trim(), context = context)
                     }
                     if (isSecondPinKey) {
-                        viewModel.verifySecondPin(secondPinKey.trim())
+                        viewModel.verifySecondPin(secondPinKey.trim(), context = context)
                     }
                 }
             )

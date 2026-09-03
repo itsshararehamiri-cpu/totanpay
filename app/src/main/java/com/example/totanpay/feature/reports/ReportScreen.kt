@@ -9,7 +9,7 @@ fun MenuReportScreen(
     onDetailsOfTransactionsClicked: () -> Unit,
     onReportBasedOnTraceClicked: () -> Unit
 ) {
-    ReportContent(
+    ReportContent(currentLanguageIsFarsi = true,
         onBackClicked = { onBackClicked() },
         onLastTransactionClicked = { onLastTransactionClicked() },
         onDetailsOfTransactionsClicked = { onDetailsOfTransactionsClicked() },

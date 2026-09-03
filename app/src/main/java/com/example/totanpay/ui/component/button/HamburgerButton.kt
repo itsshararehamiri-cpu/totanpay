@@ -51,16 +51,3 @@ fun HamburgerButton(modifier: Modifier, onClick: () -> Unit) {
     }
 
 }
-@Composable
-@Preview
-fun HamburgerButtonPreview() {
-    TotanPayTheme {
-        HamburgerButton(
-            modifier = Modifier
-                .padding(top = 16.dp)
-                .layoutId("hamburgerButton")
-        ) {
-
-        }
-    }
-}

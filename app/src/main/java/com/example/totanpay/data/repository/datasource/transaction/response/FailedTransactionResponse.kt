@@ -15,7 +15,7 @@ var rrn : String? = null*/
 class FailedTransactionResponse(
     stan: String,
     responseCode: Int,
-    responseMessage: String?,
+    responseMessage: Int?,
     reasonCode: Int? = null,
     date: String,
     time: String,
@@ -24,6 +24,7 @@ class FailedTransactionResponse(
     rrn: String? = null,
     val cardIssuer: String? = null,
     posCode:String?
+    , dateTimeOfServer:String?=null
 ) : BaseTransactionResponse(
     responseCode = responseCode,
     responseMessage = responseMessage,
@@ -32,13 +33,14 @@ class FailedTransactionResponse(
     time = time,
     trace = stan.toString(),
     rrn = rrn,
-    posCode=posCode
+    posCode=posCode,
+    dateTimeOfServer = dateTimeOfServer
 
 ) {
 
 }
 
-fun FailedTransactionResponse.toPurchaseTransactionResponse(responseMessage:String): BaseTransactionResponse.PurchaseTransactionResponse? {
+fun FailedTransactionResponse.toPurchaseTransactionResponse(responseMessage:Int): BaseTransactionResponse.PurchaseTransactionResponse? {
     return BaseTransactionResponse.PurchaseTransactionResponse(
         responseCode = this.responseCode,
         responseMessage = responseMessage,
@@ -49,11 +51,12 @@ fun FailedTransactionResponse.toPurchaseTransactionResponse(responseMessage:Stri
         rrn = this.rrn,
         amount = this.amount ?: "",
         maskedPan = this.maskedPan ?: "",
-        issuerName = this.cardIssuer ?: "", posCode = this.posCode ?: ""
+        issuerName = this.cardIssuer ?: "", posCode = this.posCode ?: "",
+        dateTimeOfServer = this.dateTimeOfServer
     )
 }
 
-fun FailedTransactionResponse.toLogonTransactionResponse(responseMessage:String): BaseTransactionResponse.LogonTransactionResponse? {
+fun FailedTransactionResponse.toLogonTransactionResponse(responseMessage:Int): BaseTransactionResponse.LogonTransactionResponse? {
     return BaseTransactionResponse.LogonTransactionResponse(
         responseCode = this.responseCode,
         responseMessage = responseMessage,
@@ -65,15 +68,16 @@ fun FailedTransactionResponse.toLogonTransactionResponse(responseMessage:String)
         dataKey = ByteArray(0),
         pinKey = ByteArray(0),
         macKey = ByteArray(0),
-        terminalId = "", dateTimeOfServer = ""
+        terminalId = "", dateTimeOfServer = this.dateTimeOfServer
     )
 }
 
-fun FailedTransactionResponse.toInitTransactionResponse(responseMessage:String): BaseTransactionResponse.InitTransactionResponse? {
+fun FailedTransactionResponse.toInitTransactionResponse(responseMessage:Int): BaseTransactionResponse.InitTransactionResponse? {
     return BaseTransactionResponse.InitTransactionResponse(
         responseCode = this.responseCode,
         responseMessage =responseMessage,
         reasonCode = this.reasonCode,
+
         date = this.date,
         time = this.time,
         trace = this.trace,
@@ -82,11 +86,12 @@ fun FailedTransactionResponse.toInitTransactionResponse(responseMessage:String):
         merchantPhone = "",
         posCode = this.posCode ?: "",
         dateTimeOfServer = this.dateTimeOfServer ?: "",
-        merchantName = "", accountMerchants = null
+        merchantName = "", accountMerchants = null,
+        englishMerchantName = ""
     )
 }
 
-fun FailedTransactionResponse.toBalanceTransactionResponse(responseMessage:String): BaseTransactionResponse.BalanceTransactionResponse? {
+fun FailedTransactionResponse.toBalanceTransactionResponse(responseMessage: Int): BaseTransactionResponse.BalanceTransactionResponse? {
     return BaseTransactionResponse.BalanceTransactionResponse(
         responseCode = this.responseCode,
         responseMessage =responseMessage,
@@ -99,11 +104,11 @@ fun FailedTransactionResponse.toBalanceTransactionResponse(responseMessage:Strin
         maskedPan = this.maskedPan ?: "",
         issuerName = "",
         availableBalance = "",
-        currency = "", posCode = this.posCode
+        currency = "", posCode = this.posCode, dateTimeOfServer = this.dateTimeOfServer
     )
 }
 
-fun FailedTransactionResponse.toVoucherTransactionResponse(responseMessage:String): BaseTransactionResponse.VoucherTransactionResponse? {
+fun FailedTransactionResponse.toVoucherTransactionResponse(responseMessage:Int): BaseTransactionResponse.VoucherTransactionResponse? {
     return BaseTransactionResponse.VoucherTransactionResponse(
         responseCode = this.responseCode,
         responseMessage = responseMessage,
@@ -119,11 +124,12 @@ fun FailedTransactionResponse.toVoucherTransactionResponse(responseMessage:Strin
         voucherSerial = "",
         voucherPin = "",
         voucherPINEncrypted = "",
-        groupVoucherDataEncrypted = HashMap(), posCode = this.posCode
+        groupVoucherDataEncrypted = HashMap(), posCode = this.posCode,
+        dateTimeOfServer = this.dateTimeOfServer
     )
 }
 
-fun FailedTransactionResponse.toTopupTransactionResponse(responseMessage:String): BaseTransactionResponse.TopUpTransactionResponse? {
+fun FailedTransactionResponse.toTopupTransactionResponse(responseMessage:Int): BaseTransactionResponse.TopUpTransactionResponse? {
     return BaseTransactionResponse.TopUpTransactionResponse(
         responseCode = this.responseCode,
         responseMessage = responseMessage,
@@ -134,7 +140,7 @@ fun FailedTransactionResponse.toTopupTransactionResponse(responseMessage:String)
         rrn = this.rrn,
         maskedPan = this.maskedPan ?: "",
         issuerName = this.cardIssuer ?: "",
-        amount = this.amount ?: "", posCode = this.posCode
+        amount = this.amount ?: "", posCode = this.posCode, dateTimeOfServer = this.dateTimeOfServer
     )
 }
 
@@ -147,7 +153,7 @@ fun FailedTransactionResponse.toTopupTransactionResponse(responseMessage:String)
     var trace: String="",
     var rrn : String? = null
  */
-fun FailedTransactionResponse.toBillPayTransactionResponse(responseMessage:String): BaseTransactionResponse.BillPayTransactionResponse? {
+fun FailedTransactionResponse.toBillPayTransactionResponse(responseMessage:Int): BaseTransactionResponse.BillPayTransactionResponse? {
     return BaseTransactionResponse.BillPayTransactionResponse(
         responseCode = this.responseCode,
         responseMessage = responseMessage,
@@ -158,11 +164,11 @@ fun FailedTransactionResponse.toBillPayTransactionResponse(responseMessage:Strin
         rrn = this.rrn,
         maskedPan = "",
         issuerName = "",
-        amount = "",
+        amount = "", dateTimeOfServer = this.dateTimeOfServer
     )
 }
 
-fun FailedTransactionResponse.toBillInquiryTransactionResponse(responseMessage:String): BaseTransactionResponse.BillInquiryTransactionResponse? {
+fun FailedTransactionResponse.toBillInquiryTransactionResponse(responseMessage:Int): BaseTransactionResponse.BillInquiryTransactionResponse? {
     return BaseTransactionResponse.BillInquiryTransactionResponse(
         responseCode = this.responseCode,
         responseMessage = responseMessage,
@@ -172,6 +178,8 @@ fun FailedTransactionResponse.toBillInquiryTransactionResponse(responseMessage:S
         trace = this.trace,
         rrn = "",
         billType = "",
-        serviceDesc = "", amount = "", posCode = this.posCode
+        serviceDesc = "", amount = "", posCode = this.posCode,
+        englishServiceDesc = "",
+        dateTimeOfServer = this.dateTimeOfServer
     )
 }

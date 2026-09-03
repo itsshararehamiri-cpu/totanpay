@@ -7,6 +7,7 @@ import androidx.compose.runtime.getValue
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.totanpay.ui.component.Loading
+import com.example.totanpay.ui.component.dialog.ConnectionMessageDialog
 
 @Composable
 fun LoadingScreen(
@@ -32,15 +33,17 @@ fun LoadingScreen(
     }
     if (uiState.isSuccessful) {
     LaunchedEffect(lifecycle) {
-            println("successResponse")
             onSuccessResult(uiState.response)
         }
     }
     LaunchedEffect(uiState.isUnSuccessful) {
-        println("lifecycle")
         if (uiState.isUnSuccessful) {
-            println("successResponse")
             onErrorResult(uiState.response)
+        }
+    }
+    if (uiState.connectionError) {
+        ConnectionMessageDialog {
+            onBackButtonClicked()
         }
     }
     Loading()

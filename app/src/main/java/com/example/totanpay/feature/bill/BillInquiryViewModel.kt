@@ -3,8 +3,7 @@ package com.example.totanpay.feature.bill
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.totanpay.data.repository.BillRepository
-import com.example.totanpay.data.repository.MainRepository
+import com.example.totanpay.data.repository.bill.BillRepository
 import com.example.totanpay.data.repository.datasource.ResponseData
 import com.example.totanpay.feature.purchase.PurchaseUiState
 import com.google.gson.Gson
@@ -34,11 +33,17 @@ class BillInquiryViewModel @Inject constructor(private val billRepository: BillR
                     )
                 }
             } else {
-                _uiState.update {
-                    it.copy(
-                        response = Gson().toJson(result.data),
-                        isUnSuccessful = true
-                    )
+                if (result.data!=null)
+                {
+                    _uiState.update {
+                        it.copy(
+                            response = Gson().toJson(result.data),
+                            isUnSuccessful = true
+                        )
+                    }
+                }
+                else{
+                    _uiState.update { it.copy(connectionError = true) }
                 }
             }
         }

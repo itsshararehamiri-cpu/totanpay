@@ -13,8 +13,8 @@ android {
         applicationId = "com.example.totanpay"
         minSdk = 21
         targetSdk = 35
-        versionCode = 9
-        versionName = "1.6.0"
+        versionCode = 17
+        versionName = "2.1.2"
         multiDexEnabled =true
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
         vectorDrawables {
@@ -44,10 +44,11 @@ android {
             applicationIdSuffix = ".fa"
             resValue("string", "app_name", "فناوا")
         }
-        create("i5000") {
+
+        create("i9000") {
             dimension = "device"
         }
-        create("i9000") {
+        create("i5000") {
             dimension = "device"
         }
     }

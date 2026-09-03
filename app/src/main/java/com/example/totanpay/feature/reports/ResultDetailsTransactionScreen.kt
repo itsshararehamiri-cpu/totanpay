@@ -1,7 +1,6 @@
 package com.example.totanpay.feature.reports
 
 import android.graphics.Bitmap
-import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -67,7 +66,7 @@ fun ResultDetailsTransactionScreen(
                 toDate = uiState.toDate,
                 fromTime = uiState.fromTime,
                 toTime = uiState.toTime,
-                numberOfAllTransactions = uiState.numberOfTransactions
+                numberOfAllTransactions = uiState.numberOfTransactions, englishMerchantName = uiState.englishMerchantName
             )
 
         }) {
@@ -76,7 +75,7 @@ fun ResultDetailsTransactionScreen(
     if (!uiState.result.isNullOrEmpty())
         ReceiptUi(content = {
             ReportAll(
-                uiState.result!!
+                uiState.result!!,uiState.sumOfTransactions
             )
         }) {
             allReceiptBitmap = it

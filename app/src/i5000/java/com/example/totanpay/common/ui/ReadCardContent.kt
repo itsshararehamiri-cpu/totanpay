@@ -212,7 +212,7 @@ fun ReadCardContent(
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium)
                     )
                     Text(
-                        text = "1800".formatAmount(),
+                        text = "1440".formatAmount(),
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier,
                         style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold)
@@ -299,7 +299,7 @@ fun ReadCardContent(
                 hideInternetErrorMessage()
             }
         }
-        if(uiState.showSwitchIsNotAvailableMessage){
+        if(uiState.showInternetErrorMessage){
             ShowErrorMessage(
                 modifier = Modifier
                     .fillMaxWidth()

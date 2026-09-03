@@ -89,7 +89,7 @@ private val LightColorI5000Scheme = lightColorScheme(
 
 @Composable
 fun TotanPayTheme(
-    darkTheme: Boolean = true,
+    darkTheme: Boolean = true,isFarsi: Boolean = true,
     dynamicColor: Boolean = true,
     content: @Composable () -> Unit
 ) {
@@ -104,13 +104,13 @@ fun TotanPayTheme(
         darkTheme -> if(isSmall) DarkColorI5000Scheme else DarkColorScheme
         else ->if(isSmall) LightColorI5000Scheme else LightColorScheme
     }
-    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+
         MaterialTheme(
             colorScheme = colorScheme,
-            typography =if(isSmall)TypographyI5000 else Typography,
+            typography = typography(isFarsi),
             content = content
         )
-    }
+
 }
 /*
 private val LightColorScheme = lightColorScheme(

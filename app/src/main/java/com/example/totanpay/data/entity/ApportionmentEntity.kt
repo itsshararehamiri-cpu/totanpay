@@ -5,7 +5,7 @@ import androidx.room.PrimaryKey
 
 @Entity("apportionment")
 data class ApportionmentEntity(
-    val IBAN: String, val amount: String, val bankName: String
+    val IBAN: String, val amount: String, val bankName: String,val englishBankName: String
 ){
     @PrimaryKey(autoGenerate = true)
     var id: Long=0

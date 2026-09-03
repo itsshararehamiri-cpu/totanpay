@@ -12,7 +12,7 @@ class TopUpTransactionRequest (val amount:String, val pan:String, stan: Int, val
                                val productCode:String,
                                val mobile:String,
                                serial: String, appVersion: String, nii: String, date:String, time:String,
-                               posConditionCode:String):
+                               posConditionCode:String,val logs:String?):
     BaseTransactionRequest(
         serial = serial, appVersion = appVersion, nii = nii, stan = stan,
         date = date, time = time, terminalLanguage = terminalLanguage, posConditionCode = posConditionCode,terminalConnectionType=terminalConnectionType

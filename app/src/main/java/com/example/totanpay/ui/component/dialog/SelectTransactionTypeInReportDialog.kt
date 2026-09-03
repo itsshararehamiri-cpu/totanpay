@@ -24,6 +24,7 @@ import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onKeyEvent
 import androidx.compose.ui.input.key.type
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -72,7 +73,7 @@ fun SelectTransactionTypeInReport(
                                 transactionType.toString()
 
                             )
-                            true // مصرف کردن رویداد
+                            true
                         } else {
                             false
                         }
@@ -122,26 +123,27 @@ fun SelectTransactionTypeInReport(
                         .layoutId("transactionTypeTitle"),
                     style = MaterialTheme.typography.bodyLarge
                 )
+                val context= LocalContext.current
                 TransactionTypeCheckbox(modifier = Modifier.layoutId("purchase"),
-                    title = TransactionType.PURCHASE.title,
+                    title = context.getString(TransactionType.PURCHASE.title),
                     isChecked = purchaseIsSelected,
                     onCheckedChange = {
                         purchaseIsSelected = it
                     })
                 TransactionTypeCheckbox(modifier = Modifier.layoutId("voucher"),
-                    title = TransactionType.VOUCHER.title,
+                    title = context.getString(TransactionType.VOUCHER.title),
                     isChecked = voucherIsSelected,
                     onCheckedChange = {
                         voucherIsSelected = it
                     })
                 TransactionTypeCheckbox(modifier = Modifier.layoutId("topup"),
-                    title = TransactionType.TOPUP.title,
+                    title = context.getString(TransactionType.TOPUP.title),
                     isChecked = topUpIsSelected,
                     onCheckedChange = {
                         topUpIsSelected = it
                     })
                 TransactionTypeCheckbox(modifier = Modifier.layoutId("billPay"),
-                    title = TransactionType.BILL_PAY.title,
+                    title = context.getString(TransactionType.BILL_PAY.title),
                     isChecked = billPayIsSelected,
                     onCheckedChange = {
                         billPayIsSelected = it

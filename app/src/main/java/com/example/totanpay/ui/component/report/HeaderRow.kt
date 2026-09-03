@@ -177,20 +177,3 @@ fun HeaderRow(
     }
 }
 
-@Composable
-@Preview
-fun HeaderRowPreview(){
-    TotanPayTheme {
-        Column(Modifier.fillMaxHeight()) {
-            HeaderRow(
-                modifier = Modifier.fillMaxWidth(1f), listOf(
-                    stringResource(id = R.string.transaction_type),
-                    stringResource(id = R.string.amount),
-                    stringResource(id = R.string.trace),
-                    stringResource(id = R.string.time),
-                    stringResource(id = R.string.row1)
-                ), textColor = Black, isPaperReceipt = true
-            )
-        }
-    }
-}

@@ -13,9 +13,10 @@ class PurchaseTransactionRequest (val amount:String,val pan:String,stan: Int, va
                                   val dateTimeInGMT:String, val acquiringInstitutionIdentificationCode:String,
                                  serial: String, appVersion: String, nii: String,date:String,time:String,posConditionCode:String,
                                 val  purchaseId:String?
-    ,  val apportionments: List<Apportionment>?=null):
+    ,  val apportionments: List<Apportionment>?=null,val logs: String?):
     BaseTransactionRequest(
         serial = serial, appVersion = appVersion, nii = nii, stan = stan,
         date = date, time = time, terminalLanguage = terminalLanguage, posConditionCode = posConditionCode,terminalConnectionType=terminalConnectionType
     )
-data class Apportionment(val IBAN:String , var amount:String,val bankName:String)
+data class Apportionment(val IBAN:String , var amount:String,val bankName:String,
+                         val englishBankName:String)

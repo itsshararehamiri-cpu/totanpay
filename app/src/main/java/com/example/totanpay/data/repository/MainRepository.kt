@@ -10,6 +10,7 @@ import com.example.totanpay.data.repository.datasource.model.Merchant
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
 import com.example.totanpay.data.repository.datasource.transaction.response.AccountMerchant
 import com.example.totanpay.data.repository.datasource.transaction.response.BaseTransactionResponse
+import kotlinx.coroutines.flow.Flow
 
 interface MainRepository {
     suspend fun isConfigured(): Boolean
@@ -35,5 +36,9 @@ interface MainRepository {
     fun isNetworkAvailable(): Boolean
     fun setTaxIrancellCharge(tax:String)
     fun getTaxIrancellCharge():String
+
+    fun enableMac(isEnable: Boolean)
+    fun getIsEnableMac(): Boolean
+    fun hasTransactionInQueue(): Flow<Boolean>
 
 }

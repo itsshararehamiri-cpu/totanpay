@@ -4,7 +4,10 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.totanpay.R
 import com.example.totanpay.common.ui.ReadCardContent
 //import com.example.totanpay.common.ui.ReadCardContent
 import com.example.totanpay.feature.balance.ReadCardViewModel
@@ -16,6 +19,7 @@ fun ReadCardScreen(
     onGetTrack2: (String) -> Unit,
     onBackButtonClicked: () -> Unit
 ) {
+    val context= LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     BackHandler {
         onBackButtonClicked()
@@ -30,10 +34,10 @@ fun ReadCardScreen(
     }
     ReadCardContent(uiState,
         amountValue =amount,
-        amountTitle = "مبلغ شارژ:",
+        amountTitle = stringResource(R.string.amount_of_charge),
         onBackButtonClicked = { onBackButtonClicked() },
         hideInternetErrorMessage = {viewModel.hideInternetErrorMessage()},
         readCard = {
-        viewModel.readCard()
+        viewModel.readCard(context)
     })
 }

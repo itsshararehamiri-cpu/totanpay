@@ -1,6 +1,7 @@
 package com.example.totanpay.data.repository.datasource.transaction
 
 
+import com.example.totanpay.R
 import com.example.totanpay.data.repository.datasource.transaction.connection.IConnection
 import com.example.totanpay.data.repository.datasource.transaction.request.TopUpTransactionRequest
 import com.example.totanpay.data.repository.datasource.transaction.response.BaseTransactionResponse
@@ -13,7 +14,7 @@ class TopUpTransaction(
     saveTransactionLog: suspend (msg: IsoMessage) -> Unit,
     updateTransaction: suspend (
         date: String, time: String, pan: String, cardIssuer: String, responseCode: String, amount: String, rrn: String?,
-        serviceDesc: String?, pinVoucher: String?, serialVoucher: String?, mobileNumber: String?, operatorCode: Int?,responseMessage:String?,trace:String?
+        serviceDesc: String?, pinVoucher: String?, serialVoucher: String?, mobileNumber: String?, operatorCode: Int?, responseMessage: Int?, trace:String?
     ) -> Unit,
     deleteTransaction: suspend (
         date: String, time: String
@@ -55,6 +56,8 @@ class TopUpTransaction(
                 setProductCode(request.productCode)
                 setMobileNumber(request.mobile)
                 setTerminalLanguage(request.terminalLanguage)
+                if (!request.logs.isNullOrEmpty())
+                    set99(request.logs)
             }
             setCurrency(request.currency)
             setPinBlock(request.pinBlock)
@@ -110,7 +113,7 @@ class TopUpTransaction(
             )
             return FailedTransactionResponse(
                 responseCode = -1,
-                responseMessage = "خطا در دریافت اطلاعات",
+                responseMessage =ResponseMessageContainer.RC_1.messageId,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,
@@ -120,16 +123,21 @@ class TopUpTransaction(
                 amount = request.amount, posCode = null
             )
         } else {
-            if (receivedIsoMessage.respCode != 80)
+            if (receivedIsoMessage.respCode != 80 && receivedIsoMessage.respCode > 0)
                 clearTransactionFromQueue(sendMessage.tranDate, sendMessage.tranTime)
             val cardIssuer = receivedIsoMessage.getField48Tag(0x38)?.split("\\")?.get(0) ?: ""
             deleteTransaction(
                 sendMessage.tranDate,
                 sendMessage.tranTime
             )
+            var dateTimeOfServer: String? = null
+            if (receivedIsoMessage.getBytes(48) != null) {
+                val ltv: Ltv = Ltv().also { it.unpack(receivedIsoMessage.getBytes(48)) }
+                dateTimeOfServer = ltv?.getNode(0x50)
+            }
             return FailedTransactionResponse(
                 responseCode = receivedIsoMessage.respCode,
-                responseMessage = "",
+                responseMessage = R.string.empty_message,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,
@@ -140,6 +148,7 @@ class TopUpTransaction(
                 maskedPan =   (request as TopUpTransactionRequest).pan,
                 amount = request.amount,
                 rrn = receivedIsoMessage.rrn,posCode = receivedIsoMessage.getField48Tag(0x98) ?: "",
+                dateTimeOfServer = dateTimeOfServer
             )
         }
     }

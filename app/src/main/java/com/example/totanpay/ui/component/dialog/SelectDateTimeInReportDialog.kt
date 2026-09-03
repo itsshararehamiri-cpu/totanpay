@@ -166,7 +166,7 @@ fun SelectDateTimeInReportDialog(
                                 rememberDialogFromDatePicker.getPersianMonth().toString(),
                                 rememberDialogFromDatePicker.getPersianDay().toString(),
                                 hour = fromTimeValue.dropLast(3),
-                                minute = fromTimeValue.drop(3) // TODO:
+                                minute = fromTimeValue.drop(3)
                             )
                             val from = Gson().toJson(temp)
                             val tt = DateContainer(
@@ -174,7 +174,7 @@ fun SelectDateTimeInReportDialog(
                                 rememberDialogToDatePicker.getPersianMonth().toString(),
                                 rememberDialogToDatePicker.getPersianDay().toString(),
                                 hour = toTimeValue.dropLast(3),
-                                minute = toTimeValue.drop(3) // TODO:
+                                minute = toTimeValue.drop(3)
                                 //second = 0
                             )
                             val to = Gson().toJson(tt)
@@ -183,7 +183,7 @@ fun SelectDateTimeInReportDialog(
                                 from, to
 
                             )
-                            true // مصرف کردن رویداد
+                            true
                         } else {
                             false
                         }

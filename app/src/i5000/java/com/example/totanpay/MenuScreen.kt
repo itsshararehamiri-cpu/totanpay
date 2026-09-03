@@ -39,6 +39,7 @@ import com.example.totanpay.feature.purchase.ReceiptContent
 import com.example.totanpay.feature.purchase.UnSuccessReceiptContent
 import com.example.totanpay.feature.topup.TopUpReceiptContent
 import com.example.totanpay.feature.voucher.VoucherReceiptContent
+import com.example.totanpay.receipt.ReceiptType
 import com.example.totanpay.receipt.ReceiptUi
 import com.example.totanpay.ui.component.ShowToast
 import com.example.totanpay.ui.component.button.HamburgerButton
@@ -70,19 +71,19 @@ fun MenuScreen(
         ReceiptUi(content = {
             if (uiState.lastTransactionIsNotPrinted!!.responseCode == "00") {
                 if (uiState.lastTransactionIsNotPrinted!!.transactionType == TransactionType.PURCHASE.title) {
-                    ReceiptContent(true, uiState.lastTransactionIsNotPrinted!!, true)
+                    ReceiptContent(true, uiState.lastTransactionIsNotPrinted!!, ReceiptType.CUSTOMER_RECEIPT)
                 }
                 if (uiState.lastTransactionIsNotPrinted!!.transactionType == TransactionType.VOUCHER.title) {
-                    VoucherReceiptContent(true, uiState.lastTransactionIsNotPrinted, true)
+                    VoucherReceiptContent(true, uiState.lastTransactionIsNotPrinted, ReceiptType.CUSTOMER_RECEIPT)
                 }
                 if (uiState.lastTransactionIsNotPrinted!!.transactionType == TransactionType.TOPUP.title) {
-                    TopUpReceiptContent(true, uiState.lastTransactionIsNotPrinted, true)
+                    TopUpReceiptContent(true, uiState.lastTransactionIsNotPrinted, ReceiptType.CUSTOMER_RECEIPT)
                 }
                 if (uiState.lastTransactionIsNotPrinted!!.transactionType == TransactionType.BILL_PAY.title) {
                     BillPaymentReceiptContent(
                         isPaperReceipt = true,
                         result = uiState.lastTransactionIsNotPrinted,
-                        true
+                        ReceiptType.CUSTOMER_RECEIPT
                     )
                 }
             } else {
@@ -243,7 +244,7 @@ fun MenuContent(
                 backgroundImageId = R.drawable.ic_i5000_purchase,
                 iconId = R.drawable.ic_i5000_purchase,
                 backgroundIconId = R.drawable.ic_i5000_purchase,
-                title = TransactionType.PURCHASE.title
+                title = stringResource(TransactionType.PURCHASE.title)
             )
 
             SmallMenuItem(
@@ -255,7 +256,7 @@ fun MenuContent(
                 backgroundImageId = R.drawable.main_item_background_to_left,
                 iconId = R.drawable.ic_i5000_bill,
                 backgroundIconId = R.drawable.ic_i5000_purchase,
-                title = TransactionType.BILL_PAY.title
+                title = stringResource(TransactionType.BILL_PAY.title)
             )
 
 
@@ -269,7 +270,7 @@ fun MenuContent(
                 backgroundImageId = R.drawable.main_item_background_to_right,
                 iconId = R.drawable.ic_i5000_balance,
                 backgroundIconId = R.drawable.ic_i5000_purchase,
-                title = TransactionType.BALANCE.title
+                title = stringResource(TransactionType.BALANCE.title)
             )
 
 
@@ -284,7 +285,7 @@ fun MenuContent(
                 backgroundImageId = R.drawable.main_item_background_to_left,
                 iconId = R.drawable.ic_i5000_charge,
                 backgroundIconId = R.drawable.ic_i5000_purchase,
-                title = TransactionType.CHARGE.title
+                title = stringResource(TransactionType.CHARGE.title)
             )
 
     }

@@ -1,5 +1,6 @@
 package com.example.totanpay.data.repository.datasource.transaction
 
+import com.example.totanpay.R
 import com.example.totanpay.data.repository.datasource.transaction.connection.IConnection
 import com.example.totanpay.data.repository.datasource.transaction.request.GetKeyTransactionRequest
 import com.example.totanpay.data.repository.datasource.transaction.response.BaseTransactionResponse
@@ -12,7 +13,8 @@ class GetKeyTransaction(
     iConnection: IConnection,
     saveReverseData: suspend (msg: IsoMessage) -> Unit,
     val decryptKeys: suspend (String, String, String) -> Map<String, String>,
-) : BaseTransaction(request, iConnection, saveReverseData, saveReverseData) {
+) : BaseTransaction(request, iConnection, saveReverseData, saveReverseData,
+    {true}) {
     override val isReversible: Boolean
         get() = false
     override val type: Int
@@ -71,7 +73,7 @@ class GetKeyTransaction(
         return if (receivedIsoMessage == null) {
             FailedTransactionResponse(
                 responseCode = -1,
-                responseMessage = "خطا در دریافت اطلاعات",
+                responseMessage = ResponseMessageContainer.RC_1.messageId,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,
@@ -80,7 +82,7 @@ class GetKeyTransaction(
         } else {
             FailedTransactionResponse(
                 responseCode = receivedIsoMessage.respCode,
-                responseMessage = "",
+                responseMessage = R.string.empty_message,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,

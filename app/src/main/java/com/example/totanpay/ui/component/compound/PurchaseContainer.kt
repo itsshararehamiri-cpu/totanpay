@@ -147,25 +147,3 @@ fun PurchaseContainer(textInputModifier: Modifier,
         }
     }
 }
-
-@Composable
-@Preview
-fun PurchaseContainerPreview() {
-    TotanPayTheme {
-        PurchaseContainer(textInputModifier=Modifier,
-            modifier = Modifier.fillMaxWidth(),
-            amountHasError = false,
-            amount = "1000",
-            onChangeAmountVale = {
-
-            },
-            onPurchaseSelected = { amount, purchaseId ->
-
-            },
-            onShowToastChangeValue = {
-
-            },
-            onChangeAmountHaseError = {
-            })
-    }
-}

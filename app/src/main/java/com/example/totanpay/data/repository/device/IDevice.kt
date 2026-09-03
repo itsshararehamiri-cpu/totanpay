@@ -16,8 +16,8 @@ interface IDevice {
     fun writeDataKey(dataKey: ByteArray)
     fun writePinKey(pinKey: ByteArray)
     fun getMac(data: ByteArray, index: Int = INDEX_WK): ByteArray
-    fun readCard(onSuccess: (String) -> Unit, onError: (String) -> Unit, onTimeOut: () -> Unit)
-    fun getPinBlock(
+    fun readCard(context: Context, onSuccess: (String) -> Unit, onError: (String) -> Unit, onTimeOut: () -> Unit)
+    fun getPinBlock(context: Context,
         pan: String, onError: (String) -> Unit,
         onInput: (Int) -> Unit, onConfirm: (String) -> Unit,
         onCancel: () -> Unit, onTimeOut: () -> Unit
@@ -32,7 +32,9 @@ interface IDevice {
         onSuccess: () -> Unit,
         onFailed: (String) -> Unit
     )
+    suspend fun getPrinterError(
 
+    ): String
     fun encrypt(data: ByteArray): ByteArray?
     fun decrypt(data: ByteArray): ByteArray?
     fun powerOnIcCard(): Boolean
@@ -51,5 +53,6 @@ interface IDevice {
         onTimeout: () -> Unit,
         onCancel: () -> Unit
     )
+    suspend fun getKCv(): KCV
 }
 

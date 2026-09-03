@@ -11,9 +11,13 @@
     <string name="print">چاپ</string>
     <string name="print_all">چاپ کل</string>
     <string name="print_sum">چاپ سرجمع</string>
+    <string name="general_sum">گزارش سرجمع</string>
     <string name="purchase">خرید</string>
     <string name="bill_payment">پرداخت قبض</string>
     <string name="customer_receipt">رسید مشتری</string>
+    <string name="merchant_receipt">رسید پذیرنده</string>
+    <string name="plz_enter_rrn">لطفا شماره مرجع را وارد کنید.</string>
+    <string name="rrn">شماره مرجع</string>
     <string name="cancel">انصراف</string>
     <string name="plz_swipe_card">لطفا کارت را بکشید:</string>
     <string name="in_processing">در حال انجام تراکنش</string>
@@ -21,7 +25,7 @@
     <string name="reports">گزارشات</string>
     <string name="last_transaction">آخرین تراکنش</string>
     <string name="details_of_transactions">ریز تراکنش ها</string>
-    <string name="report_based_on_trace">گزارش بر اساس شماره پیگیری</string>
+    <string name="report_based_on_trace">گزارش بر اساس شماره پیگیری/مرجع</string>
     <string name="number_of_all_transactions">تعداد کل تراکنش ها</string>
     <string name="sum_of_all_transactions">جمع کل تراکنش ها</string>
     <string name="from_date">از تاریخ</string>
@@ -40,11 +44,14 @@
     <string name="connection_settings">تنظیمات ارتباط</string>
     <string name="key_injection">کلیدگذاری</string>
     <string name="configuration">پیکربندی</string>
+    <string name="get_terminal_info">دریافت اطلاعات پایانه</string>
 
 
     <string name="enable_and_disable_voice">فعال سازی صدا</string>
+    <string name="enable_mac_on_key_injection">فعال سازی مک کلیدگذاری</string>
     <string name="choose_theme">انتخاب تم</string>
     <string name="dark_mode">حالت شب (تاریک) </string>
+    <string name="english_language">زبان انگلیسی</string>
 
 
     <string name="ip">IP</string>
@@ -55,6 +62,7 @@
     <string name="balance">مانده موجودی</string>
     <string name="real_balance">مانده موجودی واقعی</string>
 
+    <string name="balance_">موجودی</string>
 
     <string name="pin">رمز</string>
     <string name="serial">سریال شارژ</string>
@@ -70,6 +78,8 @@
     <string name="success_transaction">تراکنش موفق</string>
     <string name="unsuccess_transaction">تراکنش ناموفق</string>
 
+    <string name="success_operation">عملیات موفق</string>
+    <string name="unsuccess_operation">عملیات ناموفق</string>
 
     <string name="confirm">تایید</string>
     <string name="close">بستن</string>
@@ -106,7 +116,7 @@
     <string name="please_enter_second_password">لطفا رمز کارت دوم را وارد نمایید:</string>
 
 
-    <string name="please_enter_password">لطفا رمز را وارد نمایید:</string>
+    <string name="please_enter_password"> لطفا رمز را وارد نمایید:</string>
 
 
     <string name="bill_id_is_not_valid">شناسه قبض معتبر نیست.</string>
@@ -122,6 +132,7 @@
 
     <string name="pos_code">کد کارتخوان</string>
     <string name="plz_enter_percent">لطفا درصد را وارد نمایید:</string>
+    <string name="customer_signature">امضا مشتری</string>
 
     <string name="plz_choose_your_operator">لطفا اپراتور مورد نظر خود را انتخاب نمایید:</string>
     <string name="select_amount_or_enter_amount">مبلغ شارژ را انتخاب یا وارد نمایید:</string>
@@ -132,6 +143,7 @@
 
 
     <string name="in_configuration">در حال پیکربندی</string>
+    <string name="in_get_terminal_info">در حال دریافت اطلاعات</string>
     <string name="configuration_do_successfully">پیکربندی با موفقیت انجام شد.</string>
     <string name="enter_amount_or_select">مبلغ شارژ را انتخاب یا وارد نمایید:</string>
     <string name="operator_not_selected">اپراتور انتخاب نشده است.</string>
@@ -171,17 +183,230 @@
 
     <string name="amount_should_be_greater_than">مبلغ نباید بیشتر از  %1$s  ریال باشد</string>
 
-<string name="set_maximum_amount_for_purchase_transaction">تعیین حداکثر مبلغ برای خرید</string>
+    <string name="set_maximum_amount_for_purchase_transaction">تعیین حداکثر مبلغ برای خرید</string>
     <string name="plz_enter_maximum_amount_for_purchase_transaction">لطفا حداکثر مبلغ برای خرید را وارد کنید</string>
     <string name="plz_enter_percent_of_tax_irancell_charge">درصد مالیات شارژ ایرانسل را وارد کنید</string>
-<string name="set_percent_of_tax_irancell_charge"> تعیین درصد مالیات شارژ ایرانسل</string>
+    <string name="set_percent_of_tax_irancell_charge"> تعیین درصد مالیات شارژ ایرانسل</string>
     <string name="percent_must_be_in_range">لطفاً عددی بین ۰ تا ۱۰۰ وارد کنید.</string>
 
     <string name="key_injection_not_done">کلیدگذاری انجام نشده است.</string>
+    <string name="receipt_payback_message_part1">در صورت کسر وجه از حساب شما</string>
+    <string name="receipt_payback_message_part2">مبلغ مذکور طی 72 ساعت به حساب شما</string>
+    <string name="receipt_payback_message_part3">عودت خواهد شد در غیر اینصورت</string>
+    <string name="receipt_payback_message_part4">جهت پیگیری با شماره امداد مشتریان</string>
+    <string name="receipt_payback_message_part4_s">جهت پیگیری لطفا با شماره تلفن 43695000-021</string>
+    <string name="receipt_payback_message_part5_s">تماس حاصل نمایید</string>
 
+    <string name="unable_to_print">امکان چاپ وجود ندارد</string>
+    <string name="there_are_no_connection_settings_please_go_to_connection_settings_section_and_configure_settings">
+        تنظیمات ارتباطی وجود ندارد لطفا به قسمت تنظیمات اتصال بروید و  تنظیمات را تعیین نمایید.
+    </string>
+    <string name="no_password_has_been_set">کلمه عبور تعیین نشده است.</string>
+
+    <string name="from_amount">از مبلغ</string>
+    <string name="to_amount">تا مبلغ</string>
+    <string name="no_transactions_selected">هیچ تراکنشی انتخاب نشده است!</string>
+    <string name="the_total_of_percentages_must_be_equal_to_on_houndred">جمع درصدها باید برابر با 100 باشد.</string>
+    <string name="two_password_is_not_same">دو کلمه عبور مطابقت ندارند.</string>
+    <string name="print_receipt_for_any_amount">چاپ رسید با هر مبلغ</string>
+    <string name="mobile_number">شماره موبایل</string>
+    <string name="terminal_merchant">پایانه/پذیرنده</string>
+    <string name="trace__">شماره پیگیری/       </string>
+    <string name="trace_rrn">شماره پیگیری/مرجع</string>
+    <string name="withdrawable_account_balance">مانده حساب قابل برداشت</string>
+    <string name="voucher_serial">سریال شارژ</string>
+    <string name="voucher_pin">رمز شارژ</string>
+    <string name="charging_method">روش شارژ</string>
+    <string name="error_in_print">خطا در چاپ</string>
+    <string name="no_options_selected">هیچ گزینه ای انتخاب نشده است.</string>
+    <string name="enter_amount">مبلغ  را وارد نمایید:</string>
+    <string name="password_not_entered">رمز وارد نشده است.</string>
+    <string name="please_specify_minimum_amount_for_printing_a_receipt">لطفا حداقل مبلغ برای چاپ رسید را تعیین نمایید:</string>
+    <string name="amount_of_charge"> مبلغ شارژ:</string>
+    <string name="amount_of_purchase">مبلغ خرید:</string>
+    <string name="amount_of_bill">مبلغ قبض:</string>
+    <string name="please_turn_off_automatic_date_and_time_setting">لطفاً تنظیم خودکار تاریخ و ساعت را خاموش کنید.</string>
+    <string name="please_set_device_time_zone_to_tehran">لطفا محدوده زمانی دستگاه را روی تهران تنظیم نمایید.</string>
+<string name="please_set_time_zone_to_tehran">لطفاً منطقه زمانی را روی تهران تنظیم کنید.</string>
+    <string name="number_">عدد %d</string>
+    <string name="amount_with_currency">%1$s ریال</string>
+
+
+
+    <string name="unknown_error">خطای ناشناخته</string>
+    <string name="plz_put_barcode_front_device">لطفا بارکد را مقابل دستگاه قرار دهید</string>
+    <string name="reading_card_have_error">خواندن کارت با خطا مواجه شد</string>
+    <string name="no_paper">کاغذ وجود ندارد</string>
+    <string name="printer_is_printing">پرینتر در حال پرینت است</string>
+    <string name="printer_be_broken">پرینتر خراب است</string>
+    <string name="print_failed">پرینت با مشکل مواجه شد</string>
+    <string name="plz_enter_pin">لطفا رمز را وارد نمایید:\n (الزاما توسط مشتری)</string>
+    <string name="required_by_customer">الزاما توسط مشتری</string>
+    <string name="cancel_">لغو</string>
+    <string name="delete">حذف</string>
+    <string name="select_range_is_not_correct">بازه انتخابی درست نمی باشد</string>
 
 
     <string name="amount_can_not_be_greater_than">
     مبلغ وارد شده نمی تواند بیشتر از %1$s ریال باشد.
 </string>
+
+
+
+
+
+    <string name="unable_to_complete_transaction_please_check_internet">امکان انجام تراکنش وجود ندارد لطفا اینترنت را بررسی کنید.</string>
+
+
+
+    <string name="sheba_number">شماره شبا</string>
+    <string name="the_selected_range_is_not_correct">بازه انتخابی درست نمی باشد.</string>
+
+
+    <string name="error_in_reading_icc">خطا در خواندن کلید از کارت</string>
+    <string name="error_in_reading_key_is_failed">خطا در خواندن کلید از کارت</string>
+    <string name="first_pin_is_incorrect">رمز اول اشتباه است.</string>
+    <string name="second_pin_is_incorrect">رمز دوم اشتباه است.</string>
+    <string name="pass_is_incorrect">رمز اشتباه است.</string>
+    <string name="empty_message"></string>
+
+
+    <string name="configuration_not_done">پیکربندی انجام نشده است</string>
+    <string name="please_go_to_account_management_section_and_determine_share_of_each_account_number">لطفا به قسمت مدیریت حساب ها بروید و سهم هر شماره حساب را تعیین کنید.</string>
+
+    <string name="print_with_any_amount">چاپ رسید با هر مبلغ</string>
+    <string name="failur_to_print_receipt">عدم چاپ رسید</string>
+    <string name="print_receipt">چاپ رسید</string>
+    <string name="print_receipt_above_min_amount">چاپ خودکار رسید</string>
+    <string name="no_internet">امکان انجام تراکنش وجود ندارد لطفا اینترنت را بررسی کنید</string>
+    <string name="error">خطا:</string>
+    <string name="voucher">خرید کد شارژ</string>
+    <string name="topup">خرید مستقیم شارژ</string>
+    <string name="min_amount_for_auto_print_receipt">حداقل مبلغ برای چاپ خودکار(اختیاری)</string>
+    <string name="duplicate_receipt">رسید مجدد</string>
+
+    <string name="get_key">گرفتن کلید</string>
+    <string name="confirm_key">تایید کلید</string>
+    <string name="key_exchange_key">تبادل کلید</string>
+    <string name="charge">شارژ</string>
+    <string-array name="numbers">
+        <item>۰</item>
+        <item>۱</item>
+        <item>۲</item>
+        <item>۳</item>
+        <item>۴</item>
+        <item>۵</item>
+        <item>۶</item>
+        <item>۷</item>
+        <item>۸</item>
+        <item>۹</item>
+    </string-array>
+    <string name="rc_3">خطا در فرمت اطلاعات</string>
+    <string name="rc_6">خطا در ارسال تراکنش</string>
+    <string name="rc_5">خطا در برقراری ارتباط</string>
+    <string name="rc_1">خطا در دریافت اطلاعات</string>
+    <string name="rc_2">خطا در ارسال تراکنش تسویه-بازگشت</string>
+    <string name="rc_01">به صادر کننده کارت رجوع شود، تراکنش لغو شد</string>
+    <string name="rc_02">با توجه به شرایط خاص بوجود آمده به صادر کننده کارت رجوع شود.</string>
+    <string name="rc_03">پذیرنده فروشگاهی معتبر نیست.</string>
+    <string name="rc_04">کارت نامعتبر است</string>
+    <string name="rc_05">مجوز صادر نشود</string>
+    <string name="rc_06">خطا</string>
+    <string name="rc_07">کارت نامعتبر است</string>
+    <string name="rc_08">مجوز پس از شناسایی صادر شود، تراکنش انجام شد</string>
+    <string name="rc_09">صادر کننده کارت نامعتبر است</string>
+    <string name="rc_10">تراکنش با جزئی از مبلغ انجام شد، تراکنش انجام شد</string>
+    <string name="rc_11">تراکنش جهت اشخاص خاص انجام شد</string>
+    <string name="rc_12">تراکنش معتبر نیست</string>
+    <string name="rc_13">مبلغ معتبر نیست</string>
+    <string name="rc_14">شماره کارت معتبر نیست</string>
+    <string name="rc_15">صادر کننده کارت نامعتبر است</string>
+    <string name="rc_16">تراکنش پس از بروزرسانی کارت انجام شد، تراکنش انجام شد</string>
+    <string name="rc_17">انصراف مشتری</string>
+    <string name="rc_18">اعتراض مشتری</string>
+    <string name="rc_19">تراکنش تکراری،تراکنش لغو شد</string>
+    <string name="rc_20">پاسخ معتبر نیست</string>
+    <string name="rc_21">عملیات خاصی انجام نشد</string>
+    <string name="rc_22">احتمال خرابی</string>
+    <string name="rc_23">کارمزد تراکنش غیرقابل اعمال است، تراکنش لغو شد</string>
+    <string name="rc_24">دریافت کننده امکان پشتیبانی از عملیات فایلی را ندارد</string>
+    <string name="rc_25">تراکنش اصلی یافت نشد</string>
+    <string name="rc_26">عملیات فایلی مربوط به رکورد تکراری است. رکورد قبلی جایگزین می شود</string>
+    <string name="rc_27">عملیات فایلی تصحیح فیلد با خطا مواجه شد</string>
+    <string name="rc_28">انجام عملیات فایلی روی یک فایل قفل شده است</string>
+    <string name="rc_29">عملیات فایلی موفقیت آمیز نبود، با پذیرنده تماس بگیرید</string>
+    <string name="rc_30">اشکال در فرمت اطلاعات</string>
+    <string name="rc_31">بانک توسط سوییچ پشتیبانی نمی شود، تراکنش لغو شد</string>
+    <string name="rc_32">تراکنش به صورت جزئی انجام شد</string>
+    <string name="rc_33">کارت منقضی شده</string>
+    <string name="rc_34"></string>
+    <string name="rc_35">دریافت کننده کارت نمی تواند یک پذیرنده باشد،ضبط کارت</string>
+    <string name="rc_36">کارت نامعتبر</string>
+    <string name="rc_37">کارت نامعتبر</string>
+    <string name="rc_38">تعداد دفعات مجاز تکرار رمز مشتری به پایان رسید</string>
+    <string name="rc_39">حساب اعتباری وجود ندارد،تراکنش لغو شد</string>
+
+    <string name="rc_40">عملیات درخواستی پشتیبانی نمی شود،تراکنش لغو شد</string>
+
+    <string name="rc_41">کارت نامعتبر</string>
+    <string name="rc_42">حساب عمومی وجود ندارد،تراکنش لغو شد</string>
+    <string name="rc_43"></string>
+    <string name="rc_44">حساب سرمایه گذاری وجود ندارد،تراکنش لغو شد</string>
+
+
+    <string name="rc_52">حساب جاری وجود ندارد،تراکنش لغو شد</string>
+    <string name="rc_53">حساب پس انداز موجود نیست،تراکنش لغو شد</string>
+    <string name="rc_54">کارت منقضی شده است، تراکنش لغو شد</string>
+
+
+    <string name="rc_55">رمز اشتباه است،تراکنش لغو شد</string>
+
+
+
+    <string name="rc_51">موجوی حساب کافی نیست،تراکنش لغو شد</string>
+    <string name="rc_57">دارنده کارت مجاز به انجام تراکنش نیست،تراکنش لغو شد</string>
+
+    <string name="rc_59">احتمال سو استفاده،تراکنش لغو شد</string>
+
+    <string name="rc_60">دریافت کننده کارت نمیتواند یک پذیرنده باشد، تراکنش لغو شد</string>
+
+
+    <string name="rc_56">کارت نامعتبر</string>
+    <string name="rc_58">پایانه مجاز به انجام تراکنش نیست،تراکنش لغو شد</string>
+    <string name="rc_64">مبلغ تراکنش اصلی اشتباه است،تراکنش لغو شد</string>
+
+
+    <string name="rc_61">مبلغ نامعتبر</string>
+    <string name="rc_62">کارت نامعتبر</string>
+    <string name="rc_63"> نقض موارد امنیتی</string>
+    <string name="rc_65">مبلغ از سقف دوره ای برداشت نقدی بیشتر است،تراکنش لغو شد</string>
+
+    <string name="rc_68">پاسخ در فرصت مشخص شده دریافت نشد</string>
+    <string name="rc_75">تعداد دفعات مجاز تکرار رمز مشتری به پایان رسید،تراکنش لغو شد</string>
+
+    <string name="rc_77">تاریخ تراکنش معتبر نیست</string>
+    <string name="rc_67">عملیات تعویض دوره مالی در حال انجام اس</string>
+    <string name="rc_66">تماس دریافت کننده کارت با تشکیلات امنیتی پذیرنده، تراکنش لغو شد</string>
+    <string name="rc_92">موسسه مالی یا شبکه ارتباط جهت مسیریابی در دسترس نیست،تراکنش لغو شد</string>
+    <string name="rc_91">صادر کننده یا سوئیچ در حال انجام عملیات هستند-تراکنش لغو شد</string>
+    <string name="rc_90">عملیات تعویض دوره مالی در حال انجام است</string>
+    <string name="rc_93">امکان تکمیل تراکنش وجود ندارد</string>
+    <string name="rc_94">تراکنش تکراری است</string>
+    <string name="rc_95">تسویه حساب با خطا مواجه شد</string>
+    <string name="rc_96">اشکال در عملکرد سیستم</string>
+    <string name="rc_empty"> </string>
+    <string name="card_number_title">شماره کارت</string>
+
+    <string name="water">آب</string>
+    <string name="electricity">برق</string>
+    <string name="gas">گاز</string>
+    <string name="mobile">موبایل</string>
+    <string name="should_change_pass">
+        لطفا رمز پذیرنده را تغییر دهید.</string>
+    <string name="transaction_settlement_reversal_has_not_been_completed">تراکنش اصلاحیه/تسویه انجام نشده است.</string>
+    <string name="plz_send_it_to_complete_transaction_process">لطفاً برای تکمیل فرآیند، آن را ارسال کنید</string>
+    <string name="continue_">ادامه دادن</string>
+    <string name="error_in_print_message">در صورت ادامه، عملیات بدون چاپ رسید انجام خواهد شد. آیا ادامه می‌دهید؟
+</string>
+    <string name="connection_to_net">تنظیمات شبکه</string>
 </resources>

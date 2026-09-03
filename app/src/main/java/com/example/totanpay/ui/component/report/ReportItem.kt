@@ -21,11 +21,14 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.totanpay.LocalLanguageState
 import com.example.totanpay.R
 import com.example.totanpay.ui.theme.TotanPayTheme
 
 @Composable
 fun ReportItem(modifier: Modifier, backgroundImageId:Int, title: String, onItemClicked: () -> Unit) {
+    val isRtl= LocalLanguageState.current.isFarsiSelected.value
+
     Box(
         modifier = modifier
             .fillMaxWidth().height(80.dp)
@@ -50,26 +53,14 @@ fun ReportItem(modifier: Modifier, backgroundImageId:Int, title: String, onItemC
             )
             Spacer(modifier = Modifier.weight(1f))
             Image(
-                painter = painterResource(id = R.drawable.ic_arrow_left_gray),
+                painter = painterResource(id =if(isRtl) R.drawable.ic_arrow_left_gray
+                else R.drawable.ic_arrow_right),
                 contentDescription = title,
                 modifier = modifier
                     .padding(end = 26.dp)
                     .size(24.dp), colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f))
             )
 
-        }
-    }
-}
-@Composable
-@Preview
-fun ReportItemPreview() {
-    TotanPayTheme {
-        ReportItem(
-            modifier = Modifier
-            ,
-            backgroundImageId = R.drawable.background_last_transaction,
-            title = stringResource(id = R.string.last_transaction)
-        ) {
         }
     }
 }

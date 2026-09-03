@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.totanpay.common.PrintableViewModel
 import com.example.totanpay.common.ResultTransactionUiState
 import com.example.totanpay.data.repository.DeviceRepository
-import com.example.totanpay.data.repository.DeviceSettingsRepository
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
+import com.example.totanpay.data.repository.settings.device_settings.DeviceSettingsRepository
 import com.example.totanpay.data.util.getPersianDate
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -29,6 +29,17 @@ class BalanceUnSuccessResultViewModel @Inject constructor(private val deviceSett
         viewModelScope.launch {
             val result=Gson().fromJson(response,ResponseTransaction::class.java)
             _uiState.update { it.copy(result = result.copy(date = getPersianDate(result.date))) }
+        }
+    }
+    fun clearErrorMessage(){
+        viewModelScope.launch {
+            _uiState.update { it.copy(errorInPrint = "") }
+        }
+    }
+
+    fun setErrorInPrint(errorInPrint: String) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(errorInPrint =errorInPrint) }
         }
     }
 }

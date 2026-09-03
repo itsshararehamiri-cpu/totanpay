@@ -57,17 +57,6 @@ fun DashedDivider(@ColorRes colorId: Color) {
     }
 }
 
-
-@Preview
-@Composable
-fun ShowDashDivider() {
-    TotanPayTheme {
-        DashedDivider(Color.Gray)
-    }
-
-}
-
-
 @Composable
 fun DottedDivider(
     modifier: Modifier = Modifier,
@@ -79,38 +68,12 @@ fun DottedDivider(
             .height(1.dp)
     )
 }
-
-@Composable
-@Preview
-fun DottedDividerPreview() {
-    TotanPayTheme {
-        DottedDivider()
-    }
-}
-
-@Composable
-fun DividerLightGray(
-    modifier: Modifier
-) {
-    Divider(modifier = modifier, color = Color.LightGray)
-}
-
-@Composable
-@Preview
-fun DividerLightGrayPreview() {
-    TotanPayTheme {
-        DividerLightGray(Modifier.fillMaxWidth())
-    }
-}
-
-@Preview(showBackground = true)
-@Composable
-fun ReceiptDividerPreview() {
-    TotanPayTheme {
-        DottedDivider(modifier = Modifier.fillMaxWidth())
-    }
-}
-
+//@Composable
+//fun DividerLightGray(
+//    modifier: Modifier
+//) {
+//    HorizontalDivider(modifier = modifier, color = Color.LightGray)
+//}
 data class DottedShape(
     val step: Dp,
 ) : Shape {
@@ -174,20 +137,4 @@ fun DottedLine(
                 }
             }
     )
-}
-
-@Composable
-@Preview
-fun LinePreview() {
-    TotanPayTheme {
-        Line(modifier = Modifier.fillMaxWidth(1f))
-    }
-}
-
-@Composable
-@Preview
-fun DottedLinePreview() {
-    TotanPayTheme {
-        DottedLine(modifier = Modifier.fillMaxWidth(1f))
-    }
 }

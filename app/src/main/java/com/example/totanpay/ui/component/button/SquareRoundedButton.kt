@@ -38,10 +38,4 @@ fun SquareRoundedButton(
         )
     }
 }
-@Composable
-@Preview
-fun SquareRoundedButtonPreview() {
-    TotanPayTheme {
-        SquareRoundedButton(onClick = {}, modifier = Modifier)
-    }
-}
+

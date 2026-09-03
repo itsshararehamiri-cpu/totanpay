@@ -33,7 +33,6 @@ public class TypefaceHelper {
         String name = bold + "_" + fontName;
         synchronized (TYPEFACE_CACHE) {
             if (!TYPEFACE_CACHE.containsKey(name)) {
-                Log.e(TAG, "getDefault TYPEFACE_CACHE not contains " + name);
                 try {
                     Typeface typeface = Typeface.defaultFromStyle(bold ? Typeface.BOLD : Typeface.NORMAL);
                     TYPEFACE_CACHE.put(name, typeface);

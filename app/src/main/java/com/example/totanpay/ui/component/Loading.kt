@@ -78,10 +78,3 @@ fun Loading(waitingTitle:String=stringResource(id = R.string.in_processing)) {
         )
     }
 }
-@Composable
-@Preview
-fun LoadingContentPreview() {
-    TotanPayTheme {
-        Loading()
-    }
-}

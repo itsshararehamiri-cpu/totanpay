@@ -8,5 +8,6 @@ class WorkingKeyExchangeTransactionRequest(
     stan: Int, serial: String, appVersion: String, nii: String,date:String,time:String,terminalLanguage:String,
     posConditionCode:String
 ) :
-    BaseTransactionRequest(serial=serial, appVersion=appVersion,terminalLanguage=terminalLanguage, nii=nii, stan=stan,
-        date=date,time=time,posConditionCode=posConditionCode,terminalConnectionType="")// TODO:  
+    BaseTransactionRequest(serial=serial, appVersion=appVersion,terminalLanguage=terminalLanguage,
+        nii=nii, stan=stan,
+        date=date,time=time,posConditionCode=posConditionCode,terminalConnectionType="")

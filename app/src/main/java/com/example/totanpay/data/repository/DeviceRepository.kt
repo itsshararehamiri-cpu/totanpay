@@ -2,6 +2,7 @@ package com.example.totanpay.data.repository
 
 import android.content.Context
 import android.graphics.Bitmap
+import com.example.totanpay.data.repository.device.KCV
 
 interface DeviceRepository {
 //    suspend fun readCard(
@@ -10,7 +11,7 @@ interface DeviceRepository {
 //        onTimeOut: () -> Unit
 //    )
 
-    suspend fun getPinBlock(
+    suspend fun getPinBlock(context: Context,
         pan: String, onError: (String) -> Unit,
         onInput: (Int) -> Unit, onConfirm: (String) -> Unit,
         onCancel: () -> Unit, onTimeOut: () -> Unit
@@ -32,12 +33,15 @@ interface DeviceRepository {
         onTimeout: () -> Unit,
         onCancel: () -> Unit
     )
-
+    suspend fun getPrinterError(
+        onFailed: (String) -> Unit
+    )
     suspend fun getBatteryStatus(): Boolean
     suspend fun isInjectMaster(): Boolean
     fun requestDecryptData(data: ByteArray?): ByteArray?
     suspend fun batteryIsEnough(): Boolean
     suspend fun enableHome()
     suspend fun disableHome()
-    suspend fun readCard(): CardReadResult
+    suspend fun readCard(context: Context): CardReadResult
+    suspend fun getKcv(): KCV
 }

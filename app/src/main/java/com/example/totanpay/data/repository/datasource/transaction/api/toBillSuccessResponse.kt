@@ -1,5 +1,6 @@
 package com.example.totanpay.data.repository.datasource.transaction.api
 
+import com.example.totanpay.R
 import com.example.totanpay.data.repository.datasource.mask
 import com.example.totanpay.data.repository.datasource.model.Merchant
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
@@ -16,11 +17,11 @@ fun BaseTransactionResponse.BillPayTransactionResponse.toBillSuccessResponse(
     amount: String,
     billID: String,
     payId: String,
-    serviceDesc: String
+    serviceDesc: String,posCode: String
 ): ResponseTransaction {
     return ResponseTransaction(
         responseCode = this!!.responseCode.toString(),
-        responseMessage = this.responseMessage ?: "",
+        responseMessage = this.responseMessage ?: R.string.empty_message,
         rrn = this.rrn ?: "",
         trace = this.trace,
         merchantName = merchant.merchantName ?: "",
@@ -35,13 +36,14 @@ fun BaseTransactionResponse.BillPayTransactionResponse.toBillSuccessResponse(
         maskedPan = extractPanFromTrack2(track2).mask(),
         billId = billID,
         paymentId = payId,
-        serviceDesc = serviceDesc
+        serviceDesc = serviceDesc, posCode = posCode,
+        englishMerchantName = merchant.englishMerchantName?:""
     )
 }
 
 fun BaseTransactionResponse.BillPayTransactionResponse.toBillUnSuccessResponse(
     merchant: Merchant,
-    terminalId: String
+    terminalId: String,posCode: String
 ): ResponseTransaction {
     return ResponseTransaction(
         responseCode = this.responseCode.toString(),
@@ -50,7 +52,7 @@ fun BaseTransactionResponse.BillPayTransactionResponse.toBillUnSuccessResponse(
         } else {
             ResponseMessageContainer.valueOfLabel(
                 this.responseCode.toString()
-            ).message
+            ).messageId
         },
         rrn = this.rrn ?: "",
         trace = this.trace,
@@ -64,17 +66,17 @@ fun BaseTransactionResponse.BillPayTransactionResponse.toBillUnSuccessResponse(
         issuerName = this.issuerName,
         amount = "",
         billId = "",
-        maskedPan = this.maskedPan,
+        maskedPan = this.maskedPan, posCode = posCode, englishMerchantName = merchant.englishMerchantName?:""
     )
 }
 
 fun BaseTransactionResponse.BillInquiryTransactionResponse.toBillInquirySuccessResponse(
     merchant: Merchant, terminalId: String,
-    billID: String, payId: String
+    billID: String, payId: String,posCode: String
 ): ResponseTransaction {
     return ResponseTransaction(
         responseCode = this.responseCode.toString(),
-        responseMessage = this.responseMessage ?: "",
+        responseMessage = this.responseMessage ?: R.string.empty_message,
         rrn = this.rrn ?: "",
         trace = this.trace,
         merchantName = merchant.merchantName ?: "",
@@ -91,17 +93,18 @@ fun BaseTransactionResponse.BillInquiryTransactionResponse.toBillInquirySuccessR
         billId = billID,
         paymentId = payId,
         serviceDesc = this.serviceDesc,
-        billType = this.billType
+        englishServiceDesc=this.englishServiceDesc,
+        billType = this.billType, posCode = posCode, englishMerchantName = merchant.englishMerchantName?:""
     )
 }
 
 fun BaseTransactionResponse.BillInquiryTransactionResponse.toBillInquiryUnSuccessResponse(
     merchant: Merchant,
-    terminalId: String
+    terminalId: String,posCode: String
 ): ResponseTransaction {
     return ResponseTransaction(
         responseCode = this.responseCode.toString(),
-        responseMessage = this.responseMessage.toString(),
+        responseMessage = this.responseMessage?:R.string.empty_message,
         rrn = this.rrn ?: "",
         trace = this.trace ?: "",
         merchantName = merchant.merchantName ?: "",
@@ -114,6 +117,6 @@ fun BaseTransactionResponse.BillInquiryTransactionResponse.toBillInquiryUnSucces
         issuerName = "",
         amount = "",
         billId = "",
-        maskedPan = "",
+        maskedPan = "", posCode = posCode, englishMerchantName = merchant.englishMerchantName?:""
     )
 }

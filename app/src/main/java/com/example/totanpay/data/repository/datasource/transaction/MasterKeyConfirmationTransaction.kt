@@ -1,5 +1,6 @@
 package com.example.totanpay.data.repository.datasource.transaction
 
+import com.example.totanpay.R
 import com.example.totanpay.data.repository.datasource.transaction.connection.IConnection
 import com.example.totanpay.data.repository.datasource.transaction.request.MasterKeyConfirmTransactionRequest
 import com.example.totanpay.data.repository.datasource.transaction.response.BaseTransactionResponse
@@ -12,7 +13,7 @@ class MasterKeyConfirmationTransaction(
     private val macGenerator: IMacGenerator,
     iConnection: IConnection,
     saveReverseData: suspend (msg: IsoMessage) -> Unit,
-) : BaseTransaction(request, iConnection, saveReverseData, saveReverseData) {
+) : BaseTransaction(request, iConnection, saveReverseData, saveReverseData,{true}) {
     override val isReversible: Boolean
         get() = false
     override val type: Int
@@ -60,7 +61,7 @@ class MasterKeyConfirmationTransaction(
         {
             FailedTransactionResponse(
                 responseCode = -1,
-                responseMessage ="خطا در دریافت اطلاعات",
+                responseMessage =ResponseMessageContainer.RC_1.messageId,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,
@@ -70,7 +71,7 @@ class MasterKeyConfirmationTransaction(
         else{
             FailedTransactionResponse(
                 responseCode = receivedIsoMessage.respCode,
-                responseMessage ="",
+                responseMessage =R.string.empty_message,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,

@@ -45,6 +45,7 @@ import com.google.gson.Gson
 
 @Composable
 fun MainVoucherScreen(onConfirm: (String, String) -> Unit, onBackButtonClicked: () -> Unit) {
+    val context=LocalContext.current
     var showToast by remember { mutableStateOf(false) }
     var operatorHasError: Boolean by remember { mutableStateOf(true) }
     var selectedOption by remember {
@@ -107,7 +108,7 @@ fun MainVoucherScreen(onConfirm: (String, String) -> Unit, onBackButtonClicked: 
                 }
             }) {
                 BackButton(
-                    title = TransactionType.VOUCHER.title,
+                    title =context.getString( TransactionType.VOUCHER.title),
                     modifier = BackButtonModifier
                         .layoutId("toolBar")
                 ) {
@@ -124,7 +125,7 @@ fun MainVoucherScreen(onConfirm: (String, String) -> Unit, onBackButtonClicked: 
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.titleMedium
                 )
-                val operators: List<Operator>? = getAllCharges(context = LocalContext.current)
+                val operators: List<Operator>? = remember { getAllCharges(context = context) }
                 LazyRow(
                     modifier = ListModifier.layoutId("operators")
                 ) {

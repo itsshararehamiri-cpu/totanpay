@@ -157,9 +157,9 @@ fun ChangeMerchantPasswordContent(
             ShowToast(
                 modifier = Modifier.align(Alignment.Center),
                 message = if (showToast) {
-                    if (passwordValue.isEmpty() || repeatPasswordValue.isEmpty()) "کلمه عبور تعیین نشده است."
-                    else if (passwordValue.length < 4 || repeatPasswordValue.length < 4) "طول کلمه عبور باید 4 باشد"
-                    else if (passwordValue != repeatPasswordValue) "دو کلمه عبور مطابقت ندارند."
+                    if (passwordValue.isEmpty() || repeatPasswordValue.isEmpty()) stringResource(R.string.no_password_has_been_set)
+                    else if (passwordValue.length < 4 || repeatPasswordValue.length < 4)stringResource(R.string.length_of_pass_be_four)
+                    else if (passwordValue != repeatPasswordValue) stringResource(R.string.two_password_is_not_same)
                     else ""
                 } else ""
             ) {

@@ -2,13 +2,16 @@ package com.example.totanpay.feature.topup
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import com.example.totanpay.common.containerReceiptModifier
 import com.example.totanpay.common.receipt.AddAmount
+import com.example.totanpay.common.receipt.AddCustomerSignature
 import com.example.totanpay.common.receipt.AddMaskedPanCardIssuer
 import com.example.totanpay.common.receipt.AddMerchantIdTerminalId
 import com.example.totanpay.common.receipt.AddMerchantNamePhone
@@ -16,18 +19,21 @@ import com.example.totanpay.common.receipt.AddMobile
 import com.example.totanpay.common.receipt.AddPSPLog
 import com.example.totanpay.common.receipt.AddPosCode
 import com.example.totanpay.common.receipt.AddRRNStan
+import com.example.totanpay.common.receipt.AddReceiptType
 import com.example.totanpay.common.receipt.AddTypeDateTime
+import com.example.totanpay.common.receipt.ShowSuccessResult
 import com.example.totanpay.common.rowReceiptModifier
 import com.example.totanpay.common.rowReceiptWithPSPLogoModifier
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
 import com.example.totanpay.data.repository.datasource.transaction.TransactionType
+import com.example.totanpay.receipt.ReceiptType
 import com.example.totanpay.ui.component.HorizontalDivider
 import com.example.totanpay.ui.theme.Green60
 
 @Composable
 fun TopUpReceiptContent(
     isPaperReceipt: Boolean,
-    result: ResponseTransaction?, printForCustomer: Boolean
+    result: ResponseTransaction?, receiptType: ReceiptType
 ) {
     val context = LocalContext.current
 
@@ -44,16 +50,20 @@ fun TopUpReceiptContent(
                 isPaperReceipt = false
             )
         }
+        if(isPaperReceipt)
+            AddReceiptType( modifier = Modifier.rowReceiptModifier(isPaperReceipt), receiptType=receiptType,
+                textColor = firstColor)
         AddMerchantNamePhone(
             modifier = modifierRowReceipt,
             merchantName = result!!.merchantName,
             merchantPhone = result.merchantPhone,
+            englishMerchantName = result.englishMerchantName,
             textColor = firstColor,
             isPaperReceipt = isPaperReceipt
         )
         AddTypeDateTime(
             modifier = modifierRowReceipt,
-            type = TransactionType.TOPUP.title,
+            type =context.getString( TransactionType.TOPUP.title),
             date = result.date,
             time = result.time,
             textColor = firstColor,
@@ -63,7 +73,7 @@ fun TopUpReceiptContent(
             isPaperReceipt = isPaperReceipt
         )
         if (!result.mobile.isNullOrEmpty())
-            if (printForCustomer)
+            if (receiptType== ReceiptType.CUSTOMER_RECEIPT)
                 AddMobile(
                     modifier = Modifier.rowReceiptWithPSPLogoModifier(isPaperReceipt),
                     result.mobile,
@@ -105,6 +115,13 @@ fun TopUpReceiptContent(
             isPaperReceipt = isPaperReceipt
         )
         if (isPaperReceipt) {
+            ShowSuccessResult(modifier = Modifier
+                .wrapContentSize()
+                .align(Alignment.CenterHorizontally), firstColor = firstColor)
+
+
+            if(receiptType== ReceiptType.MERCHANT_RECEIPT)  AddCustomerSignature( modifier = Modifier.rowReceiptModifier(isPaperReceipt)
+                ,textColor=firstColor,isPaperReceipt = true)
             AddPSPLog(
                 modifier = Modifier.fillMaxWidth(),
                 color = firstColor,

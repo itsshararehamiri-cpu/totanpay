@@ -38,8 +38,8 @@ import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-const val TIME_TO_FINISH_SUCCESS_RESULT = 20000
-const val TIME_TO_FINISH_TAKE_CARD = 20000
+const val TIME_TO_FINISH_SUCCESS_RESULT = 100000
+const val TIME_TO_FINISH_TAKE_CARD = 30000
 
 
 @AndroidEntryPoint

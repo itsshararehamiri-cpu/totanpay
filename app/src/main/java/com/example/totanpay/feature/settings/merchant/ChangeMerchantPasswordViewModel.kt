@@ -2,7 +2,7 @@ package com.example.totanpay.feature.settings.merchant
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.totanpay.data.repository.MerchantSettingsRepository
+import com.example.totanpay.data.repository.settings.merchant.MerchantSettingsRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow

@@ -5,19 +5,19 @@ import android.graphics.Bitmap
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.wrapContentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.constraintlayout.compose.layoutId
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.totanpay.MainActivity
@@ -30,6 +30,7 @@ import com.example.totanpay.common.ReceiptResultContainer
 import com.example.totanpay.common.containerReceiptModifier
 import com.example.totanpay.common.isSmall
 import com.example.totanpay.common.receipt.AddAmount
+import com.example.totanpay.common.receipt.AddCustomerSignature
 import com.example.totanpay.common.receipt.AddMaskedPanCardIssuer
 import com.example.totanpay.common.receipt.AddMerchantIdTerminalId
 import com.example.totanpay.common.receipt.AddMerchantNamePhone
@@ -37,16 +38,17 @@ import com.example.totanpay.common.receipt.AddPSPLog
 import com.example.totanpay.common.receipt.AddPosCode
 import com.example.totanpay.common.receipt.AddPurchaseId
 import com.example.totanpay.common.receipt.AddRRNStan
+import com.example.totanpay.common.receipt.AddReceiptType
 import com.example.totanpay.common.receipt.AddTypeDateTime
+import com.example.totanpay.common.receipt.ShowSuccessResult
 import com.example.totanpay.common.rowReceiptModifier
-import com.example.totanpay.data.repository.PrintStatus
 import com.example.totanpay.data.repository.datasource.mask
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
+import com.example.totanpay.receipt.ReceiptType
 import com.example.totanpay.receipt.ReceiptUi
 import com.example.totanpay.ui.component.HorizontalDivider
 import com.example.totanpay.ui.theme.Black
 import com.example.totanpay.ui.theme.Green60
-import com.example.totanpay.ui.theme.TotanPayTheme
 import kotlinx.coroutines.delay
 
 @Composable
@@ -61,7 +63,7 @@ fun PurchaseSuccessResult(
     if (packageName != null) {
         viewModel.getResponseFroCallerApp(response)
     }
-    LaunchedEffect(uiState.responseForCallerApp) {
+    LaunchedEffect(uiState.responseForCallerApp) {// TODO:
         if (uiState.responseForCallerApp != null && !packageName.isNullOrEmpty()) {
             delay(1000)
             val intent = context.packageManager.getLaunchIntentForPackage(packageName)
@@ -70,28 +72,20 @@ fun PurchaseSuccessResult(
             context.finish()
         }
     }
-    var receiptBitmap: Bitmap? by remember {
+    var customerReceiptBitmap: Bitmap? by remember {
         mutableStateOf(null)
     }
-    var printForCustomer: Boolean by remember {
-        mutableStateOf(true)
+    var merchantReceiptBitmap: Bitmap? by remember {
+        mutableStateOf(null)
     }
-    var printCount: Int by remember {
-        mutableIntStateOf(0)
-    }
-    var startPrint by remember {
-        mutableStateOf(false)
-    }
+    var printForMerchant by remember { mutableStateOf(false) }
+    var printForCustomer by remember { mutableStateOf(false) }
     PlaybackSoundEffect(uiState.playbackSound, R.raw.successfultransaction)
-    LaunchedEffect(Unit) {
+    LaunchedEffect(true) {
         viewModel.init(response)
     }
-    LaunchedEffect(uiState.printStatus) {
-        startPrint = when (uiState.printStatus) {
-            PrintStatus.NO_PRINTING -> false
-            PrintStatus.ALWAYS_PRINTING -> true
-            else -> false
-        }
+    LaunchedEffect(uiState.result) {
+        if (uiState.result != null) viewModel.getPrintStatus()
     }
     BackHandler {
         onBackButtonClicked()
@@ -99,33 +93,61 @@ fun PurchaseSuccessResult(
     CountdownEffect(TIME_TO_FINISH_SUCCESS_RESULT) {
         onBackButtonClicked()
     }
-    if (uiState.result != null) ReceiptUi(content = {
-        ReceiptContent(true, uiState.result, printForCustomer)
-    }) {
-        receiptBitmap = it
+    if (uiState.result != null) {
+        if (customerReceiptBitmap == null)
+            ReceiptUi(content = {
+                ReceiptContent(true, uiState.result, ReceiptType.CUSTOMER_RECEIPT)
+            }) {
+                customerReceiptBitmap = it
+            }
+        if (merchantReceiptBitmap == null)
+            ReceiptUi(content = {
+                ReceiptContent(true, uiState.result, ReceiptType.MERCHANT_RECEIPT)
+            }) {
+                merchantReceiptBitmap = it
+            }
     }
-    LaunchedEffect(startPrint) {
-        if (receiptBitmap != null && startPrint) {
-            viewModel.print(bitmap = receiptBitmap!!, context = context)
-            viewModel.changePrintStatus()
-            startPrint = false
-            printCount++
+
+    LaunchedEffect(
+        customerReceiptBitmap,
+        printForCustomer
+    ) {
+        if (
+            customerReceiptBitmap != null &&
+           printForCustomer
+        ) {
+            printForCustomer=false
+            viewModel.printCustomerReceipt(customerReceiptBitmap!!, context)
+            printForCustomer=false
         }
     }
-    LaunchedEffect(receiptBitmap) {
-        if (receiptBitmap != null && startPrint) {
-            viewModel.print(bitmap = receiptBitmap!!, context = context)
-            viewModel.changePrintStatus()
-            startPrint = false
-            printCount++
+    LaunchedEffect(merchantReceiptBitmap, printForMerchant) {
+        if (
+            merchantReceiptBitmap != null &&
+            printForMerchant) {
+            printForMerchant=false
+            viewModel.printMerchantReceipt(merchantReceiptBitmap!!, context)
+            printForMerchant=false
+        }
+    }
+    LaunchedEffect(uiState.autoPrintCustomerReceipt) {
+        if (uiState.autoPrintCustomerReceipt) {
+            printForCustomer = true
         }
     }
     if (uiState.result != null) {
-        ReceiptResultContainer(printTitle = stringResource(
-            id = if (printCount != 0)
-                R.string.print_merchant_receipt else R.string.print_customer_receipt
-        ),
-            onPrintButtonClicked = { startPrint = true },
+        ReceiptResultContainer(
+            showCustomerPrintButton =
+                uiState.showPrintForCustomer,
+            showMerchantPrintButton =
+                uiState.showPrintForMerchant,
+            printTitle = stringResource(id = R.string.print_customer_receipt),
+            errorInPrint = uiState.errorInPrint,
+            onMerchantPrintButtonClicked = { printForMerchant = true },
+            onCustomerPrintButtonClicked = { printForCustomer = true },
+            clearPrintErrorMessage = {
+                viewModel.clearErrorMessage()
+            },
             onBackButtonClicked = {
                 onBackButtonClicked()
             }) {
@@ -133,7 +155,7 @@ fun PurchaseSuccessResult(
                 isPaperReceipt = false,
                 modifier = Modifier.layoutId("receipt"), isSuccess = true
             ) {
-                ReceiptContent(false, uiState.result, printForCustomer = true)
+                ReceiptContent(false, uiState.result, ReceiptType.CUSTOMER_RECEIPT)
             }
         }
     }
@@ -141,7 +163,7 @@ fun PurchaseSuccessResult(
 
 @Composable
 fun ReceiptContent(
-    isPaperReceipt: Boolean, result: ResponseTransaction?, printForCustomer: Boolean = true
+    isPaperReceipt: Boolean, result: ResponseTransaction?, receiptType: ReceiptType,
 ) {
     val context = LocalContext.current
     Column(
@@ -153,7 +175,13 @@ fun ReceiptContent(
                 modifier = Modifier.fillMaxWidth(), color = firstColor, isPaperReceipt = false
             )
         }
-        if(isSmall(context))
+        if (isPaperReceipt)
+            AddReceiptType(
+                modifier = Modifier.rowReceiptModifier(isPaperReceipt),
+                receiptType = receiptType,
+                textColor = firstColor
+            )
+        if (isSmall(context))
             AddAmount(
                 modifier = Modifier.rowReceiptModifier(isPaperReceipt),
                 result!!.amount,
@@ -165,11 +193,12 @@ fun ReceiptContent(
             merchantName = result!!.merchantName,
             merchantPhone = result.merchantPhone,
             textColor = firstColor,
-            isPaperReceipt
+            englishMerchantName = result.englishMerchantName,
+            isPaperReceipt = isPaperReceipt
         )
         AddTypeDateTime(
             modifier = Modifier.rowReceiptModifier(isPaperReceipt),
-            type = result.transactionType,
+            type = context.getString(result.transactionType),
             date = result.date,
             time = result.time,
             textColor = firstColor,
@@ -214,51 +243,24 @@ fun ReceiptContent(
         if (isPaperReceipt || !isSmall(context))
             AddAmount(
                 modifier = Modifier.rowReceiptModifier(isPaperReceipt),
-                result.amount
-                ,textColor=if(isPaperReceipt) Black else Green60
-                ,isPaperReceipt
+                result.amount, textColor = if (isPaperReceipt) Black else Green60, isPaperReceipt
             )
         if (isPaperReceipt) {
+            ShowSuccessResult(
+                modifier = Modifier
+                    .wrapContentSize()
+                    .align(Alignment.CenterHorizontally), firstColor = firstColor
+            )
+            if (receiptType == ReceiptType.MERCHANT_RECEIPT)
+                AddCustomerSignature(
+                    modifier = Modifier.rowReceiptModifier(isPaperReceipt),
+                    textColor = firstColor,
+                    isPaperReceipt = true
+                )
             AddPSPLog(
                 modifier = Modifier.fillMaxWidth(), color = firstColor, isPaperReceipt = true
             )
         }
 
-    }
-}
-
-@Composable
-@Preview
-fun ReceiptContentPreveiw() {
-    TotanPayTheme {
-        ReceiptContent(
-            true, result = ResponseTransaction(
-                responseCode = "00",
-                responseMessage = "خطا",
-                rrn = "1",
-                trace = "2",
-                merchantName = "تست",
-                merchantId = "3",
-                merchantPhone = "0214236598",
-                terminalID = "2",
-                transactionType = "خرید",
-                date = "1403/10/08",
-                time = "10:22",
-                issuerName = "صادرات",
-                amount = "10000",
-                availableBalance = "10000",
-                maskedPan = "6037********78",
-                realBalance = "13",
-                voucherPin = "12"
-            ), printForCustomer = true
-        )
-    }
-}
-
-@Composable
-@Preview
-fun PurchaseSuccessResultPreveiw() {
-    TotanPayTheme {
-        // PurchaseSuccessResult("")
     }
 }

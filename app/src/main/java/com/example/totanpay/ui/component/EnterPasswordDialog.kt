@@ -35,13 +35,9 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.totanpay.ui.theme.Black400
-import com.example.totanpay.ui.theme.TotanPayTheme
-
 
 
 @Composable
@@ -228,12 +224,7 @@ fun ReceivedCodePlacement(
     }
 }
 
-@Composable
-@Preview
-fun ReceivedCodeDigitPlacementPreview() {
-    TotanPayTheme {
-    }
-}
+
 
 @Composable
 fun CustomReceivedCodeDigitPlacement(

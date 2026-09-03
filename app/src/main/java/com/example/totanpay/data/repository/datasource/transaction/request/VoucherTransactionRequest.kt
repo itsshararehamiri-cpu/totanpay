@@ -19,7 +19,7 @@ class VoucherTransactionRequest(
     nii: String,
     date: String,
     time: String,
-    posConditionCode: String
+    posConditionCode: String,val logs: String?
 ) :
     BaseTransactionRequest(
         serial = serial,

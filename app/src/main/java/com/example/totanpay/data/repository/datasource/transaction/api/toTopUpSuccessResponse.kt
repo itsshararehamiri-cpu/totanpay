@@ -1,5 +1,6 @@
 package com.example.totanpay.data.repository.datasource.transaction.api
 
+import com.example.totanpay.R
 import com.example.totanpay.data.repository.datasource.mask
 import com.example.totanpay.data.repository.datasource.model.Merchant
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
@@ -9,13 +10,14 @@ import com.example.totanpay.data.repository.datasource.transaction.response.Base
 import com.example.totanpay.data.repository.util.extractPanFromTrack2
 import com.example.totanpay.data.util.formatTime
 
-fun BaseTransactionResponse.TopUpTransactionResponse.toTopUpSuccessResponse(merchant: Merchant,terminalId:String,track2:String,mobile:String):ResponseTransaction{
+fun BaseTransactionResponse.TopUpTransactionResponse.toTopUpSuccessResponse(isFarsi: Boolean,
+     merchant: Merchant,terminalId:String,track2:String,mobile:String,posCode: String):ResponseTransaction{
    return ResponseTransaction(
         responseCode = this!!.responseCode.toString(),
-        responseMessage = this.responseMessage ?: "",
+        responseMessage = this.responseMessage ?: R.string.empty_message,
         rrn = this.rrn ?: "",
         trace = this.trace,
-        merchantName = merchant.merchantName ?: "",
+        merchantName = if(isFarsi)merchant.merchantName ?: "" else merchant.englishMerchantName ?: "",
         merchantId = merchant.merchantId ?: "",
         merchantPhone = merchant.merchantPhone ?: "",
         terminalID = terminalId,
@@ -25,14 +27,14 @@ fun BaseTransactionResponse.TopUpTransactionResponse.toTopUpSuccessResponse(merc
         issuerName = this.issuerName,
         amount = amount, voucherPin = null,
         maskedPan = extractPanFromTrack2(track2).mask(),
-        mobile = mobile
+        mobile = mobile, posCode = posCode, englishMerchantName = merchant.englishMerchantName?:""
     )
 }
 
 
 fun BaseTransactionResponse.TopUpTransactionResponse.toTopUpUnSuccessResponse(
      merchant: Merchant,
-     terminalId: String
+     terminalId: String,posCode: String
 ): ResponseTransaction {
      return ResponseTransaction(
           responseCode = this.responseCode.toString(),
@@ -41,7 +43,7 @@ fun BaseTransactionResponse.TopUpTransactionResponse.toTopUpUnSuccessResponse(
           }else {
                ResponseMessageContainer.valueOfLabel(
                     this.responseCode.toString()
-               ).message
+               ).messageId
           },
           rrn = this.rrn ?: "",
           trace = this.trace,
@@ -55,6 +57,7 @@ fun BaseTransactionResponse.TopUpTransactionResponse.toTopUpUnSuccessResponse(
           issuerName = this.issuerName,
           amount = this.amount,
           availableBalance = "", maskedPan = this.maskedPan,
-          realBalance = null, voucherPin = null, voucherSerial = null
+          realBalance = null, voucherPin = null, voucherSerial = null,posCode=posCode,
+          englishMerchantName = merchant.englishMerchantName?:""
      )
 }

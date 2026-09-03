@@ -43,11 +43,3 @@ fun CloseImage(
         )
     }
 }
-
-@Composable
-@Preview
-fun CloseImagePreview() {
-    TotanPayTheme {
-        CloseImage(Modifier) {}
-    }
-}

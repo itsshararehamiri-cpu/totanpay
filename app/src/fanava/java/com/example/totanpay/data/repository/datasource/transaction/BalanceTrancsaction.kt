@@ -1,6 +1,5 @@
 package com.example.totanpay.data.repository.datasource.transaction
-
-
+import com.example.totanpay.R
 import com.example.totanpay.data.repository.datasource.mask
 import com.example.totanpay.data.repository.datasource.transaction.connection.IConnection
 import com.example.totanpay.data.repository.datasource.transaction.request.BalanceTransactionRequest
@@ -10,8 +9,11 @@ import com.example.totanpay.data.repository.datasource.transaction.response.Fail
 class BalanceTransaction(
     request: BalanceTransactionRequest,
     private val macGenerator: IMacGenerator,
+    sendTransactionInQueue: suspend () -> Boolean,
+
     connection: IConnection
-) : BaseTransaction(request, connection, {}, {}) {
+) : BaseTransaction(request, connection, {}, {},
+    sendTransactionInQueue  ) {
     override val isReversible: Boolean
         get() = false
     override val type: Int
@@ -75,14 +77,16 @@ class BalanceTransaction(
             date = sendMessage.tranDate,
             time = sendMessage.tranTime,
             maskedPan = sendMessage.pan.mask(),
-            posCode = receivedIsoMessage.getField48Tag(0x98) ?: "",dateTimeOfServer =ltv.getNode(0x50)?.toString(),
+            posCode = receivedIsoMessage.getField48Tag(0x98) ?: "",
+            dateTimeOfServer = ltv.getNode(0x50),
         )
     }
+
     override suspend fun onFail(receivedIsoMessage: IsoMessage?): FailedTransactionResponse {
         return if (receivedIsoMessage == null) {
             FailedTransactionResponse(
-                responseCode = -1,
-                responseMessage = "خطا در دریافت اطلاعات",
+                responseCode = ResponseMessageContainer.RC_1.code.toInt(),
+                responseMessage = ResponseMessageContainer.RC_1.messageId,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,
@@ -91,9 +95,14 @@ class BalanceTransaction(
                 posCode = null
             )
         } else {
+            var dateTimeOfServer: String? = null
+            if (receivedIsoMessage.getBytes(48) != null) {
+                val ltv: Ltv = Ltv().also { it.unpack(receivedIsoMessage.getBytes(48)) }
+                dateTimeOfServer = ltv?.getNode(0x50)
+            }
             FailedTransactionResponse(
                 responseCode = receivedIsoMessage.respCode,
-                responseMessage = "",
+                responseMessage = R.string.empty_message,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,
@@ -102,6 +111,7 @@ class BalanceTransaction(
                 } else request.stan.toString(),
                 maskedPan = sendMessage.pan.mask(),
                 posCode = receivedIsoMessage.getField48Tag(0x98) ?: "",
+                dateTimeOfServer = dateTimeOfServer
             )
         }
     }

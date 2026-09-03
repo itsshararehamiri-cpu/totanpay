@@ -1,5 +1,4 @@
 package com.example.totanpay.feature.balance
-
 import android.graphics.Bitmap
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Box
@@ -10,6 +9,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -19,13 +19,15 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.layoutId
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.totanpay.LocalLanguageState
 import com.example.totanpay.R
 import com.example.totanpay.ResultReceiptContainer
 import com.example.totanpay.TIME_TO_FINISH_SUCCESS_RESULT
@@ -47,12 +49,10 @@ import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
 import com.example.totanpay.data.repository.datasource.transaction.TransactionType
 import com.example.totanpay.receipt.ReceiptUi
 import com.example.totanpay.ui.component.HorizontalDivider
-import com.example.totanpay.ui.component.ShowToast
 import com.example.totanpay.ui.theme.Dimensions.LINE_HEIGHT_PAPER_RECEIPT
 import com.example.totanpay.ui.theme.Dimensions.LINE_HEIGHT_RECEIPT
 import com.example.totanpay.ui.theme.Dimensions.MARGIN_TOP_ROW_PAGER_RECEIPT
 import com.example.totanpay.ui.theme.Dimensions.MARGIN_TOP_ROW_RECEIPT
-import com.example.totanpay.ui.theme.TotanPayTheme
 
 @Composable
 fun BalanceUnSuccessResultScreen(
@@ -61,18 +61,13 @@ fun BalanceUnSuccessResultScreen(
     onBackButtonClicked: () -> Unit
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val isFarsi= LocalLanguageState.current.isFarsiSelected.value
     val context = LocalContext.current
     var receiptBitmap: Bitmap? by remember {
         mutableStateOf(null)
     }
     var startPrint by remember {
-        mutableStateOf(false)
-    }
-    var showErrorInPrint by remember {
-        mutableStateOf(false)
-    }
-    var errorMessagePrint by remember {
-        mutableStateOf("")
+        mutableStateOf(true)
     }
     PlaybackSoundEffect(uiState.playbackSound, R.raw.unsuccessfultransaction)
     BackHandler {
@@ -83,7 +78,9 @@ fun BalanceUnSuccessResultScreen(
     }
     if (uiState.result != null)
         ReceiptUi(content = {
-            UnSuccessReceiptContent(isPaperReceipt = true, uiState.result)
+            CompositionLocalProvider(LocalLayoutDirection provides if (isFarsi) LayoutDirection.Rtl else LayoutDirection.Ltr) {
+                UnSuccessReceiptContent(isPaperReceipt = true, uiState.result)
+            }
         }) {
             receiptBitmap = it
         }
@@ -94,8 +91,7 @@ fun BalanceUnSuccessResultScreen(
                 context = context,
                 onSuccess = {},
                 onFailed = {
-                    showErrorInPrint = true
-                    errorMessagePrint = it
+                    viewModel.setErrorInPrint(it)
                 })
             startPrint = false
         }
@@ -105,10 +101,16 @@ fun BalanceUnSuccessResultScreen(
     }
     if (uiState.result != null) {
         Box(modifier = Modifier.fillMaxSize()) {
-            ReceiptResultContainer(
+            ReceiptResultContainer(showCustomerPrintButton = false,
+                showMerchantPrintButton = false,
                 printTitle = stringResource(id = R.string.print_customer_receipt),
-                onPrintButtonClicked = {
+                onCustomerPrintButtonClicked = {
                     startPrint = true
+                },
+                onMerchantPrintButtonClicked = {},
+                errorInPrint = uiState.errorInPrint,
+                clearPrintErrorMessage = {
+                    viewModel.clearErrorMessage()
                 },
                 onBackButtonClicked = { onBackButtonClicked() }) {
                 ResultReceiptContainer(
@@ -118,14 +120,6 @@ fun BalanceUnSuccessResultScreen(
                     UnSuccessReceiptContent(false, uiState.result)
                 }
             }
-            if (showErrorInPrint)
-                ShowToast(
-                    modifier = Modifier.align(Alignment.BottomCenter),
-                    message = errorMessagePrint.ifEmpty { "خطا در چاپ" }
-                ) {
-                    showErrorInPrint = false
-                    errorMessagePrint = ""
-                }
         }
     }
 }
@@ -149,12 +143,13 @@ fun UnSuccessReceiptContent(isPaperReceipt: Boolean, result: ResponseTransaction
         AddMerchantNamePhone(
             modifier = Modifier.fillMaxWidth(),
             merchantName = result!!.merchantName,
-            merchantPhone = result.merchantPhone,
-            textColor = firstColor, isPaperReceipt
+            merchantPhone = result.merchantPhone,            englishMerchantName = result.englishMerchantName,
+
+            textColor = firstColor, isPaperReceipt=isPaperReceipt
         )
         AddTypeDateTime(
             modifier = modifierRowReceipt,
-            type = TransactionType.BALANCE.title,
+            type = context.getString(TransactionType.BALANCE.title),
             date = result.date,
             time = result.time,
             textColor = firstColor, isPaperReceipt
@@ -203,7 +198,8 @@ fun UnSuccessReceiptContent(isPaperReceipt: Boolean, result: ResponseTransaction
             color = firstColor, textAlign = TextAlign.Center
         )
         Text(
-            text = "${result.responseMessage} ${result.responseCode}",
+            text = "${if(result.responseMessage!=null) stringResource(result.responseMessage)
+            else ""} ${result.responseCode}",
             style =
             MaterialTheme.typography.bodyMedium.copy(
                 fontSize = getFontSize(isPaperReceipt, context), fontWeight = FontWeight.Bold,
@@ -227,28 +223,3 @@ fun UnSuccessReceiptContent(isPaperReceipt: Boolean, result: ResponseTransaction
 }
 
 
-@Composable
-@Preview
-fun UnSuccessReceiptContentPreveiw() {
-    TotanPayTheme {
-        UnSuccessReceiptContent(
-            true, result = ResponseTransaction(
-                responseCode = "-1",
-                responseMessage = "خطا",
-                rrn = "1",
-                trace = "2",
-                merchantName = "تست",
-                merchantId = "3",
-                merchantPhone = "0214236598",
-                terminalID = "2",
-                transactionType = "خرید",
-                date = "1403/10/08",
-                time = "10:22",
-                issuerName = "صادرات",
-                amount = "10000",
-                availableBalance = "10000", maskedPan = "6037********78",
-                realBalance = "13", voucherPin = "12"
-            )
-        )
-    }
-}

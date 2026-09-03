@@ -38,7 +38,7 @@ fun getAllCharges(context: Context): List<Operator>? {
                 Operator(
                     code=code.toInt()
                     , persianName = operatorName,
-                    englishName = operatorName, voucherChargeMSG = "", borderColor =
+                    englishName = operatorCode, voucherChargeMSG = "", borderColor =
                     when(code.toInt()){
                         12-> TurquoiseBlue
                         17-> Purpule

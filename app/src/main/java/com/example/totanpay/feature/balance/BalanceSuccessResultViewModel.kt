@@ -1,12 +1,13 @@
 package com.example.totanpay.feature.balance
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.totanpay.common.PrintableViewModel
 import com.example.totanpay.data.repository.DeviceRepository
-import com.example.totanpay.data.repository.DeviceSettingsRepository
-import com.example.totanpay.data.repository.PrintCustomerSettingsRepository
-import com.example.totanpay.data.repository.PrintStatus
+import com.example.totanpay.data.repository.settings.device_settings.DeviceSettingsRepository
+import com.example.totanpay.data.repository.settings.print_customer_setting.PrintCustomerSettingsRepository
+import com.example.totanpay.data.repository.settings.merchant.PrintStatus
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
 import com.example.totanpay.data.util.getPersianDate
 import com.google.gson.Gson
@@ -49,6 +50,6 @@ class BalanceSuccessResultViewModel @Inject constructor(
 data class BalanceSuccessResultUiState(
     val result: ResponseTransaction? = null,
     val error: String = "",
-    val printStatus: PrintStatus = PrintStatus.ALWAYS_PRINTING,
+    val printStatus: PrintStatus = PrintStatus.NO_PRINTING,
     val playbackSound: Boolean = false
 )

@@ -24,7 +24,7 @@ import com.example.totanpay.ui.theme.Dimensions.TOTAN_ICON_SIZE
 import com.example.totanpay.ui.theme.TotanPayTheme
 
 @Composable
-fun ReportContent(
+fun ReportContent(currentLanguageIsFarsi: Boolean,
     onBackClicked: () -> Unit, onLastTransactionClicked: () -> Unit,
     onDetailsOfTransactionsClicked: () -> Unit, onReportBasedOnTraceClicked: () -> Unit
 ) {
@@ -100,18 +100,5 @@ fun ReportContent(
                     .size(TOTAN_ICON_SIZE)
                     .align(Alignment.BottomCenter)
             )
-    }
-}
-
-@Composable
-@Preview
-fun ReportContentPreview() {
-    TotanPayTheme {
-        ReportContent(
-            onBackClicked = {},
-            onLastTransactionClicked = {},
-            onDetailsOfTransactionsClicked = {},
-            onReportBasedOnTraceClicked = {})
-
     }
 }

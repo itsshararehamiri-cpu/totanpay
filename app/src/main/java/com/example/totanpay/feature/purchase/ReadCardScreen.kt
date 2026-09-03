@@ -5,7 +5,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
+import com.example.totanpay.R
 import com.example.totanpay.common.ui.ReadCardContent
 import com.example.totanpay.data.repository.datasource.transaction.TransactionType
 import com.example.totanpay.feature.balance.ReadCardViewModel
@@ -38,15 +40,15 @@ fun ReadCardScreen(
     ReadCardContent(
         uiState, amount,
         amountTitle = when (type) {
-            TransactionType.TOPUP -> "مبلغ شارژ:"
-            TransactionType.PURCHASE -> "مبلغ خرید:"
-            TransactionType.BILL_PAY -> "مبلغ قبض:"
+            TransactionType.TOPUP -> stringResource(R.string.amount_of_charge)
+            TransactionType.PURCHASE -> stringResource(R.string.amount_of_purchase)
+            TransactionType.BILL_PAY ->stringResource(R.string.amount_of_bill)
             else -> ""
         },
         extraMessageValue =uiState.extraMessageValue,
         onBackButtonClicked = { onBackButtonClicked() },
         readCard = {
-            viewModel.readCard()
+            viewModel.readCard(context)
         },
         hideInternetErrorMessage = { viewModel.hideInternetErrorMessage() }
     )

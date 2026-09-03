@@ -8,7 +8,7 @@ import com.example.totanpay.data.util.formatTime
 
 sealed class BaseTransactionResponse (
     var responseCode: Int=-1,
-    var responseMessage: String?=null,
+    var responseMessage: Int?=null,
     var reasonCode: Int? = null,
     var date: String="p",
     var time: String="q",
@@ -21,7 +21,7 @@ sealed class BaseTransactionResponse (
                                      val issuerName:String,
                                      val maskedPan:String,
                                      responseCode: Int,
-                                     responseMessage: String?,
+                                     responseMessage: Int?,
                                      reasonCode: Int? = null,
                                      date: String,
                                      time: String,
@@ -38,9 +38,10 @@ sealed class BaseTransactionResponse (
     )
     class BillInquiryTransactionResponse(val billType:String,
                                          val serviceDesc:String,
+                                       val  englishServiceDesc: String,
                                          val amount:String?= null,
                                          responseCode: Int,
-                                         responseMessage: String?,
+                                         responseMessage: Int?,
                                          reasonCode: Int? = null,
                                          date: String,
                                          time: String,
@@ -63,12 +64,13 @@ sealed class BaseTransactionResponse (
                                      val voucherPINEncrypted:String,
                                      val groupVoucherData:HashMap<String,String>,
                                      val groupVoucherDataEncrypted:HashMap<String,String>,                                  responseCode: Int,
-                                     responseMessage: String?,
+                                     responseMessage: Int?,
                                      reasonCode: Int? = null,
                                      date: String,
                                      time: String,
                                      trace: String,
                                      rrn: String? = null,posCode:String?=null,dateTimeOfServer:String?=null,
+
     ) : BaseTransactionResponse(
         responseCode=responseCode,
         responseMessage=responseMessage,
@@ -84,7 +86,7 @@ sealed class BaseTransactionResponse (
                                    val issuerName:String,
                                    val maskedPan:String,
                                    responseCode: Int,
-                                   responseMessage: String?,
+                                   responseMessage: Int?,
                                    reasonCode: Int? = null,
                                    date: String,
                                    time: String,
@@ -106,7 +108,7 @@ sealed class BaseTransactionResponse (
                                      val issuerName:String,
                                      val maskedPan:String,
                                      responseCode: Int,
-                                     responseMessage: String?,
+                                     responseMessage: Int?,
                                      reasonCode: Int? = null,
                                      date: String,
                                      time: String,
@@ -124,8 +126,9 @@ sealed class BaseTransactionResponse (
     class InitTransactionResponse(val merchantPhone:String?,
                                   val merchantId:String,
                                   val merchantName:String?,
+                                  val englishMerchantName:String?,
                                   responseCode: Int,
-                                  responseMessage: String?,
+                                  responseMessage: Int?,
                                   reasonCode: Int? = null,
                                   date: String,
                                   time: String,
@@ -148,7 +151,7 @@ sealed class BaseTransactionResponse (
         val macKey: ByteArray,
         val terminalId: String,
         responseCode: Int,
-        responseMessage: String?,
+        responseMessage: Int?,
         reasonCode: Int? = null,
         date: String,
         time: String,
@@ -167,12 +170,12 @@ sealed class BaseTransactionResponse (
                                       val issuerName:String,
                                       val maskedPan:String,
                                       responseCode: Int,
-                                      responseMessage: String?,
+                                      responseMessage: Int?,
                                       reasonCode: Int? = null,
                                       date: String,
                                       time: String,
                                       trace: String,
-                                      rrn: String? = null,posCode:String?=null,val purchaseId:String?=null,dateTimeOfServer:String?=null,
+                                      rrn: String? = null,posCode:String?=null,val purchaseId:String?=null,dateTimeOfServer:String?=null
     ) : BaseTransactionResponse(
         responseCode=responseCode,
         responseMessage=responseMessage,
@@ -184,7 +187,7 @@ sealed class BaseTransactionResponse (
     )
     class SettlementReverseTransactionResponse(
         responseCode: Int,
-        responseMessage: String?,
+        responseMessage: Int?,
         reasonCode: Int? = null,
         date: String,
         time: String,
@@ -201,7 +204,7 @@ sealed class BaseTransactionResponse (
     )
     class GetKeyTransactionResponse(
         responseCode: Int,
-        responseMessage: String?,
+        responseMessage: Int?,
         reasonCode: Int? = null,
         date: String,
         time: String,
@@ -224,7 +227,7 @@ val acquiringInstitutionIdentificationCode:String?=null,
     )
     class MasterKeyConfirmationTransactionResponse(
         responseCode: Int,
-        responseMessage: String?,
+        responseMessage: Int?,
         reasonCode: Int? = null,
         date: String,
         time: String,
@@ -244,7 +247,7 @@ val acquiringInstitutionIdentificationCode:String?=null,
     )
     class WorkingKeyExchangeTransactionResponse(
         responseCode: Int,
-        responseMessage: String?,
+        responseMessage: Int?,
         reasonCode: Int? = null,
         date: String,
         time: String,
@@ -267,19 +270,20 @@ val acquiringInstitutionIdentificationCode:String?=null,
     )
 
 }
-data class AccountMerchant(var bankName:String?=null,var farsiBankName:String?=null,var number:String?=null,var isActive:Boolean=true)
+data class AccountMerchant(var bankName:String?=null,var farsiBankName:String?=null,var number:String?=null,var isActive:Boolean=true,
+    var englishBankName:String?=null,)
 fun BaseTransactionResponse.PurchaseTransactionResponse.toResponseTransaction(purchaseId: String?,
                                                                               merchant: Merchant,
                                                                               terminalId: String
 ): ResponseTransaction? {
     return ResponseTransaction(
         responseCode = this.responseCode.toString(),
-        responseMessage = if (this.responseMessage.isNullOrEmpty()) {
+        responseMessage = if (this.responseMessage==null) {
             ResponseMessageContainer.valueOfLabel(
                 this.responseCode.toString()
-            ).message
+            ).messageId
         } else {
-            this.responseMessage ?: ""
+            this.responseMessage
         },
         rrn = this.rrn ?: "",
         trace = this.trace,
@@ -291,6 +295,6 @@ fun BaseTransactionResponse.PurchaseTransactionResponse.toResponseTransaction(pu
         date = this.date,
         time = this.time.formatTime(),
         issuerName = this.issuerName,
-        amount = this.amount, maskedPan = this.maskedPan, posCode = this.posCode
+        amount = this.amount, maskedPan = this.maskedPan, posCode = this.posCode, englishMerchantName = merchant.englishMerchantName?:""
     )
 }

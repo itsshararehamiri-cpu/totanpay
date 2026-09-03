@@ -1,11 +1,11 @@
 package com.example.totanpay.data.repository.datasource.transaction
 
 
+import com.example.totanpay.R
 import com.example.totanpay.data.repository.datasource.transaction.connection.IConnection
 import com.example.totanpay.data.repository.datasource.transaction.request.PurchaseTransactionRequest
 import com.example.totanpay.data.repository.datasource.transaction.response.BaseTransactionResponse
 import com.example.totanpay.data.repository.datasource.transaction.response.FailedTransactionResponse
-import org.jpos.iso.ISOUtil
 
 class PurchaseTransaction(
     request: PurchaseTransactionRequest,
@@ -16,7 +16,7 @@ class PurchaseTransaction(
     sendTransactionInQueue: suspend () -> Boolean,
     updateTransaction: suspend (
         date: String, time: String, pan: String, cardIssuer: String, responseCode: String, amount: String, rrn: String?,
-        serviceDesc: String?, pinVoucher: String?, serialVoucher: String?, mobileNumber: String?, operatorCode: Int?, responseMessage: String?,trace:String?
+        serviceDesc: String?, pinVoucher: String?, serialVoucher: String?, mobileNumber: String?, operatorCode: Int?, responseMessage: Int?, trace: String?
     ) -> Unit,
     deleteTransaction: suspend (
         date: String, time: String
@@ -30,7 +30,9 @@ class PurchaseTransaction(
     saveReverseData,
     saveTransactionLog,
     sendTransactionInQueue,
-    updateTransaction = updateTransaction,deleteTransaction=deleteTransaction, clearTransactionFromQueue = clearTransactionFromQueue
+    updateTransaction = updateTransaction,
+    deleteTransaction = deleteTransaction,
+    clearTransactionFromQueue = clearTransactionFromQueue
 ) {
     override val isReversible: Boolean
         get() = true
@@ -60,6 +62,8 @@ class PurchaseTransaction(
                     setPurchaseId(request.purchaseId)
                 }
                 setTerminalConnectionType(request.terminalConnectionType)
+                if (!request.logs.isNullOrEmpty())
+                    set99(request.logs)
             }
             tranTime = getString(12)
             tranDate = getString(13)
@@ -89,15 +93,6 @@ class PurchaseTransaction(
         val cardIssuer = receivedIsoMessage.getField48Tag(0x38)?.split("\\")?.get(0) ?: ""
         val ltv = Ltv().also { it.unpack(receivedIsoMessage.getBytes(48)) }
         setStatusToSettle(sendMessage.tranDate, sendMessage.tranTime)
-        var responseMessage = ""
-        if (receivedIsoMessage.hasField(47)) {
-            if (receivedIsoMessage.getBytes(47) != null) responseMessage =
-                ISOUtil.hexString(
-                    receivedIsoMessage.getBytes(
-                        47
-                    )
-                )
-        }
         updateTransaction(
             sendMessage.tranDate,
             sendMessage.tranTime,
@@ -110,8 +105,8 @@ class PurchaseTransaction(
             null, null,
             null,
             null,
-            responseMessage,
-             if (receivedIsoMessage.hasField(38)) {
+            R.string.empty_message,
+            if (receivedIsoMessage.hasField(38)) {
                 receivedIsoMessage.getString(38)
             } else
                 request.stan.toString(),
@@ -120,20 +115,19 @@ class PurchaseTransaction(
             amount = sendMessage.getString(4),
             issuerName = cardIssuer,
             responseCode = receivedIsoMessage.respCode,
-            responseMessage = responseMessage,
+            responseMessage = R.string.empty_message,
             reasonCode = null,
             date = sendMessage.tranDate,
             time = sendMessage.tranTime,
             maskedPan = request.pan,
             trace =
                 if (receivedIsoMessage.hasField(38)) {
-                receivedIsoMessage.getString(38)
-            } else
-                request.stan.toString()
-            ,
+                    receivedIsoMessage.getString(38)
+                } else
+                    request.stan.toString(),
             rrn = receivedIsoMessage.rrn,
             posCode = receivedIsoMessage.getField48Tag(0x98) ?: "",
-            purchaseId=  request.purchaseId,dateTimeOfServer = ltv.getNode(0x50),
+            purchaseId = request.purchaseId, dateTimeOfServer = ltv.getNode(0x50)
         )
 
     }
@@ -146,24 +140,29 @@ class PurchaseTransaction(
             )
             return FailedTransactionResponse(
                 stan = sendMessage.stan,
-                responseCode = -1,
-                responseMessage = "خطا در دریافت اطلاعات",
+                responseCode = ResponseMessageContainer.RC_1.code.toInt(),
+                responseMessage = ResponseMessageContainer.RC_1.messageId,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,
-                maskedPan =   (request as PurchaseTransactionRequest).pan,
+                maskedPan = (request as PurchaseTransactionRequest).pan,
                 amount = request.amount,
                 posCode = null
             )
 
         } else {
-            if (receivedIsoMessage.respCode != 80)
+            if (receivedIsoMessage.respCode != 80 && receivedIsoMessage.respCode > 0)
                 clearTransactionFromQueue(sendMessage.tranDate, sendMessage.tranTime)
             val cardIssuer = receivedIsoMessage.getField48Tag(0x38)?.split("\\")?.get(0) ?: ""
             deleteTransaction(
                 request.date,
                 request.time
             )
+            var dateTimeOfServer: String? = null
+            if (receivedIsoMessage.getBytes(48) != null) {
+                val ltv: Ltv = Ltv().also { it.unpack(receivedIsoMessage.getBytes(48)) }
+                dateTimeOfServer = ltv?.getNode(0x50)
+            }
             return FailedTransactionResponse(
                 responseCode = receivedIsoMessage.respCode,
                 reasonCode = null,
@@ -171,12 +170,13 @@ class PurchaseTransaction(
                 stan = if (receivedIsoMessage.hasField(38)) receivedIsoMessage.stan else request.stan.toString(),
                 date = request.date,
                 time = request.time,
-                maskedPan =   (request as PurchaseTransactionRequest).pan,
+                maskedPan = (request as PurchaseTransactionRequest).pan,
                 amount = request.amount,
-                responseMessage = "",
+                responseMessage = R.string.empty_message,
                 cardIssuer = cardIssuer,
-                posCode = receivedIsoMessage.getField48Tag(0x98) ?: "")
-
+                posCode = receivedIsoMessage.getField48Tag(0x98) ?: "",
+                dateTimeOfServer = dateTimeOfServer
+            )
         }
     }
 }

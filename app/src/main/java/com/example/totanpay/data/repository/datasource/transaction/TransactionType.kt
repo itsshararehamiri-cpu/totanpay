@@ -1,20 +1,22 @@
 package com.example.totanpay.data.repository.datasource.transaction
 
-enum class TransactionType (val tag:Int,val title:String){
-    LOGON(1,""),
-    INIT(2,""),
-    BALANCE(3,"موجودی"),
-    PURCHASE(4,"خرید"),
-    BILL_INQUERY(5,"استعلام قبض"),
-    SETTLEMENT_REVERSE(6,""),
-    VOUCHER(7,"خرید کد شارژ"),
-    BILL_PAY(8,"پرداخت قبض"),
-    TOPUP(9,"شارژ مستقیم"),
-    GETKE(10,"گرفتن کلید"),
-    CONFIRMKEY(11,"خرید مستقیم شارژ"),
-    KEYEXCHANGEWORKINGKEY(12,"خرید مستقیم شارژ"),
-    PURCHASEWITHID(13,"خرید شناسه دار"),
-    CHARGE(14,"شارژ")
+import com.example.totanpay.R
+
+enum class TransactionType (val tag:Int,val title :Int){
+    LOGON(1,-1),
+    INIT(2,-2),
+    BALANCE(3, R.string.balance_),
+    PURCHASE(4,R.string.purchase),
+    BILL_INQUERY(5,R.string.bill_inquery),
+    SETTLEMENT_REVERSE(6,-3),
+    VOUCHER(7,R.string.voucher),
+    BILL_PAY(8,R.string.bill_payment),
+    TOPUP(9,R.string.topup),
+    GETKE(10,R.string.get_key),
+    CONFIRMKEY(11,R.string.confirm_key),
+    KEYEXCHANGEWORKINGKEY(12,R.string.key_exchange_key),
+    PURCHASEWITHID(13,R.string.purchase_with_id),
+    CHARGE(14, R.string.charge)
     ;
     companion object {
         fun titleOf(tag: Int): TransactionType {

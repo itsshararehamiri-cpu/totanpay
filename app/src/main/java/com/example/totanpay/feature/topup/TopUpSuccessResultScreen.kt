@@ -5,7 +5,6 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -20,8 +19,9 @@ import com.example.totanpay.TIME_TO_FINISH_SUCCESS_RESULT
 import com.example.totanpay.common.CountdownEffect
 import com.example.totanpay.common.PlaybackSoundEffect
 import com.example.totanpay.common.ReceiptResultContainer
-import com.example.totanpay.data.repository.PrintStatus
+import com.example.totanpay.receipt.ReceiptType
 import com.example.totanpay.receipt.ReceiptUi
+import kotlinx.coroutines.delay
 
 @Composable
 fun TopUpSuccessResult(
@@ -30,18 +30,14 @@ fun TopUpSuccessResult(
 ) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     val context = LocalContext.current
-    var receiptBitmap: Bitmap? by remember {
+    var customerReceiptBitmap: Bitmap? by remember {
         mutableStateOf(null)
     }
-    var printForCustomer: Boolean by remember {
-        mutableStateOf(true)
+    var merchantReceiptBitmap: Bitmap? by remember {
+        mutableStateOf(null)
     }
-    var printCount: Int by remember {
-        mutableIntStateOf(0)
-    }
-    var startPrint by remember {
-        mutableStateOf(false)
-    }
+    var printForCustomer by remember { mutableStateOf(false) }
+    var printForMerchant by remember { mutableStateOf(false) }
     PlaybackSoundEffect(uiState.playbackSound, R.raw.successfultransaction)
     BackHandler {
         onBackButtonClicked()
@@ -49,44 +45,56 @@ fun TopUpSuccessResult(
     LaunchedEffect(Unit) {
         viewModel.init(response)
     }
-    LaunchedEffect(uiState.printStatus) {
-        startPrint = when (uiState.printStatus) {
-            PrintStatus.NO_PRINTING -> false
-            PrintStatus.ALWAYS_PRINTING -> true
-            else -> false
-        }
+    LaunchedEffect(uiState.result) {
+        if (uiState.result != null) viewModel.getPrintStatus()
     }
     CountdownEffect(TIME_TO_FINISH_SUCCESS_RESULT) {
         onBackButtonClicked()
     }
-    if (uiState.result != null && receiptBitmap==null)
-        ReceiptUi(content = {
-            TopUpReceiptContent(true, uiState.result, printForCustomer)
-        }) {
-            receiptBitmap = it
+    if (uiState.result != null) {
+        if (customerReceiptBitmap == null) {
+            ReceiptUi(content = {
+                TopUpReceiptContent(true, uiState.result, ReceiptType.CUSTOMER_RECEIPT)
+            }) {
+                customerReceiptBitmap = it
+            }
         }
-
-    LaunchedEffect(startPrint) {
-        if (receiptBitmap != null && startPrint) {
-            viewModel.print(bitmap = receiptBitmap!!, context = context)
-            viewModel.changePrintStatus()
-            startPrint = false
-            printCount++
+        if (merchantReceiptBitmap == null) {
+            ReceiptUi(content = {
+                TopUpReceiptContent(true, uiState.result, ReceiptType.MERCHANT_RECEIPT)
+            }) {
+                merchantReceiptBitmap = it
+            }
+        }
+    }
+    LaunchedEffect(customerReceiptBitmap, printForCustomer) {
+        if (customerReceiptBitmap != null && printForCustomer) {
             printForCustomer = false
-            receiptBitmap=null
+            viewModel.printCustomerReceipt(customerReceiptBitmap!!, context)
         }
     }
-    LaunchedEffect(receiptBitmap) {
-        if (receiptBitmap != null && startPrint) {
-            viewModel.print(bitmap = receiptBitmap!!, context = context)
-            startPrint = false
+    LaunchedEffect(merchantReceiptBitmap, printForMerchant) {
+        if (merchantReceiptBitmap != null && printForMerchant) {
+            printForMerchant = false
+            viewModel.printMerchantReceipt(merchantReceiptBitmap!!, context)
         }
     }
-    ReceiptResultContainer(printTitle = stringResource(id = if (printCount != 0) R.string.print_merchant_receipt else R.string.print_customer_receipt),
-        onPrintButtonClicked = {
-            startPrint = true
-        }, onBackButtonClicked = { onBackButtonClicked() }) {
-        if (uiState.result != null) {
+    LaunchedEffect(uiState.autoPrintCustomerReceipt) {
+        if (uiState.autoPrintCustomerReceipt) {
+            printForCustomer = true
+        }
+    }
+    if (uiState.result != null) {
+        ReceiptResultContainer(
+            showCustomerPrintButton = uiState.showPrintForCustomer,
+            showMerchantPrintButton = uiState.showPrintForMerchant,
+            printTitle = stringResource(id = R.string.print_customer_receipt),
+            errorInPrint = uiState.errorInPrint,
+            onCustomerPrintButtonClicked = { printForCustomer = true },
+            onMerchantPrintButtonClicked = { printForMerchant = true },
+            clearPrintErrorMessage = { viewModel.clearErrorMessage() },
+            onBackButtonClicked = { onBackButtonClicked() }
+        ) {
             ResultReceiptContainer(
                 isPaperReceipt = false,
                 modifier = Modifier.layoutId("receipt"), isSuccess = true
@@ -94,10 +102,9 @@ fun TopUpSuccessResult(
                 TopUpReceiptContent(
                     isPaperReceipt = false,
                     result = uiState.result,
-                    printForCustomer = printForCustomer
+                    receiptType = ReceiptType.CUSTOMER_RECEIPT
                 )
             }
-
         }
     }
 }

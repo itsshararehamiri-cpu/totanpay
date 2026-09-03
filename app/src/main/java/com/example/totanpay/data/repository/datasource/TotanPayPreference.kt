@@ -19,6 +19,10 @@ interface TotanPayPreference {
     fun getMerchantName(): String
 
 
+    fun storeEnglishMerchantName(merchantName: String?)
+    fun getEnglishMerchantName(): String
+
+
     fun storeMerchantId(merchantId: String?)
     fun getMerchantId(): String
 
@@ -32,9 +36,17 @@ interface TotanPayPreference {
     fun setPrintStatus(status: Int)
     fun getPrintStatus(): Int
 
+    fun setAutoPrintCustomerReceipt(f: Boolean)
+    fun getAutoPrintCustomerReceipt(): Boolean
+
 
     fun setMinAmountForPrint(minAmount: String)
     fun getMinAmountForPrint(): String
+
+    fun setPrintStatusMerchant(status: Int)
+    fun getPrintStatusMerchant(): Int
+    fun setMinAmountForPrintMerchant(minAmount: String)
+    fun getMinAmountForPrintMerchant(): String
     fun setMerchantPassword(pass: String)
     fun getMerchantPassword(): String?
 
@@ -55,4 +67,15 @@ interface TotanPayPreference {
     fun getTaxForIrancellCharge(): String
 
 
+
+    fun setEnableMac(status: Boolean)
+    fun getEnableMac(): Boolean
+
+
+    fun storePosCode(posCode: String)
+    fun getPosCode(): String
+
+
+    fun isChangePassword(): Boolean
+    fun setChangePassword(b: Boolean)
 }

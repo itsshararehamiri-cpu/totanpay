@@ -3,6 +3,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.totanpay.common.ui.ReadCardContent
 
@@ -12,6 +13,7 @@ fun ReadCardScreen(
     onGetTrack2: (String) -> Unit,
     onBackButtonClicked: () -> Unit) {
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
+    val context= LocalContext.current
     BackHandler {
         onBackButtonClicked()
     }
@@ -30,7 +32,7 @@ fun ReadCardScreen(
         amountTitle=null,
         onBackButtonClicked = { onBackButtonClicked() },
         readCard = {
-            viewModel.readCard()
+            viewModel.readCard(context = context)
         },
         hideInternetErrorMessage = {
             viewModel.hideInternetErrorMessage()

@@ -14,6 +14,10 @@ const val TERMINAL_ID = "terminal_id"
 const val MERCHANT_ID = "merchant_id"
 const val MERCHANT_PHONE = "merchant_phone"
 const val MERCHANT_NAME = "merchant_name"
+
+const val ENGLISH_MERCHANT_NAME = "english_merchant_name"
+
+const val POS_CODE="pos_code"
 const val IP = "ip"
 const val PORT = "port"
 const val NII = "nii"
@@ -28,6 +32,9 @@ const val TAX_FOR_IRANCELL_CHARGE="tax_for_irancell_charge"
 
 const val PRINT_SATUS = "print_status"
 const val MIN_AMOUNT_FOR_PRINT_STATUS = "min_amount_for_print_status"
+const val PRINT_STATUS_MERCHANT = "print_status_merchant"
+const val MIN_AMOUNT_FOR_PRINT_MERCHANT = "min_amount_for_print_merchant"
+const val ENABLE_MAC="enable_mac"
 
 @Singleton
 class TotanPayPreferenceImpl @Inject constructor(@ApplicationContext context: Context) :
@@ -88,6 +95,15 @@ class TotanPayPreferenceImpl @Inject constructor(@ApplicationContext context: Co
             .getString(MERCHANT_NAME, null) ?: ""
     }
 
+    override fun storeEnglishMerchantName(merchantName: String?) {
+        sharedPreferces.edit()
+            .apply { putString(ENGLISH_MERCHANT_NAME, merchantName) }.apply()
+    }
+
+    override fun getEnglishMerchantName(): String {
+        return sharedPreferces
+            .getString(ENGLISH_MERCHANT_NAME, null) ?: ""
+    }
     override fun storeConnectionSettings(ip: String, port: String, nii: String) {
         sharedPreferces.edit()
             .apply { putString(IP, ip) }.apply()
@@ -97,14 +113,15 @@ class TotanPayPreferenceImpl @Inject constructor(@ApplicationContext context: Co
             .apply { putString(NII, nii) }.apply()
     }
 
-    override fun getIP(): String {
+    override fun
+            getIP(): String {
         return sharedPreferces
             .getString(IP, "78.157.33.210") ?: ""
     }
 
     override fun getNii(): String {
         return sharedPreferces
-            .getString(NII, "300") ?: ""
+            .getString(NII, "101") ?: ""
     }
 
     override fun setPrintStatus(status: Int) {
@@ -114,7 +131,17 @@ class TotanPayPreferenceImpl @Inject constructor(@ApplicationContext context: Co
 
     override fun getPrintStatus(): Int {
         return sharedPreferces
-            .getInt(PRINT_SATUS, -1)
+            .getInt(PRINT_SATUS, 2)
+    }
+
+    override fun setAutoPrintCustomerReceipt(f: Boolean) {
+        sharedPreferces.edit()
+            .apply { putBoolean("auto_print_customer_receipt", f) }.apply()
+    }
+
+    override fun getAutoPrintCustomerReceipt(): Boolean {
+        return sharedPreferces
+            .getBoolean("auto_print_customer_receipt", true) ?: true
     }
 
     override fun setMinAmountForPrint(minAmount: String) {
@@ -125,6 +152,26 @@ class TotanPayPreferenceImpl @Inject constructor(@ApplicationContext context: Co
     override fun getMinAmountForPrint(): String {
         return sharedPreferces
             .getString(MIN_AMOUNT_FOR_PRINT_STATUS, null) ?: ""
+    }
+
+    override fun setPrintStatusMerchant(status: Int) {
+        sharedPreferces.edit()
+            .apply { putInt(PRINT_STATUS_MERCHANT, status) }.apply()
+    }
+
+    override fun getPrintStatusMerchant(): Int {
+        return sharedPreferces
+            .getInt(PRINT_STATUS_MERCHANT, 1)
+    }
+
+    override fun setMinAmountForPrintMerchant(minAmount: String) {
+        sharedPreferces.edit()
+            .apply { putString(MIN_AMOUNT_FOR_PRINT_MERCHANT, minAmount) }.apply()
+    }
+
+    override fun getMinAmountForPrintMerchant(): String {
+        return sharedPreferces
+            .getString(MIN_AMOUNT_FOR_PRINT_MERCHANT, null) ?: ""
     }
 
     override fun getPort(): String {
@@ -195,6 +242,35 @@ class TotanPayPreferenceImpl @Inject constructor(@ApplicationContext context: Co
 
     override fun getTaxForIrancellCharge(): String {
         return sharedPreferces
-            .getString(TAX_FOR_IRANCELL_CHARGE, "9".toEnglishNumber())?:""
+            .getString(TAX_FOR_IRANCELL_CHARGE, "10".toEnglishNumber())?:""
+    }
+
+    override fun setEnableMac(isEnable: Boolean) {
+        sharedPreferces.edit()   .apply { putBoolean(ENABLE_MAC, isEnable) }.apply()
+    }
+
+    override fun getEnableMac(): Boolean {
+        return sharedPreferces
+            .getBoolean(ENABLE_MAC, true)
+    }
+
+    override fun storePosCode(posCode: String) {
+        sharedPreferces.edit()
+            .apply { putString(POS_CODE, posCode) }.apply()
+    }
+
+    override fun getPosCode(): String {
+        return sharedPreferces
+            .getString(POS_CODE, "")?:""
+    }
+
+    override fun setChangePassword(b: Boolean) {
+        sharedPreferces.edit()
+            .apply { putBoolean("is_change", b) }.apply()
+    }
+
+    override fun isChangePassword(): Boolean {
+        return sharedPreferces
+            .getBoolean("is_change", false)
     }
 }

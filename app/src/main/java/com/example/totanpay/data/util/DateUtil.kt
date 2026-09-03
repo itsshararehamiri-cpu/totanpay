@@ -34,3 +34,7 @@ fun String.toFormattedDate():String{
        this
     )?.time.toString()
 }
+fun getCurrentDate():String{
+    val sdf = SimpleDateFormat("yyyyMMdd", Locale.getDefault())
+    return sdf.format(Date())
+}

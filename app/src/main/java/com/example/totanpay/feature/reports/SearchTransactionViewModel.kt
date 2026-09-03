@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.totanpay.common.PrintableViewModel
 import com.example.totanpay.data.repository.DeviceRepository
-import com.example.totanpay.data.repository.ReportRepository
+import com.example.totanpay.data.repository.settings.report.ReportRepository
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -22,10 +22,10 @@ class SearchTransactionViewModel @Inject constructor(private val reportRepositor
     private val _uiState = MutableStateFlow(SearchTransactionUiState())
     val uiState: StateFlow<SearchTransactionUiState> = _uiState
 
-    fun search(stan: String) {
+    fun search(stan: String,traceIsSelected: Boolean) {
         viewModelScope.launch {
             _uiState.update { it.copy(showProgress = true,isInitState=false) }
-            val searchedTransaction = reportRepository.geTransactionBasedStan(stan)
+            val searchedTransaction = reportRepository.geTransactionBasedStan(stan,traceIsSelected)
             if (searchedTransaction != null)
                 _uiState.update { it.copy(result = searchedTransaction, showProgress = false, showNotFounding = false) }
             else {

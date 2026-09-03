@@ -14,6 +14,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -31,6 +32,7 @@ fun ChargeTypeContainer(
     modifier: Modifier, isTopUpSelected: Boolean = true, onVoucherSelected: () -> Unit,
     onTopUpSelected: () -> Unit
 ) {
+    val context= LocalContext.current
     val selectedModifier = Modifier.height(55.dp)
         .padding(top = 5.dp, bottom = 5.dp, start = 0.dp)
         .background(
@@ -59,7 +61,7 @@ fun ChargeTypeContainer(
 
         ) {
             Text(
-             TransactionType.VOUCHER.title,
+             context.getString(TransactionType.VOUCHER.title),
                 modifier = Modifier.align(Alignment.Center),
                 textAlign = TextAlign.Center, color =  if (!isTopUpSelected) {
                     Color.White
@@ -81,7 +83,7 @@ fun ChargeTypeContainer(
             }
         ) {
             Text(
-                TransactionType.TOPUP.title,
+                context.getString(TransactionType.TOPUP.title),
                 modifier = Modifier.align(Alignment.Center),
                 textAlign = TextAlign.Center, color =  if (isTopUpSelected) {
                     Color.White
@@ -89,13 +91,5 @@ fun ChargeTypeContainer(
                 else Color.Black, style = MaterialTheme.typography.bodyMedium.copy(fontSize = 20.sp)
             )
         }
-    }
-}
-
-@Composable
-@Preview
-fun ChargeTypeContainerPreview() {
-    TotanPayTheme   {
-        ChargeTypeContainer(modifier = Modifier, isTopUpSelected = true, onVoucherSelected = {}, onTopUpSelected = {})
     }
 }

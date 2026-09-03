@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.totanpay.common.PrintableViewModel
 import com.example.totanpay.data.repository.DeviceRepository
-import com.example.totanpay.data.repository.ReportRepository
+import com.example.totanpay.data.repository.settings.report.ReportRepository
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow

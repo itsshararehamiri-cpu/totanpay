@@ -1,8 +1,12 @@
 package com.example.totanpay.feature.settings.supervisor
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.totanpay.data.repository.IccCardRepository
+import com.example.totanpay.R
+import com.example.totanpay.data.repository.log.LogRepository
+import com.example.totanpay.data.repository.log.LogType
+import com.example.totanpay.data.repository.settings.device_settings.IccCardRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -13,11 +17,11 @@ import java.security.PrivateKey
 import javax.inject.Inject
 
 @HiltViewModel
-class KeyInjectionViewModel @Inject constructor(private val iccCardRepository: IccCardRepository) : ViewModel() {
+class KeyInjectionViewModel @Inject constructor(private val iccCardRepository: IccCardRepository,private val logRepository: LogRepository) : ViewModel() {
     private val _uiState = MutableStateFlow(KeyInjectionUiState())
     val uiState: StateFlow<KeyInjectionUiState> = _uiState
 val TAG="ssss"
-    fun verifyFirstPin(pin: String) {
+    fun verifyFirstPin(pin: String,context: Context) {
         viewModelScope.launch {
             _uiState.update { it.copy(showEnterFirstCard = true, showEnterFirstPin = false) }
             val cardIsDetected = iccCardRepository.detectCard()
@@ -28,7 +32,7 @@ val TAG="ssss"
                     if (readPublicKeyResult != null) {
                         val privateKey = iccCardRepository.readPrivateKey()
                         if (privateKey == null) {
-                            _uiState.update { it.copy(errorInKeyInjection="خطا در خواندن کلید از کارت") }
+                            _uiState.update { it.copy(errorInKeyInjection=context.getString(R.string.error_in_reading_icc)) }
                             delay(3000)
                             _uiState.update { it.copy(errorInKeyInjection = "", isFinished = true) }
                         } else {
@@ -50,12 +54,13 @@ val TAG="ssss"
                             }
                         }
                     } else {
-                        _uiState.update { it.copy(errorInKeyInjection="خطا در خواندن کلید از کارت") }
+                        _uiState.update { it.copy(errorInKeyInjection=context.getString(R.string.error_in_reading_key_is_failed)) }
                         delay(3000)
                         _uiState.update { it.copy(errorInKeyInjection = "", isFinished = true) }
                     }
                 } else {
-                    _uiState.update { it.copy(errorInKeyInjection = "رمز اول اشتباه است.") }
+                    logRepository.addLog(LogType.KEY_CARD_INCORRECT)
+                    _uiState.update { it.copy(errorInKeyInjection = context.getString(R.string.first_pin_is_incorrect)) }
                     delay(3000)
                     _uiState.update { it.copy(errorInKeyInjection = "", isFinished = true) }
                 }
@@ -66,7 +71,7 @@ val TAG="ssss"
         }
     }
 
-    fun verifySecondPin(pin: String) {
+    fun verifySecondPin(pin: String,context: Context) {
         viewModelScope.launch {
             _uiState.update { it.copy(showEnterSecondCard = true, showEnterSecondPin = false) }
             val cardIsDetected = iccCardRepository.detectCard()
@@ -74,7 +79,8 @@ val TAG="ssss"
                 val verifyPinResult =
                     iccCardRepository.verifySecondPinAndInjectKeys(pin, uiState.value.privateKey)
                 if (!verifyPinResult) {
-                    _uiState.update { it.copy(errorInKeyInjection = "رمز دوم اشتباه است.") }
+                    logRepository.addLog(LogType.KEY_CARD_INCORRECT)
+                    _uiState.update { it.copy(errorInKeyInjection = context.getString(R.string.second_pin_is_incorrect)) }
                     delay(3000)
                     _uiState.update { it.copy(errorInKeyInjection = "", isFinished = true) }
                 } else {

@@ -1,0 +1,383 @@
+<resources>
+    <string name="app_name">Totan</string>
+    <string name="currency">Rial</string>
+    <string name="terminal">Terminal</string>
+    <string name="terminal_id">Terminal ID</string>
+    <string name="merchant">Merchant</string>
+    <string name="rrn_trace">Reference/Trace</string>
+    <string name="amount">Amount</string>
+    <string name="empty_message"> </string>
+
+    <string name="print_customer_receipt">Print Customer Receipt</string>
+    <string name="print_merchant_receipt">Print Merchant Receipt</string>
+    <string name="print">Print</string>
+    <string name="print_all">Print All</string>
+    <string name="print_sum">Print Summary</string>
+    <string name="general_sum">General Report</string>
+
+    <string name="purchase">Purchase</string>
+    <string name="bill_payment">Bill Payment</string>
+    <string name="customer_receipt">Customer Receipt</string>
+    <string name="merchant_receipt">Merchant Receipt</string>
+    <string name="cancel">Cancel</string>
+    <string name="plz_swipe_card">Please swipe your card:</string>
+    <string name="in_processing">Processing transaction...</string>
+    <string name="in_searching">Searching...</string>
+    <string name="reports">Reports</string>
+    <string name="last_transaction">Last Transaction</string>
+    <string name="details_of_transactions">Transaction Details</string>
+    <string name="report_based_on_trace">Report by Trace/RRN Number</string>
+    <string name="number_of_all_transactions">Total Number of Transactions</string>
+    <string name="sum_of_all_transactions">Total Amount of Transactions</string>
+    <string name="from_date">From Date</string>
+    <string name="to_date">To Date</string>
+    <string name="from_time">From Time</string>
+    <string name="to_time">To Time</string>
+
+    <string name="trace">Trace Number</string>
+    <string name="today">Today</string>
+    <string name="display_results">Show Results</string>
+    <string name="supervisor_settings">Supervisor Settings</string>
+    <string name="merchant_settings">Merchant Settings</string>
+    <string name="exit">Exit</string>
+
+    <string name="settings">Settings</string>
+    <string name="connection_settings">Connection Settings</string>
+    <string name="key_injection">Key Injection</string>
+    <string name="configuration">Configuration</string>
+    <string name="get_terminal_info">Get Terminal Info</string>
+    <string name="in_get_terminal_info">Retrieving information ....</string>
+
+
+    <string name="enable_and_disable_voice">Enable/Disable Sound</string>
+    <string name="enable_mac_on_key_injection">Enable MAC on Key Injection</string>
+    <string name="choose_theme">Choose Theme</string>
+    <string name="dark_mode">Dark Mode</string>
+    <string name="english_language">English Language</string>
+
+    <string name="ip">IP</string>
+    <string name="port">Port</string>
+    <string name="nii">NII</string>
+
+    <string name="balance">Balance</string>
+    <string name="real_balance">Real Balance</string>
+    <string name="balance_">Balance</string>
+
+    <string name="pin">PIN</string>
+    <string name="serial">Charge Serial</string>
+    <string name="code">Command Code</string>
+
+    <string name="bill_id">Bill ID</string>
+    <string name="payment_id">Payment ID</string>
+    <string name="in_bill_inquery">Bill Inquiry in Progress</string>
+    <string name="bill_inquery">Bill Inquiry</string>
+    <string name="service_desc">Bill Type</string>
+
+    <string name="success_transaction">Successful Transaction</string>
+    <string name="unsuccess_transaction">Unsuccessful Transaction</string>
+
+    <string name="success_operation">Successful Operation</string>
+    <string name="unsuccess_operation">Unsuccessful Operation</string>
+
+    <string name="confirm">Confirm</string>
+    <string name="close">Close</string>
+    <string name="return_back_to_main">Return to Main Page</string>
+    <string name="return_back">Back</string>
+    <string name="not_found_transaction">No transaction found.</string>
+    <string name="printer_settings">Printer Settings</string>
+    <string name="change_merchant_password">Change Merchant Password</string>
+    <string name="account_management">Account Management</string>
+
+    <string name="transaction_type">Transaction Type</string>
+    <string name="time">Time</string>
+    <string name="row1">Row</string>
+    <string name="date_time">Date and Time</string>
+    <string name="show_result">Show Results</string>
+
+    <string name="password">Password</string>
+    <string name="repeat_password">Repeat Password</string>
+
+    <string name="key_injection_done_successfully">Key injection completed successfully.</string>
+    <string name="enter_purchase_amount">Enter the purchase amount:</string>
+    <string name="purchase_with_id">Purchase with ID</string>
+    <string name="amount_not_entered">Amount not entered.</string>
+    <string name="purchase_id_not_entered">Purchase ID not entered.</string>
+    <string name="configuration_not_completed">Configuration not completed.</string>
+    <string name="please_enter_purchase_id">Please enter purchase ID:</string>
+    <string name="please_enter_first_card">Please insert the first card.</string>
+    <string name="please_enter_second_card">Please insert the second card.</string>
+    <string name="please_remove_first_card">Please remove the first card.</string>
+    <string name="please_remove_second_card">Please remove the second card.</string>
+    <string name="please_enter_first_password">Please enter the first card password:</string>
+    <string name="please_enter_second_password">Please enter the second card password:</string>
+
+    <string name="please_enter_password">Please enter the password:</string>
+
+    <string name="bill_id_is_not_valid">Bill ID is not valid.</string>
+    <string name="pay_id_is_not_valid">Payment ID is not valid.</string>
+    <string name="bill_id_is_not_entered">Bill ID not entered.</string>
+    <string name="pay_id_is_not_entered">Payment ID not entered.</string>
+    <string name="values_are_not_entered">Values not entered.</string>
+    <string name="sleeping_settings_device">Device Sleep Settings</string>
+    <string name="play_sound">Play Sound</string>
+
+    <string name="are_you_sure_you_want_to_make_changes">Are you sure you want to make these changes?</string>
+
+    <string name="pos_code">POS Code</string>
+    <string name="plz_enter_percent">Please enter the percentage:</string>
+    <string name="customer_signature">Customer Signature</string>
+
+    <string name="plz_choose_your_operator">Please choose your operator:</string>
+    <string name="select_amount_or_enter_amount">Select or enter charge amount:</string>
+    <string name="select_amount_amount">Select charge amount:</string>
+    <string name="operator_dont_select">Operator not selected.</string>
+    <string name="amount_dont_set">Amount not set.</string>
+    <string name="values_dont_set">Values not set.</string>
+
+    <string name="in_configuration">Configuring...</string>
+    <string name="configuration_do_successfully">Configuration completed successfully.</string>
+    <string name="enter_amount_or_select">Select or enter charge amount:</string>
+    <string name="operator_not_selected">Operator not selected.</string>
+    <string name="mobile_not_entered">Mobile number not entered.</string>
+    <string name="enter_your_mobile">Enter your mobile number:</string>
+    <string name="plz_select_operator">Please select your operator:</string>
+
+    <string name="there_is_no_transaction_to_perform_please_check_network">Unable to perform transaction. Please check internet connection.</string>
+
+    <string name="balance_transaction_fee">Balance Inquiry Fee</string>
+    <string name="switch_is_not_accessible">Switch is not accessible</string>
+
+    <string name="final_price_single_value">Including %1$s%% VAT, the final amount is %2$s Rial.</string>
+
+    <string name="plz_enter_an_valid_ip">Please enter a valid IP address.</string>
+    <string name="plz_enter_ip">Please enter IP.</string>
+    <string name="plz_enter_port">Please enter port.</string>
+    <string name="plz_enter_nii">Please enter NII.</string>
+
+    <string name="plz_enter_trace">Please enter trace.</string>
+    <string name="plz_enter_rrn">Please enter rrn.</string>
+    <string name="rrn">RRN</string>
+    <string name="show_more">Show Details</string>
+    <string name="show_sum">Show Total</string>
+
+    <string name="version_label">Version %1$s</string>
+    <string name="mobile_is_not_valid">Mobile number is not valid.</string>
+    <string name="value_should_be_valid">Value must be between 1 and 100.</string>
+    <string name="percent_not_entered">Percentage not entered.</string>
+    <string name="length_of_pass_be_four">Password length must be 4.</string>
+    <string name="amount_is_not_valid">Amount is not valid.</string>
+
+    <string name="amount_should_be_smaller_than">Amount should not be less than %1$s Rial.</string>
+    <string name="amount_should_be_greater_than">Amount should not be greater than %1$s Rial.</string>
+
+    <string name="set_maximum_amount_for_purchase_transaction">Set maximum purchase amount</string>
+    <string name="plz_enter_maximum_amount_for_purchase_transaction">Please enter maximum amount for purchase.</string>
+    <string name="plz_enter_percent_of_tax_irancell_charge">Please enter the Irancell tax percentage.</string>
+    <string name="set_percent_of_tax_irancell_charge">Set Irancell charge tax percentage</string>
+    <string name="percent_must_be_in_range">Please enter a number between 0 and 100.</string>
+
+    <string name="key_injection_not_done">Key injection not done.</string>
+    <string name="receipt_payback_message_part1">If money has been deducted from your account,</string>
+    <string name="receipt_payback_message_part2">the mentioned amount will be refunded within 72 hours.</string>
+    <string name="receipt_payback_message_part3">Otherwise,</string>
+    <string name="receipt_payback_message_part4">please contact customer service</string>
+    <string name="receipt_payback_message_part4_s">For assistance call 021-43695000</string>
+    <string name="receipt_payback_message_part5_s">Thank you.</string>
+
+    <string name="unable_to_print">Unable to print.</string>
+    <string name="there_are_no_connection_settings_please_go_to_connection_settings_section_and_configure_settings">
+        No connection settings found. Please go to connection settings and configure them.
+    </string>
+    <string name="no_password_has_been_set">Password not set.</string>
+
+    <string name="from_amount">From Amount</string>
+    <string name="to_amount">To Amount</string>
+    <string name="no_transactions_selected">No transactions selected!</string>
+    <string name="the_total_of_percentages_must_be_equal_to_on_houndred">The total percentage must equal 100.</string>
+    <string name="two_password_is_not_same">Passwords do not match.</string>
+    <string name="print_receipt_for_any_amount">Print receipt for any amount</string>
+    <string name="mobile_number">Mobile Number</string>
+    <string name="terminal_merchant">Terminal/Merchant</string>
+    <string name="trace__">Trace Number /</string>
+    <string name="trace_rrn">Trace/Reference Number</string>
+    <string name="withdrawable_account_balance">Withdrawable Account Balance</string>
+    <string name="voucher_serial">Voucher Serial</string>
+    <string name="voucher_pin">Voucher PIN</string>
+    <string name="charging_method">Charging Method</string>
+    <string name="error_in_print">Print Error</string>
+    <string name="no_options_selected">No option selected.</string>
+    <string name="enter_amount">Enter amount:</string>
+    <string name="password_not_entered">Password not entered.</string>
+    <string name="please_specify_minimum_amount_for_printing_a_receipt">Please specify the minimum amount for printing a receipt:</string>
+    <string name="amount_of_charge">Charge Amount:</string>
+    <string name="amount_of_purchase">Purchase Amount:</string>
+    <string name="amount_of_bill">Bill Amount:</string>
+    <string name="please_turn_off_automatic_date_and_time_setting">Please turn off automatic date and time setting.</string>
+    <string name="please_set_device_time_zone_to_tehran">Please set the device time zone to Tehran.</string>
+    <string name="please_set_time_zone_to_tehran">Please set the time zone to Tehran.</string>
+    <string name="number_">Number %d</string>
+
+    <string name="amount_with_currency">%1$s Rial</string>
+
+
+    <string name="unknown_error">Unknown Error</string>
+    <string name="plz_put_barcode_front_device">Please place the barcode in front of the device.</string>
+    <string name="reading_card_have_error">Error reading card.</string>
+    <string name="no_paper">No paper.</string>
+    <string name="printer_is_printing">Printer is printing.</string>
+    <string name="printer_be_broken">Printer is broken.</string>
+    <string name="print_failed">Printing failed.</string>
+    <string name="plz_enter_pin">Enter your card PIN:\n (Required by customer)</string>
+    <string name="required_by_customer">Required by the customer</string>
+    <string name="cancel_">Cancel</string>
+    <string name="delete">Delete</string>
+    <string name="select_range_is_not_correct">Selected range is incorrect.</string>
+
+    <string name="amount_can_not_be_greater_than">
+        The entered amount cannot be greater than %1$s Rial.
+    </string>
+
+    <string name="unable_to_complete_transaction_please_check_internet">Unable to complete transaction. Please check your internet connection.</string>
+
+    <string name="sheba_number">IBAN Number</string>
+    <string name="the_selected_range_is_not_correct">The selected range is incorrect.</string>
+
+    <string name="error_in_reading_icc">Error reading key from card.</string>
+    <string name="error_in_reading_key_is_failed">Error reading key from card.</string>
+    <string name="first_pin_is_incorrect">First password is incorrect.</string>
+    <string name="second_pin_is_incorrect">Second password is incorrect.</string>
+    <string name="pass_is_incorrect">Password is incorrect.</string>
+
+    <string name="configuration_not_done">Configuration not done.</string>
+    <string name="please_go_to_account_management_section_and_determine_share_of_each_account_number">Please go to Account Management and determine the share of each account number.</string>
+
+    <string name="print_with_any_amount">Print receipt for any amount</string>
+    <string name="failur_to_print_receipt">Failed to print receipt</string>
+    <string name="print_receipt">Print receipt</string>
+    <string name="print_receipt_above_min_amount">Auto-print receipt</string>
+    <string name="no_internet">Unable to perform transaction. Please check your internet.</string>
+    <string name="error">Error:</string>
+    <string name="voucher">Recharge Code</string>
+    <string name="topup">Direct Recharge</string>
+    <string name="get_key">Get Key</string>
+    <string name="duplicate_receipt">Duplicate Receipt</string>
+
+    <string name="min_amount_for_auto_print_receipt">Minimum amount for auto print receipt</string>
+    <string name="confirm_key">Confirm Key</string>
+    <string name="key_exchange_key">Key Exchange</string>
+    <string name="charge">Charge</string>
+    <string-array name="numbers">
+        <item>0</item>
+        <item>1</item>
+        <item>2</item>
+        <item>3</item>
+        <item>4</item>
+        <item>5</item>
+        <item>6</item>
+        <item>7</item>
+        <item>8</item>
+        <item>9</item>
+    </string-array>
+    <string name="rc_3">Error in data format</string>
+    <string name="rc_6">Error in sending transaction</string>
+    <string name="rc_5">Connection error</string>
+    <string name="rc_1">Error receiving data</string>
+    <string name="rc_2">Error sending settlement/refund transaction</string>
+
+    <string name="rc_01">Contact the card issuer, the transaction was canceled.</string>
+    <string name="rc_02">Please contact the card issuer regarding specific circumstances.</string>
+    <string name="rc_03">Invalid merchant</string>
+    <string name="rc_04">Invalid card</string>
+    <string name="rc_05">No license will be issued.</string>
+    <string name="rc_06">Error</string>
+    <string name="rc_07">Invalid card</string>
+    <string name="rc_08">Authorization issued after identification,transaction completed.</string>
+    <string name="rc_09">Invalid card issuer</string>
+    <string name="rc_10">The transaction was completed with a partial amount</string>
+    <string name="rc_11">The transaction was carried out for specific individuals</string>
+    <string name="rc_12">Invalid transaction</string>
+    <string name="rc_13">Invalid amount</string>
+    <string name="rc_14">Invalid card number</string>
+    <string name="rc_15">Invalid issuer</string>
+    <string name="rc_16">The transaction was completed after the card update.</string>
+    <string name="rc_17">Customer cancellation</string>
+    <string name="rc_18">Customer dispute</string>
+    <string name="rc_19">Duplicate transaction, cancelled</string>
+    <string name="rc_20">Invalid response</string>
+    <string name="rc_21">No specific operation was performed.</string>
+    <string name="rc_22">Possibility of failure</string>
+    <string name="rc_23">Transaction fee not applicable, cancelled</string>
+    <string name="rc_24">File operations are not supported by receiver</string>
+    <string name="rc_25">Original transaction not found</string>
+    <string name="rc_26">Duplicate record, previous replaced</string>
+    <string name="rc_27">File field correction error</string>
+    <string name="rc_28">File locked</string>
+    <string name="rc_29">File action failed, contact acquirer</string>
+    <string name="rc_30">Format error</string>
+    <string name="rc_31">Bank not supported by switch</string>
+    <string name="rc_32">Partial transaction approved</string>
+    <string name="rc_33">Expired card</string>
+    <string name="rc_34">Suspected fraud, card captured</string>
+    <string name="rc_35">Acquirer cannot be cardholder, card captured</string>
+    <string name="rc_36">Invalid card</string>
+    <string name="rc_37">Invalid card</string>
+    <string name="rc_38">PIN retry limit exceeded</string>
+    <string name="rc_39">No credit account, transaction cancelled</string>
+    <string name="rc_40">Requested function not supported</string>
+    <string name="rc_41">Lost card</string>
+    <string name="rc_42">No universal account, transaction cancelled</string>
+    <string name="rc_43"></string>
+    <string name="rc_44">Investment account not found</string>
+    <string name="rc_51">Insufficient funds</string>
+    <string name="rc_52">Current account not available. Transaction cancelled.</string>
+    <string name="rc_53">Savings account not available. Transaction cancelled.</string>
+    <string name="rc_54">Expired card</string>
+    <string name="rc_55">Incorrect PIN</string>
+    <string name="rc_56">Invalid card</string>
+    <string name="rc_57">Transaction not permitted to cardholder</string>
+    <string name="rc_58">Transaction not permitted to terminal</string>
+    <string name="rc_59">Potential fraud detected. Transaction cancelled.</string>
+    <string name="rc_60">The card recipient cannot be merchant. Transaction cancelled.</string>
+    <string name="rc_61">Invalid amount</string>
+    <string name="rc_62">Invalid card</string>
+    <string name="rc_63">Security violation</string>
+    <string name="rc_64">Original amount incorrect</string>
+    <string name="rc_65">The amount exceeds the periodic cash withdrawal limit. Transaction cancelled.</string>
+    <string name="rc_66">Contact acquirer’s security department</string>
+    <string name="rc_67">Capture card</string>
+    <string name="rc_68">No response received within the specified time.</string>
+    <string name="rc_75">PIN retry limit exceeded</string>
+    <string name="rc_77">Invalid transaction date</string>
+    <string name="rc_90">Financial period switching is in progress.</string>
+    <string name="rc_91">Issuer or switch is currently processing. Transaction cancelled</string>
+    <string name="rc_92">Financial institution or network unavailable</string>
+    <string name="rc_93">Transaction cannot be completed</string>
+    <string name="rc_94">Duplicate transaction</string>
+    <string name="rc_95">Settlement encountered an error</string>
+    <string name="rc_96">System malfunction</string>
+    <string name="rc_empty"> </string>پ
+
+    <string name="card_number_title">Card Number</string>
+
+
+    <string name="water">Water</string>
+    <string name="electricity">Electricity</string>
+    <string name="gas">Gas</string>
+    <string name="mobile">Mobile</string>
+    <string name="should_change_pass">
+      Please Change Password Of Merchant</string>
+
+
+    <string name="transaction_settlement_reversal_has_not_been_completed">Settlement/Reversal not completed
+
+</string>
+    <string name="plz_send_it_to_complete_transaction_process">Please send it to complete the transaction process.</string>
+    <string name="continue_">Continue</string>
+
+    <string name="error_in_print_message">
+          The transaction receipt could not be printed due to a device error. The operation will proceed without a printed receipt. Do you wish to continue?
+
+    </string>
+    <string name="connection_to_net">Network Settings </string>
+
+</resources>

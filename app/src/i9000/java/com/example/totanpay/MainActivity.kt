@@ -13,7 +13,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -36,13 +39,14 @@ import com.example.totanpay.feature.topup.navigation.topUpNavigation
 import com.example.totanpay.feature.voucher.navigation.VoucherRoutes
 import com.example.totanpay.feature.voucher.navigation.voucherNavigation
 import com.example.totanpay.ui.theme.TotanPayTheme
+import com.example.totanpay.util.LocaleHelper
 import com.example.totanpay.util.PermissionUtil
 import com.example.totanpay.util.RuntimePermissionManager
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
-const val TIME_TO_FINISH_SUCCESS_RESULT = 5000
+const val TIME_TO_FINISH_SUCCESS_RESULT = 20000
 const val TIME_TO_FINISH_TAKE_CARD = 30000
 
 
@@ -50,6 +54,8 @@ const val TIME_TO_FINISH_TAKE_CARD = 30000
 class MainActivity : ComponentActivity() {
     @Inject
     lateinit var deviceManager: IDevice
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         deviceManager.disableHome()
@@ -58,91 +64,109 @@ class MainActivity : ComponentActivity() {
         enableEdgeToEdge()
         setContent {
             val sharedViewModel: MainViewModel = viewModel()
+
             val dataFlow by sharedViewModel.dataFlow.collectAsStateWithLifecycle()
-            TotanPayTheme(darkTheme = dataFlow) {
-                val systemUiController = rememberSystemUiController()
-                if (dataFlow) {
-                    systemUiController.setSystemBarsColor(
-                        color = Color.Transparent
-                    )
-                } else {
-                    systemUiController.setSystemBarsColor(
-                        color = Color.White
-                    )
-                }
-                CompositionLocalProvider(LocalDeviceManager provides deviceManager) {
-                    val navController = rememberNavController()
-                    NavHost(
-                        navController = navController,
-                        startDestination = if (receivedAmount.isNullOrEmpty()) {
-                            MainRoute.SplashRoute.route
+            val isFarsiSelected by sharedViewModel.isFarsiSelected.collectAsStateWithLifecycle()
+            val globalLanguageState = remember { LanguageState() }
+            globalLanguageState.isFarsiSelected.value = isFarsiSelected
+            CompositionLocalProvider(LocalLanguageState provides globalLanguageState) {
+                CompositionLocalProvider(LocalLayoutDirection provides if (isFarsiSelected) LayoutDirection.Rtl else LayoutDirection.Ltr) {
+                    TotanPayTheme(darkTheme = dataFlow, isFarsi = isFarsiSelected) {
+                        LocaleHelper.setLocale(this, if (!isFarsiSelected) "en" else "fa")
+                        val systemUiController = rememberSystemUiController()
+                        if (dataFlow) {
+                            systemUiController.setSystemBarsColor(
+                                color = Color.Transparent
+                            )
                         } else {
-                            PurchaseRoutes.Start(
-                                amount = receivedAmount,
-                                purchaseId = receivedAmount,
-                                packageName = packageName
-                            ).route
+                            systemUiController.setSystemBarsColor(
+                                color = Color.White
+                            )
                         }
-                    ) {
-                        composable(route = MainRoute.SplashRoute.route) {
-                            SplashScreen {
-                                navController.navigate(MainRoute.MenuRoute.route) {
-                                    popUpTo(MainRoute.MenuRoute.route) { inclusive = false }
+                        CompositionLocalProvider(LocalDeviceManager provides deviceManager) {
+                            val navController = rememberNavController()
+                            NavHost(
+                                navController = navController,
+                                startDestination = if (receivedAmount.isNullOrEmpty()) {
+                                    MainRoute.SplashRoute.route
+                                } else {
+                                    PurchaseRoutes.Start(
+                                        amount = receivedAmount,
+                                        purchaseId = receivedAmount,
+                                        packageName = packageName
+                                    ).route
                                 }
+                            ) {
+                                composable(route = MainRoute.SplashRoute.route) {
+                                    SplashScreen {
+                                        navController.navigate(MainRoute.MenuRoute.route) {
+                                            popUpTo(MainRoute.MenuRoute.route) { inclusive = false }
+                                        }
+                                    }
+                                }
+                                composable(MainRoute.MenuRoute.route) {
+                                    MenuScreen(
+                                        viewModel = hiltViewModel(),
+                                        onPurchaseSelected = { amount, purchaseId ->
+                                            navController.navigate(
+                                                "purchase_navigation?amount=$amount&purchaseId=$purchaseId&packageName=$packageName",
+                                                navOptions {
+                                                    launchSingleTop = true
+                                                })
+                                        },
+                                        onBillPaySelected = {
+                                            navController.navigate(
+                                                BILL_PAYMENT_NAVIGATION,
+                                                navOptions {
+                                                    launchSingleTop = true
+                                                })
+                                        },
+                                        onBalanceSelected = {
+                                            navController.navigate(
+                                                BalanceRoutes.Start.route,
+                                                navOptions {
+                                                    launchSingleTop = true
+                                                })
+                                        },
+                                        onVoucherSelected = {
+                                            navController.navigate(
+                                                VoucherRoutes.Start.route,
+                                                navOptions {
+                                                    launchSingleTop = true
+                                                })
+                                        },
+                                        onTopUpSelected = {
+                                            if (isSmall(context = this@MainActivity))
+                                                navController.navigate(
+                                                    "charge_navigation",
+                                                    navOptions {
+                                                        launchSingleTop = true
+                                                    })
+                                            else navController.navigate(
+                                                "topup_navigation",
+                                                navOptions {
+                                                    launchSingleTop = true
+                                                })
+                                        },
+                                        onSettingsClicked = {
+                                            navController.navigate(
+                                                SettingsRoutes.Start.route,
+                                                navOptions {
+                                                    launchSingleTop = true
+                                                })
+                                        },
+                                        onBackClicked = {
+                                            finish()
+                                        })
+                                }
+                                purchaseNavigation(navController)
+                                balanceNavigation(navController)
+                                billNavigation(navController)
+                                voucherNavigation(navController)
+                                topUpNavigation(navController)
+                                settingNavigation(navController)
                             }
                         }
-                        composable(MainRoute.MenuRoute.route) {
-                            MenuScreen(viewModel = hiltViewModel(),
-                                onPurchaseSelected = {amount, purchaseId->
-                                    navController.navigate("purchase_navigation?amount=$amount&purchaseId=$purchaseId&packageName=$packageName", navOptions {
-                                        launchSingleTop = true
-                                    })
-                                },
-                                onBillPaySelected = {
-                                    navController.navigate(BILL_PAYMENT_NAVIGATION, navOptions {
-                                        launchSingleTop = true
-                                    })
-                                },
-                                onBalanceSelected = {
-                                    navController.navigate(
-                                        BalanceRoutes.Start.route,
-                                        navOptions {
-                                            launchSingleTop = true
-                                        })
-                                },
-                                onVoucherSelected = {
-                                    navController.navigate(
-                                        VoucherRoutes.Start.route,
-                                        navOptions {
-                                            launchSingleTop = true
-                                        })
-                                },
-                                onTopUpSelected = {
-                                    if(isSmall(context = this@MainActivity))
-                                    navController.navigate("charge_navigation", navOptions {
-                                        launchSingleTop = true
-                                    })
-                                    else navController.navigate("topup_navigation", navOptions {
-                                        launchSingleTop = true
-                                    })
-                                },
-                                onSettingsClicked = {
-                                    navController.navigate(
-                                        SettingsRoutes.Start.route,
-                                        navOptions {
-                                            launchSingleTop = true
-                                        })
-                                },
-                                onBackClicked = {
-                                    finish()
-                                })
-                        }
-                        purchaseNavigation(navController)
-                        balanceNavigation(navController)
-                        billNavigation(navController)
-                        voucherNavigation(navController)
-                        topUpNavigation(navController)
-                        settingNavigation(navController)
                     }
                 }
             }
@@ -171,7 +195,7 @@ class MainActivity : ComponentActivity() {
                         }
                     }
                     //finish()
-                }// TODO:
+                }
             })
     }
 

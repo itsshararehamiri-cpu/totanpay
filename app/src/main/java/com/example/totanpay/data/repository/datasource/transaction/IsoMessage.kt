@@ -1,5 +1,6 @@
 package com.example.totanpay.data.repository.datasource.transaction
 
+import android.util.Log
 import com.example.totanpay.data.util.toEnglishNumber
 import org.jpos.iso.ISOException
 import org.jpos.iso.ISOMsg
@@ -39,11 +40,15 @@ class Ltv {
     fun unpack(msg: ByteArray) {
         var index = 0
         while (index < msg.size) {
-            val len = msg[index] / 16 * 10 + msg[index] % 16
+            if (index + 1 >= msg.size) break
+            val lenByte = msg[index].toInt() and 0xFF
+            val len = (lenByte shr 4) * 10 + (lenByte and 0x0F)
             val tag = msg[index + 1].toUByte().toInt()
-            val value = msg.copyOfRange(2 + index, len + index + 1)
+            val valueEnd = index + len + 1
+            if (len <= 0 || valueEnd > msg.size || index + 2 > valueEnd) break
+            val value = msg.copyOfRange(index + 2, valueEnd)
                 .toString(charset = Charset.forName("cp1256"))
-            index += len + 1
+            index = valueEnd
             map[tag] = value
         }
     }
@@ -70,7 +75,7 @@ class IsoMessage : ISOMsg() {
         set(value) = set(12, value)
 
     val respCode: Int
-        get() = getString(39)?.toInt() ?: -3
+        get() = getString(39)?.toInt() ?: -1 // TODO:
 
     val rrn: String?
         get() = getString(37)
@@ -117,11 +122,11 @@ class IsoMessage : ISOMsg() {
     }
 
     fun setSerial(serial: String) {
-        field48.addNode(0x01, serial)//"92261946156409"
+        field48.addNode(0x01, serial)
     }
 
     fun set99(field99: String) {
-        field48.addNode(0x99, field99)//"92261946156409"
+        field48.addNode(0x99, field99)
     }
 
     fun setVersion(version: String) {

@@ -1,6 +1,7 @@
 package com.example.totanpay.data.repository.datasource.transaction
 
 
+import com.example.totanpay.R
 import com.example.totanpay.data.repository.datasource.transaction.connection.IConnection
 import com.example.totanpay.data.repository.datasource.transaction.request.VoucherTransactionRequest
 import com.example.totanpay.data.repository.datasource.transaction.response.BaseTransactionResponse
@@ -17,7 +18,7 @@ class VoucherTransaction(
     updateTransaction: suspend (
         date: String, time: String, pan: String, cardIssuer: String, responseCode: String, amount: String, rrn: String?,
         serviceDesc: String?, pinVoucher: String?, serialVoucher: String?, mobileNumber: String?, operatorCode: Int?,
-        responseMessage: String?,trace:String?
+        responseMessage: Int?,trace:String?
     ) -> Unit,
     deleteTransaction: suspend (
         date: String, time: String
@@ -60,6 +61,8 @@ class VoucherTransaction(
                 setTerminalLanguage(request.terminalLanguage)
                 setProductCode(request.productCode)
                 setTerminalConnectionType(request.terminalConnectionType)
+                if (!request.logs.isNullOrEmpty())
+                    set99(request.logs)
             }
             setCurrency(request.currency)
             setPinBlock(request.pinBlock)
@@ -96,7 +99,7 @@ class VoucherTransaction(
             indentBytes4Decrypt(decData),
             voucherSerial,
             null,
-            sendMessage.operatorCode.toInt(), "",
+            sendMessage.operatorCode.toInt(), R.string.empty_message,
             if (receivedIsoMessage.hasField(38)) {
                 receivedIsoMessage.getString(38)
             } else{
@@ -132,7 +135,7 @@ class VoucherTransaction(
             )
             return FailedTransactionResponse(
                 responseCode = -1,
-                responseMessage = "خطا در دریافت اطلاعات",
+                responseMessage =ResponseMessageContainer.RC_1.messageId,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,
@@ -143,16 +146,21 @@ class VoucherTransaction(
                 posCode = null
             )
         } else {
-            if (receivedIsoMessage.respCode != 80)
+            if (receivedIsoMessage.respCode != 80 && receivedIsoMessage.respCode > 0)
                 clearTransactionFromQueue(sendMessage.tranDate, sendMessage.tranTime)
             val cardIssuer = receivedIsoMessage.getField48Tag(0x38)?.split("\\")?.get(0) ?: ""
             deleteTransaction(
                 sendMessage.tranDate,
                 sendMessage.tranTime
             )
+            var dateTimeOfServer: String? = null
+            if (receivedIsoMessage.getBytes(48) != null) {
+                val ltv: Ltv = Ltv().also { it.unpack(receivedIsoMessage.getBytes(48)) }
+                dateTimeOfServer = ltv?.getNode(0x50)
+            }
             return FailedTransactionResponse(
                 responseCode = receivedIsoMessage.respCode,
-                responseMessage = "",
+                responseMessage = R.string.empty_message,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,
@@ -164,6 +172,7 @@ class VoucherTransaction(
                 amount = request.amount,
                 rrn = receivedIsoMessage.rrn,
                 posCode = receivedIsoMessage.getField48Tag(0x98) ?: "",
+                dateTimeOfServer = dateTimeOfServer
             )
         }
 

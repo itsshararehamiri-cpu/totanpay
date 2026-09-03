@@ -37,6 +37,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import androidx.lifecycle.repeatOnLifecycle
 import androidx.multidex.BuildConfig.FLAVOR
+import com.example.totanpay.LocalLanguageState
 import com.example.totanpay.R
 import com.example.totanpay.TIME_TO_FINISH_TAKE_CARD
 import com.example.totanpay.common.CountdownEffect
@@ -62,6 +63,7 @@ fun ReadCardContent(
     onBackButtonClicked: () -> Unit
 ) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
+    val isFarsi= LocalLanguageState.current.isFarsiSelected.value
     LaunchedEffect(lifecycle) {
         lifecycle.repeatOnLifecycle(Lifecycle.State.STARTED) {
             readCard()
@@ -300,7 +302,7 @@ fun ReadCardContent(
             }
             Image(
                 painter = painterResource(id = R.drawable.ic_shop),
-                contentDescription = uiState.merchantName,
+                contentDescription = if(isFarsi)uiState.merchantName else uiState.englishMerchantName,
                 modifier = Modifier
                     .size(24.dp)
                     .layoutId("merchantNameImage"),
@@ -315,7 +317,7 @@ fun ReadCardContent(
                 colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onBackground)
             )
             Text(
-                text = uiState.merchantName,
+                text =if(isFarsi)uiState.merchantName else uiState.englishMerchantName,
                 modifier = Modifier.layoutId("merchantName"),
                 style = MaterialTheme.typography.titleMedium.copy(
                     color = MaterialTheme.colorScheme.onBackground,
@@ -339,7 +341,7 @@ fun ReadCardContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .align(Alignment.BottomCenter),
-                message = "امکان انجام تراکنش وجود ندارد لطفا اینترنت را بررسی کنید"
+                message = stringResource(R.string.no_internet)
             ) {
                 hideInternetErrorMessage()
             }

@@ -22,6 +22,7 @@ import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.totanpay.LocalLanguageState
 import com.example.totanpay.R
 import com.example.totanpay.ui.theme.TotanPayTheme
 
@@ -32,13 +33,15 @@ fun SettingsItem(
     iconImageId: Int,
     backgroundIconId: Int,
     title: String,
-    isSmall:Boolean,
+    isSmall: Boolean,
     onItemClicked: () -> Unit
 ) {
+    val isRtl= LocalLanguageState.current.isFarsiSelected.value
+
     Box(
         modifier = modifier
             .fillMaxWidth()
-            .height( 80.dp)
+            .height(80.dp)
             .clickable { onItemClicked() }) {
         Image(
             painter = painterResource(id = backgroundImageId), contentDescription = "",
@@ -49,11 +52,11 @@ fun SettingsItem(
 
         Row(
             Modifier
-                .padding(top =20.dp)
+                .padding(top = 20.dp)
                 .fillMaxSize()
                 .align(Alignment.Center)
         ) {
-            Box(modifier=Modifier.padding(start = 18.dp)){
+            Box(modifier = Modifier.padding(start = 18.dp)) {
                 Image(
                     painter = painterResource(id = backgroundIconId),
                     contentDescription = "",
@@ -68,7 +71,7 @@ fun SettingsItem(
                         .size(28.dp)
                         .align(Alignment.Center),
                     contentScale = ContentScale.FillBounds,
-                   colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface)
+                    colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.surface)
                 )
             }
             Text(
@@ -80,28 +83,16 @@ fun SettingsItem(
             )
             Spacer(modifier = Modifier.weight(1f))
             Image(
-                painter = painterResource(id = R.drawable.ic_arrow_left_gray),
+                painter = painterResource(
+                    id = if (isRtl) R.drawable.ic_arrow_left_gray
+                    else R.drawable.ic_arrow_right
+                ),
                 contentDescription = "",
                 modifier = modifier
                     .padding(end = 26.dp)
-                    .size(24.dp), colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f))
+                    .size(24.dp),
+                colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSurface.copy(alpha = 0.8f))
             )
-        }
-    }
-}
-@Composable
-@Preview
-fun SettingsItemPreview() {
-    TotanPayTheme {
-        SettingsItem(
-            modifier = Modifier
-                .layoutId("connectionSettings"),
-            iconImageId = R.drawable.ic_connection_settings,
-            title = stringResource(id = R.string.connection_settings),
-            backgroundIconId = R.drawable.background_connection_settings,
-            isSmall = false,
-            backgroundImageId = R.drawable.ic_item_settings1
-        ) {
         }
     }
 }

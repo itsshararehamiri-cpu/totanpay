@@ -17,7 +17,7 @@ fun MerchantSettingsScreen(
     BackHandler {
         onBackClicked()
     }
-    MerchantSettingsContent(uiState,
+    MerchantSettingsContent(uiState = uiState,
         onBackClicked = { onBackClicked() },
         onA = { onA() },
         onPrinterSettings = { onPrinterSettings() },

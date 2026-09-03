@@ -161,12 +161,12 @@ fun NavGraphBuilder.purchaseNavigation(
             route = "purchase_unsuccess_result?response={response}&packageName={packageName}",  arguments = listOf(
                 navArgument("response") {
                     type = NavType.StringType
-                    nullable = false
+                    nullable = true
                 }
                 ,
                 navArgument("packageName") {
                     type = NavType.StringType
-                    nullable = true
+                    nullable = false
                 }
         ) ){ backStack ->
             PurchaseUnSuccessResult(

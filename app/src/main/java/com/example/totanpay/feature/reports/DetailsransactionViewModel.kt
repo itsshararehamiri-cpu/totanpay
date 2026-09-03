@@ -5,8 +5,8 @@ import androidx.lifecycle.viewModelScope
 import com.example.totanpay.common.PrintableViewModel
 import com.example.totanpay.data.repository.DeviceRepository
 import com.example.totanpay.data.repository.MainRepository
-import com.example.totanpay.data.repository.ReportRepository
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
+import com.example.totanpay.data.repository.settings.report.ReportRepository
 import com.example.totanpay.ui.getPersianDateFrom
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -21,12 +21,10 @@ import javax.inject.Inject
 class DetailsTransactionViewModel @Inject constructor(
     private val reportRepository: ReportRepository,
     private val mainRepository: MainRepository,
-    override val deviceRepository: DeviceRepository
-) : ViewModel(), PrintableViewModel {
+    override val deviceRepository: DeviceRepository) : ViewModel(), PrintableViewModel {
 
     private val _uiState = MutableStateFlow(DetailsTransactionUiState())
     val uiState: StateFlow<DetailsTransactionUiState> = _uiState
-
     fun search(
         fromDate: PersianDate?,
         toDate: PersianDate?,
@@ -62,7 +60,8 @@ class DetailsTransactionViewModel @Inject constructor(
                             transaction.amount.toLong()
                         }.toString(),
                         merchantPhone = merchant?.merchantPhone.toString(),
-                        merchantName = merchant?.merchantName.toString(),
+                        merchantName =merchant?.merchantName.toString(),
+                        englishMerchantName=  merchant?.englishMerchantName.toString(),
                         merchantId = merchant?.merchantId ?: "",
                         terminalId = mainRepository.getTerminalId() ?: ""
                     )
@@ -87,6 +86,8 @@ data class DetailsTransactionUiState(
     val merchantId: String = "",
     val merchantPhone: String = "",
     val merchantName: String = "",
+    val englishMerchantName: String = "",
+
     val fromDate: String = "",
     val fromTime: String = "",
     val toDate: String = "",

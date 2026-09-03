@@ -12,6 +12,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -40,19 +41,19 @@ fun ResultLogo(modifier: Modifier, isSuccess: Boolean = false) {
         }
         .build()
     Column {
-        if(!isSmall(context))
-        Image(
-            painter = rememberAsyncImagePainter(
-                ImageRequest.Builder(LocalContext.current)
-                    .data(data = if (isSuccess) R.drawable.aa else R.drawable.uns)
-                    .apply(block = fun ImageRequest.Builder.() {
-                    }).build(),
-                imageLoader = imageLoader
-            ),
-            contentDescription = null,
-            modifier = modifier
-                .padding(top = if (isSmall(context)) 0.dp else 2.dp)
-        )
+        if (!isSmall(context))
+            Image(
+                painter = rememberAsyncImagePainter(
+                    ImageRequest.Builder(LocalContext.current)
+                        .data(data = if (isSuccess) R.drawable.aa else R.drawable.uns)
+                        .apply(block = fun ImageRequest.Builder.() {
+                        }).build(),
+                    imageLoader = imageLoader
+                ),
+                contentDescription = null,
+                modifier = modifier
+                    .padding(top = if (isSmall(context)) 0.dp else 2.dp)
+            )
         Text(
             modifier = Modifier
                 .padding(top = if (isSmall(context)) 1.dp else 5.dp)
@@ -60,18 +61,7 @@ fun ResultLogo(modifier: Modifier, isSuccess: Boolean = false) {
                 .align(Alignment.CenterHorizontally),
             text = stringResource(id = if (isSuccess) R.string.success_transaction else R.string.unsuccess_transaction),
             color = if (isSuccess) Green50 else Red,
-            style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp)
+            style = MaterialTheme.typography.titleMedium.copy(fontSize = 20.sp, fontWeight = FontWeight.Bold)
         )
     }
-}
-
-@Composable
-@Preview
-fun ResultLogoPreview() {
-    ResultLogo(
-        modifier = Modifier
-
-            .resultLogoMoifier(isSmall = true)
-            .layoutId("successTickImage"), isSuccess = false
-    )
 }

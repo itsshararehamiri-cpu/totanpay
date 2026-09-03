@@ -1,14 +1,11 @@
 package com.example.totanpay.feature.bill
-
-
-
 import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.totanpay.data.repository.DeviceSettingsRepository
 import com.example.totanpay.data.repository.MainRepository
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
+import com.example.totanpay.data.repository.settings.device_settings.DeviceSettingsRepository
 import com.example.totanpay.data.util.getPersianDate
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -17,8 +14,6 @@ import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
 import kotlinx.coroutines.launch
 import javax.inject.Inject
-
-
 @HiltViewModel
 class BillPaymentUnSuccessResultViewModel @Inject constructor(private val mainRepository: MainRepository,private val deviceSettingsRepository: DeviceSettingsRepository) :
     ViewModel() {
@@ -37,9 +32,15 @@ class BillPaymentUnSuccessResultViewModel @Inject constructor(private val mainRe
     }
     fun printAndConfirm(bitmap: Bitmap, context: Context) {
         viewModelScope.launch {
-            mainRepository.print(bitmap, context, onSuccess = {}, onFailed = {})
+            mainRepository.print(bitmap, context, onSuccess = {}, onFailed = {
+                errorMessage->_uiState.update { it.copy(errorInPrint=errorMessage) }
+            })
             mainRepository.settlementReverse()
         }
+    }
+
+    fun clearErrorMessage() {
+        viewModelScope.launch { _uiState.update { it.copy(errorInPrint = "") } }
     }
 
 }
@@ -47,5 +48,6 @@ data class BillPaymentUnSuccessUiState(
     val result: ResponseTransaction? = null,
     val error: String = "",
     val autoPrint: Boolean = true,
-    val playbackSound:Boolean=false
+    val playbackSound:Boolean=false,
+    val errorInPrint: String=""
 )

@@ -11,13 +11,6 @@ fun String?.mask(): String {
         "${take(6)}****${takeLast(4)}" else ""
 }
 
-fun getSwitchMessage(code: Int): String {
-    return when (code) {
-        0 -> "تراکنش موفق"
-
-        else -> "خطای نامشخص"
-    }
-}
 
 fun String.toTimeFormat():String {
     val temp = StringBuilder()

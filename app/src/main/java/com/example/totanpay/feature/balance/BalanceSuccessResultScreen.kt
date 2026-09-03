@@ -43,6 +43,7 @@ import com.example.totanpay.common.rowReceiptModifier
 import com.example.totanpay.common.rowReceiptWithPSPLogoModifier
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
 import com.example.totanpay.data.repository.datasource.transaction.TransactionType
+import com.example.totanpay.data.repository.settings.merchant.PrintStatus
 import com.example.totanpay.receipt.ReceiptUi
 import com.example.totanpay.ui.component.HorizontalDivider
 import com.example.totanpay.ui.component.ShowToast
@@ -69,6 +70,11 @@ fun BalanceSuccessResultScreen(
     var errorMessagePrint by remember {
         mutableStateOf("")
     }
+    LaunchedEffect(uiState.printStatus) {
+        if (uiState.printStatus== PrintStatus.PRINT) {
+            startPrint = true
+        }
+    }
     PlaybackSoundEffect(uiState.playbackSound, R.raw.successfultransaction)
     BackHandler {
         onBackButtonClicked()
@@ -83,17 +89,7 @@ fun BalanceSuccessResultScreen(
             receiptBitmap = it
         }
     }
-    LaunchedEffect(startPrint) {
-        if (receiptBitmap != null && startPrint) {
-            viewModel.print(bitmap = receiptBitmap!!, context = context, onSuccess = {
-            }, onFailed = {
-                showErrorInPrint = true
-                errorMessagePrint = it
-            })
-            startPrint = false
-        }
-    }
-    LaunchedEffect(receiptBitmap) {
+    LaunchedEffect(startPrint,receiptBitmap) {
         if (receiptBitmap != null && startPrint) {
             viewModel.print(bitmap = receiptBitmap!!, context = context, onSuccess = {
             }, onFailed = {
@@ -108,13 +104,21 @@ fun BalanceSuccessResultScreen(
     }
     if (uiState.result != null) {
         Box(modifier = Modifier.fillMaxSize()) {
-            ReceiptResultContainer(
-                printTitle = stringResource(R.string.print_customer_receipt),
+            ReceiptResultContainer(showMerchantPrintButton = false,
+                showCustomerPrintButton = true,
+                printTitle = stringResource(R.string.print),
+                errorInPrint = errorMessagePrint,
                 onBackButtonClicked = {
                     onBackButtonClicked()
                 },
-                onPrintButtonClicked = {
+                onCustomerPrintButtonClicked = {
                     startPrint = true
+                },
+                onMerchantPrintButtonClicked = {
+
+                },
+                clearPrintErrorMessage = {
+                    errorMessagePrint=""
                 }) {
                 ResultReceiptContainer(
                     isPaperReceipt = false,
@@ -126,8 +130,7 @@ fun BalanceSuccessResultScreen(
             if (showErrorInPrint)
                 ShowToast(
                     modifier = Modifier.align(Alignment.BottomCenter),
-                    message = errorMessagePrint.ifEmpty { "خطا در چاپ" }
-                ) {
+                    message = errorMessagePrint) {
                     showErrorInPrint = false
                     errorMessagePrint = ""
                 }
@@ -167,11 +170,12 @@ fun BalanceReceipt(isPaperReceipt: Boolean, result: ResponseTransaction?) {
             modifier = Modifier.rowReceiptWithPSPLogoModifier(isPaperReceipt),
             merchantName = result!!.merchantName,
             merchantPhone = result.merchantPhone,
+            englishMerchantName = result.englishMerchantName,
             textColor = firstColor, isPaperReceipt = isPaperReceipt
         )
         AddTypeDateTime(
             modifier = modifierRowReceipt,
-            type = TransactionType.BALANCE.title,
+            type =context.getString( TransactionType.BALANCE.title),
             date = result.date,
             time = result.time,
             textColor = firstColor, isPaperReceipt = isPaperReceipt

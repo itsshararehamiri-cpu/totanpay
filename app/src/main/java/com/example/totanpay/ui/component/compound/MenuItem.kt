@@ -89,20 +89,3 @@ fun MenuItem(
         }
     }
 }
-@Composable
-@Preview
-fun MenuItemPreview(){
-    TotanPayTheme {
-        MenuItem(
-            modifier = Modifier
-                .fillMaxWidth(1f)
-                .clickable {
-
-                },
-            backgroundImageId = R.drawable.main_item_background_to_left,
-            iconId = R.drawable.ic_bill,
-            backgroundIconId = R.drawable.background_bill,
-            title = TransactionType.BILL_PAY.title
-        )
-    }
-}

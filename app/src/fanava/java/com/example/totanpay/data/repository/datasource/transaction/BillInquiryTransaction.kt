@@ -1,6 +1,7 @@
 package com.example.totanpay.data.repository.datasource.transaction
 
 
+import com.example.totanpay.R
 import com.example.totanpay.data.repository.datasource.transaction.connection.IConnection
 import com.example.totanpay.data.repository.datasource.transaction.request.BillInquiryTransactionRequest
 import com.example.totanpay.data.repository.datasource.transaction.response.BaseTransactionResponse
@@ -48,21 +49,24 @@ class BillInquiryTransaction(
     }
 
     override suspend fun onSuccess(receivedIsoMessage: IsoMessage): BaseTransactionResponse {
-        val serviceDesc: String = receivedIsoMessage.getField48Tag(0x51)?.split("\\")?.get(0) ?: ""
+        val field51=receivedIsoMessage.getField48Tag(0x51)?.split("\\")
+        val serviceDesc: String =field51 ?.get(0) ?: ""
+        val englishServiceDesc: String = if((field51?.size ?: 0) > 2)field51?.get(1) ?: "" else ""
         val billType = receivedIsoMessage.getField48Tag(0x68)?.split("\\")?.get(0) ?: ""
         val ltv = Ltv().also { it.unpack(receivedIsoMessage.getBytes(48)) }
         return BaseTransactionResponse.BillInquiryTransactionResponse(
             billType = billType,
             serviceDesc = serviceDesc,
+            englishServiceDesc=englishServiceDesc,
             amount = receivedIsoMessage.getString(4),
             responseCode = 0,
-            responseMessage = "",
+            responseMessage = R.string.empty_message,
             reasonCode = 0,
             date = sendMessage.tranDate,
             time = sendMessage.tranTime,
             trace = if (receivedIsoMessage.hasField(38)) {
                 receivedIsoMessage.getString("38").toString()
-            } else request.stan.toString(),dateTimeOfServer = ltv.getNode(0x50)?.toString(),
+            } else request.stan.toString(),dateTimeOfServer = ltv.getNode(0x50),
         )
     }
 
@@ -71,7 +75,7 @@ class BillInquiryTransaction(
             FailedTransactionResponse(
                 stan = sendMessage.stan,
                 responseCode = -1,
-                responseMessage = "خطا در دریافت اطلاعات",
+                responseMessage = ResponseMessageContainer.RC_1.messageId,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,
@@ -82,9 +86,14 @@ class BillInquiryTransaction(
             val serviceDesc: String =
                 receivedIsoMessage.getField48Tag(0x51)?.split("\\")?.get(0) ?: ""
             val billType = receivedIsoMessage.getField48Tag(0x68)?.split("\\")?.get(0) ?: ""
+            var dateTimeOfServer: String? = null
+            if (receivedIsoMessage.getBytes(48) != null) {
+                val ltv: Ltv = Ltv().also { it.unpack(receivedIsoMessage.getBytes(48)) }
+                dateTimeOfServer = ltv?.getNode(0x50)
+            }
             return FailedTransactionResponse(
                 responseCode = receivedIsoMessage.respCode,
-                responseMessage = "",
+                responseMessage = R.string.empty_message,
                 reasonCode = 0,
                 amount = "",
                 date = sendMessage.tranDate,
@@ -92,6 +101,7 @@ class BillInquiryTransaction(
                     receivedIsoMessage.getString("38").trim()
                 } else request.stan.toString(),
                 time = sendMessage.tranTime, posCode = receivedIsoMessage.getField48Tag(0x98) ?: "",
+                dateTimeOfServer = dateTimeOfServer
             )
         }
     }

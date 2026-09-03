@@ -29,14 +29,9 @@ public class PinpadUtil {
             byte[] panBuff2 = Funs.StrToHexByte(panStr);
 
             do_xor_urovo(panBuff2, data, 8);
-
-            Log.e(TAG, "pinBlock 2:" + Funs.bytesToHexString(panBuff2));
             pinBlock = Funs.bytesToHexString(panBuff2);
             int pinLen = Integer.parseInt(pinBlock.substring(0, 2), 16);
-            Log.e(TAG, "Pin length:" + pinLen + "");
             pinBlock = pinBlock.substring(2, 2 + pinLen);
-
-            Log.e(TAG, "clear pin:" + pinBlock);
         } catch (Exception e) {
             e.printStackTrace();
         }
@@ -48,12 +43,9 @@ public class PinpadUtil {
         String pinBlock = "";
         try {
             int iRet = PinPadProviderImpl.getInstance().calculateDes(Constant.DesMode.DEC, Constant.Algorithm.SM4, Constant.KeyType.PIN_KEY, keyIndex, data, data);
-            Log.e(TAG, "calculateDes:" + iRet + "");
             if (iRet != 0) {
                 return pinBlock;
             }
-            Log.e(TAG, "pinBlock:" + BytesUtil.bytes2HexString(data));
-
             String panStr = Pan.substring(0, Pan.length() - 1);
             panStr = panStr.substring(panStr.length() - 12);
             panStr = BytesUtil.FormatWithZero(panStr, "00000000000000000000000000000000");

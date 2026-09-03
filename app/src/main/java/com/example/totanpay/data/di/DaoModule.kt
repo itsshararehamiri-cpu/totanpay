@@ -29,4 +29,14 @@ object DaoModule {
     @Provides
     @Singleton
     fun provideApportionmentDao(database: TotanPayAppDatabase) = database.apportionmentDao()
+
+
+    @Provides
+    @Singleton
+    fun provideLogDao(database: TotanPayAppDatabase) = database.logDao()
+
+
+    @Provides
+    @Singleton
+    fun provideLanguageDao(database: TotanPayAppDatabase) = database.languageDao()
 }

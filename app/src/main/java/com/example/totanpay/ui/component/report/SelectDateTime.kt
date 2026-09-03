@@ -89,18 +89,3 @@ fun SelectDateTime(modifier: Modifier,
 
     }
 }
-@Composable
-@Preview
-fun SelectDatePreview(){
-    TotanPayTheme {
-        SelectDateTime (
-            modifier = SelectDateModifier
-                .layoutId("fromDate"),
-            isTime = true,
-            title = stringResource(id = R.string.from_date),
-            value = "28 فروردین 1404"
-        ) {
-
-        }
-    }
-}

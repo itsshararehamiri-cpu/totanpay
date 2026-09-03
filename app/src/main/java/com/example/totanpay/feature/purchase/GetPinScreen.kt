@@ -4,6 +4,7 @@ import androidx.activity.compose.BackHandler
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.totanpay.R
 import com.example.totanpay.common.PlaybackSoundEffect
@@ -16,13 +17,14 @@ fun GetPinScreen(
     onGoLoading: (amount: String, pinBlock: String) -> Unit,
     onBackButtonClicked: () -> Unit
 ) {
+    val context= LocalContext.current
     val uiState by viewModel.uiState.collectAsStateWithLifecycle()
     PlaybackSoundEffect(uiState.playbackSound,  R.raw.plz_enter_pin)
     BackHandler {
         onBackButtonClicked()
     }
     LaunchedEffect(Unit) {
-        viewModel.getPin(track2)
+        viewModel.getPin(track2,context)
     }
     LaunchedEffect(uiState.getPin) {
         if (uiState.getPin)

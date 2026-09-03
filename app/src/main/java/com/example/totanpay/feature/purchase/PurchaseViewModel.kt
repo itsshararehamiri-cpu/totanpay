@@ -1,8 +1,9 @@
 package com.example.totanpay.feature.purchase
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.totanpay.data.repository.PurchaseRepository
+import com.example.totanpay.data.repository.purchase.PurchaseRepository
 import com.example.totanpay.data.repository.datasource.ResponseData
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -26,7 +27,11 @@ class PurchaseViewModel @Inject constructor(private val purchaseRepository: Purc
                 _uiState.update { it.copy(response = Gson().toJson(result.data), isSuccessful = true) }
             }
             else{
+                if(result.data!=null)
                 _uiState.update { it.copy(response = Gson().toJson(result.data).toString(), isUnSuccessful = true) }
+                else{
+                    _uiState.update { it.copy(connectionError=true) }
+                }
             }
         }
     }
@@ -34,4 +39,5 @@ class PurchaseViewModel @Inject constructor(private val purchaseRepository: Purc
 data class PurchaseUiState(
     val response: String="",
     val isSuccessful:Boolean=false,
-    val isUnSuccessful:Boolean=false)
+    val isUnSuccessful:Boolean=false,
+    val connectionError: Boolean=false)

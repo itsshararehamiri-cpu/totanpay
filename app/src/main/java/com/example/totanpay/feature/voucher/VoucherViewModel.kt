@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.totanpay.data.Operator
 import com.example.totanpay.data.repository.MainRepository
-import com.example.totanpay.data.repository.VoucherRepository
+import com.example.totanpay.data.repository.voucher.VoucherRepository
 import com.example.totanpay.data.repository.datasource.ResponseData
 import com.example.totanpay.feature.purchase.PurchaseUiState
 import com.google.gson.Gson
@@ -36,11 +36,17 @@ class VoucherViewModel @Inject constructor(private val voucherRepository: Vouche
                     )
                 }
             } else {
-                _uiState.update {
-                    it.copy(
-                        response = Gson().toJson(result.data),
-                        isUnSuccessful = true
-                    )
+                if(result.data!=null)
+                {
+                    _uiState.update {
+                        it.copy(
+                            response = Gson().toJson(result.data),
+                            isUnSuccessful = true
+                        )
+                    }
+                }
+                else{
+                    _uiState.update { it.copy(connectionError = true) }
                 }
             }
         }

@@ -16,31 +16,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.AbstractComposeView
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.viewinterop.AndroidView
-@Composable
-fun ReceiptUi2(content: @Composable () -> Unit) :Bitmap?{
-    val context = LocalContext.current
-    var receiptView by remember {
-        mutableStateOf(ReceiptView(context = context, content = content))
-    }
-    var isInit by remember {
-        mutableStateOf(false)
-    }
-    AndroidView(
-        modifier = Modifier.wrapContentHeight(unbounded = true),
-        factory = {
-            ReceiptView(context = it, content = content).apply {
-                post {
-                    receiptView = this
-                    isInit = true
-                }
-            }
-        })
-
-    if (isInit) {
-       return  generateBitmap(receiptView)
-    }
-    return null
-}
 
 @Composable
 fun ReceiptUi(content: @Composable () -> Unit, onGenerateReceipt: (Bitmap) -> Unit) {
@@ -66,6 +41,7 @@ fun ReceiptUi(content: @Composable () -> Unit, onGenerateReceipt: (Bitmap) -> Un
         onGenerateReceipt(generateBitmap(receiptView))
     }
 }
+
 private fun generateBitmap(view: View): Bitmap {
     val bitmap = Bitmap.createBitmap(
         view.width,

@@ -17,11 +17,13 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.totanpay.LocalLanguageState
 import com.example.totanpay.R
 import com.example.totanpay.common.isSmall
 import com.example.totanpay.data.repository.datasource.transaction.request.Apportionment
@@ -36,6 +38,8 @@ fun ApportionmentView(
     onAddApportionment: (Apportionment) -> Unit,
     onEditClicked: (Apportionment) -> Unit
 ) {
+    val isFarsi= LocalLanguageState.current.isFarsiSelected.value
+
     Column(
         Modifier
             .padding(horizontal = 10.dp)
@@ -48,7 +52,7 @@ fun ApportionmentView(
     ) {
         Row(modifier = Modifier.padding(top = 10.dp)) {
             Text(
-                text = apportionment.bankName,
+                text =if(isFarsi) apportionment.bankName else apportionment.englishBankName,
                 color = MaterialTheme.colorScheme.onSurface,
                 style = MaterialTheme.typography.titleMedium
             )
@@ -93,7 +97,7 @@ fun ApportionmentView(
         }
         Row(modifier = Modifier.padding(top = 16.dp)) {
             Text(
-                "شماره شبا",
+                stringResource(R.string.sheba_number),
                 color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                 style = MaterialTheme.typography.bodyLarge
             )
@@ -104,23 +108,5 @@ fun ApportionmentView(
                 style = MaterialTheme.typography.bodySmall
             )
         }
-    }
-}
-
-@Composable
-@Preview
-fun ApportionmentViewPreview() {
-    TotanPayTheme {
-        ApportionmentView(
-            Apportionment(
-                IBAN = "IR6037", amount = "20", bankName = "بانک شهر"
-            ),
-            onAddApportionment = {
-
-            },
-            onEditClicked = {
-
-            }
-        )
     }
 }

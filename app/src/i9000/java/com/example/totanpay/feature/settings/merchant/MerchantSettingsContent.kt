@@ -1,4 +1,5 @@
 package com.example.totanpay.feature.settings.merchant
+
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
@@ -38,6 +39,7 @@ import com.example.totanpay.common.BackButtonModifier
 import com.example.totanpay.common.isSmall
 import com.example.totanpay.ui.component.button.BackButton
 import com.example.totanpay.ui.component.compound.SettingsItem
+import com.example.totanpay.ui.component.dialog.ShouldChangePasswordMessageDialog
 import com.example.totanpay.ui.theme.Dimensions.TOTAN_ICON_SIZE
 import com.example.totanpay.ui.theme.Green50
 
@@ -79,7 +81,7 @@ fun MerchantSettingsContent(
                     start.linkTo(parent.start)
                 }
                 constrain(a) {
-                    top.linkTo(toolBar.bottom,if(isSmall(context)) 0.dp else 30.dp)
+                    top.linkTo(toolBar.bottom, if (isSmall(context)) 0.dp else 30.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
@@ -288,6 +290,11 @@ fun MerchantSettingsContent(
                         )
                     )
                 }
+            }
+        }
+        if (uiState.shouldChangePassword) {
+            ShouldChangePasswordMessageDialog {
+                onChangeMerchantPassword()
             }
         }
         if (!isSmall(context = context))

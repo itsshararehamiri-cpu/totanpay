@@ -53,8 +53,12 @@ fun NavGraphBuilder.billNavigation(
                 hiltViewModel(), billId = billId, paymentId = paymentId,
                 onSuccessResult = {
                     navController.navigate("$BILL_INQUIRY_RESULT/$it/$billId/$paymentId")
+                }, onErrorResult = {
+                    navController.navigate("$BILL_INQUIRY_UNSUCCESS_RESULT/$it")
                 }) {
-                navController.navigate("$BILL_INQUIRY_UNSUCCESS_RESULT/$it")
+                navController.navigate(MainRoute.MenuRoute.route) {
+                    popUpTo(MainRoute.MenuRoute.route) { inclusive = true }
+                }
             }
         }
         composable(route = BillRoute.BillInquiryResultRoute.route) { backStack ->
@@ -87,7 +91,7 @@ fun NavGraphBuilder.billNavigation(
                 onGetTrack2 = {
                     navController.navigate("$GET_PIN_BILL/$it/$amount/$billId/$paymentId")
                 }) {
-               // navController.popBackStack(MainRoute.MenuRoute.route, inclusive = false)
+                // navController.popBackStack(MainRoute.MenuRoute.route, inclusive = false)
                 navController.navigate(MainRoute.MenuRoute.route) {
                     popUpTo(MainRoute.MenuRoute.route) { inclusive = true }
                 }
@@ -121,8 +125,13 @@ fun NavGraphBuilder.billNavigation(
                 billId = backStack.arguments?.getString("billId") ?: "",
                 paymentId = backStack.arguments?.getString("paymentId") ?: "",
                 viewModel = hiltViewModel(),
-                onSuccessResult = { navController.navigate("$BILL_SUCCESS_RESULT/$it") }) {
-                navController.navigate("$BILL_UNSUCCESS_RESULT/$it")
+                onSuccessResult = { navController.navigate("$BILL_SUCCESS_RESULT/$it") },
+                onErrorResult = {
+                    navController.navigate("$BILL_UNSUCCESS_RESULT/$it")
+                }) {
+                navController.navigate(MainRoute.MenuRoute.route) {
+                    popUpTo(MainRoute.MenuRoute.route) { inclusive = true }
+                }
             }
         }
         composable(

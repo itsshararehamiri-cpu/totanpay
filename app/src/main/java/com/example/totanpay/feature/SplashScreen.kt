@@ -23,6 +23,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -67,12 +68,12 @@ fun SplashScreen(onShow: () -> Unit) {
                 val isAutoTime = TimeSettingsChecker.isAutoDateTimeEnabled(context)
                 val isTehran = TimeSettingsChecker.isTimeZoneTehran()
                 if (isAutoTime) {
-                    errorMessage = "لطفاً تنظیم خودکار تاریخ و ساعت را خاموش کنید."
+                    errorMessage = context.getString(R.string.please_turn_off_automatic_date_and_time_setting)
                     showDialog = true
                 } else if (!isTehran) {
                     errorMessage=""
                     showDialog=false
-                    errorMessageLocation = "لطفا محدوده زمانی دستگاه را روی تهران تنظیم نمایید"
+                    errorMessageLocation = context.getString(R.string.please_set_device_time_zone_to_tehran)
                     showDialogLocation = true
                 } else {
                     errorMessage=""
@@ -180,10 +181,3 @@ fun SplashScreen(onShow: () -> Unit) {
     }
 }
 
-@Composable
-@Preview
-fun SplashScreenPreview() {
-    TotanPayTheme {
-        SplashScreen {}
-    }
-}

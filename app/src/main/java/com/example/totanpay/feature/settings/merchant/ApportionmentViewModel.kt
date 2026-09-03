@@ -3,7 +3,7 @@ package com.example.totanpay.feature.settings.merchant
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.totanpay.data.repository.MerchantSettingsRepository
+import com.example.totanpay.data.repository.settings.merchant.MerchantSettingsRepository
 import com.example.totanpay.data.repository.datasource.transaction.request.Apportionment
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.delay

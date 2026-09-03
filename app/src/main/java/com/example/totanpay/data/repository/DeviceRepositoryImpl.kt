@@ -3,10 +3,12 @@ package com.example.totanpay.data.repository
 import android.content.Context
 import android.graphics.Bitmap
 import com.example.totanpay.data.repository.device.IDevice
+import com.example.totanpay.data.repository.device.KCV
 import com.example.totanpay.data.util.toEnglishNumber
 import com.example.totanpay.receiver.DeviceEventsReceiver
 import kotlinx.coroutines.CoroutineDispatcher
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 import org.jpos.iso.ISOUtil
 import org.slf4j.LoggerFactory
@@ -42,7 +44,7 @@ class DeviceRepositoryImpl @Inject constructor(
 //            )
 //        }
 //    }
-    override suspend fun readCard(): CardReadResult = suspendCoroutine { cont ->
+    override suspend fun readCard(context: Context): CardReadResult = suspendCoroutine { cont ->
         device.readCard(
             onSuccess = { track2 ->
                 cont.resume(CardReadResult.Success(track2))
@@ -52,13 +54,13 @@ class DeviceRepositoryImpl @Inject constructor(
             },
             onTimeOut = {
                 cont.resume(CardReadResult.TimeOut)
-            }
+            }, context = context
         )
     }
 
     private val logger = LoggerFactory.getLogger(DeviceEventsReceiver::class.java)
 
-    override suspend fun getPinBlock(
+    override suspend fun getPinBlock(context: Context,
         pan: String,
         onError: (String) -> Unit,
         onInput: (Int) -> Unit,
@@ -67,7 +69,7 @@ class DeviceRepositoryImpl @Inject constructor(
         onTimeOut: () -> Unit
     ) {
         withContext(ioDispatcher) {
-            device.getPinBlock(
+            device.getPinBlock(context = context,
                 pan,
                 onError = onError,
                 onInput = onInput,
@@ -117,7 +119,8 @@ class DeviceRepositoryImpl @Inject constructor(
         onFailed: (String) -> Unit
     ) {
         withContext(ioDispatcher) {
-            device.print(bitmap, context, onSuccess = onSuccess, onFailed = { onFailed(it) })
+            device.
+            print(bitmap, context, onSuccess = onSuccess, onFailed = { onFailed(it) })
         }
     }
 
@@ -136,6 +139,12 @@ class DeviceRepositoryImpl @Inject constructor(
                 onTimeout = onTimeout,
                 onCancel = onCancel
             )
+        }
+    }
+
+    override suspend fun getPrinterError(onFailed: (String) -> Unit) {
+        withContext(ioDispatcher) {
+           onFailed(device.getPrinterError ())
         }
     }
 
@@ -164,5 +173,8 @@ class DeviceRepositoryImpl @Inject constructor(
 
     override suspend fun disableHome() {
         device.disableHome()
+    }
+    override suspend fun getKcv(): KCV {
+        return device.getKCv()
     }
 }

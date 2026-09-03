@@ -48,7 +48,6 @@ public class StorageUtils {
                             String path = getPath(obj);
                             long total = f.getTotalSpace();
                             long free = f.getFreeSpace();
-                            Log.e(TAG ,"外置:" + path + ",total:" + getUnit(total, unit) + ",free:" + getUnit(free, unit));
                             return path;
                         }
                     }
@@ -56,7 +55,6 @@ public class StorageUtils {
                 return "";
             }
         } catch (SecurityException e) {
-            Log.e(TAG, "请检查权限");
             e.printStackTrace();
         } catch (Exception e) {
             e.printStackTrace();
@@ -95,8 +93,6 @@ public class StorageUtils {
                 int size = cursor.getInt(1);
                 String filePath = cursor.getString(2);
                 total += size;
-
-                Log.e(TAG ,"name:" + displayName + ",size:" + size + ",path:" + filePath);
             }
             //记得关闭cursor
             cursor.close();

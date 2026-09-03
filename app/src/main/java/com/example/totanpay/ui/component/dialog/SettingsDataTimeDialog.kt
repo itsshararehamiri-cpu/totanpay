@@ -6,7 +6,8 @@ import com.example.totanpay.R
 import com.example.totanpay.ui.theme.TotanPayTheme
 
 @Composable
-fun SettingsDataTimeDialog(titleMessage:String,onDismiss: () -> Unit, onConfirmButtonClicked: () -> Unit) {
+fun SettingsDataTimeDialog(titleMessage:String,onDismiss: () -> Unit,
+                           onConfirmButtonClicked: () -> Unit) {
     BaseResultDialog(
         titleMessage,
         logoId = R.drawable.ic_warning,
@@ -14,14 +15,10 @@ fun SettingsDataTimeDialog(titleMessage:String,onDismiss: () -> Unit, onConfirmB
         onConfirmButtonClicked()
     }
 }
-
-@Composable
 @Preview
+@Composable
 fun SettingsDataTimeDialogPreview(){
-TotanPayTheme {
-    SettingsDataTimeDialog(titleMessage =  "لطفا محدوده زمانی دستگاه را روی تهران تنظیم نمایید", onDismiss = {
-    }, onConfirmButtonClicked = {
+    SettingsDataTimeDialog(titleMessage="تست", onDismiss = {}){
 
-    })
-}
+    }
 }

@@ -1,10 +1,11 @@
 package com.example.totanpay.feature.bill
 
 
+import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.example.totanpay.data.repository.DeviceRepository
-import com.example.totanpay.data.repository.DeviceSettingsRepository
+import com.example.totanpay.data.repository.settings.device_settings.DeviceSettingsRepository
 import com.example.totanpay.data.repository.MainRepository
 import com.example.totanpay.feature.purchase.GetPinUiState
 import dagger.hilt.android.lifecycle.HiltViewModel
@@ -20,12 +21,12 @@ class GetPinViewModel @Inject constructor(private val mainRepository: MainReposi
     ViewModel() {
     private val _uiState = MutableStateFlow(GetPinUiState())
     val uiState: StateFlow<GetPinUiState> = _uiState
-    fun getPin(track2: String) {
+    fun getPin(track2: String,context: Context) {
         viewModelScope.launch {
             _uiState.update { it.copy(playbackSound = deviceSettingsRepository.getPlaybackStatusSound())}
             val string: List<String> = track2.split("=")
             val pan = string[0]
-            deviceRepository.getPinBlock(
+            deviceRepository.getPinBlock(context = context,
                 pan,
                 onError = { println("onError->$it") },
                 onInput = { println("onInput->$it") },

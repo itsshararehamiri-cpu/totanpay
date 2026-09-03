@@ -1,5 +1,6 @@
 package com.example.totanpay.data.repository.datasource.transaction
 
+import com.example.totanpay.R
 import com.example.totanpay.data.repository.datasource.transaction.connection.IConnection
 import com.example.totanpay.data.repository.datasource.transaction.request.BillPayTransactionRequest
 import com.example.totanpay.data.repository.datasource.transaction.response.BaseTransactionResponse
@@ -14,7 +15,7 @@ class BillPayTransaction(
     updateTransaction: suspend (
         date: String, time: String, pan: String, cardIssuer: String, responseCode: String, amount: String, rrn: String?,
         serviceDesc: String?, pinVoucher: String?, serialVoucher: String?, mobileNumber: String?, operatorCode: Int?,
-        responseMessage: String?,trace:String?
+        responseMessage: Int?,trace:String?
     ) -> Unit,
     deleteTransaction: suspend (
         date: String, time: String
@@ -59,6 +60,8 @@ class BillPayTransaction(
                 setBillId(request.billId)
                 setPayId(request.payId)
                 setTerminalConnectionType(request.terminalConnectionType)
+                if (!request.logs.isNullOrEmpty())
+                    set99(request.logs)
             }
             setCurrency(request.currency)
             setPinBlock(request.pinBlock)
@@ -71,15 +74,15 @@ class BillPayTransaction(
         val cardIssuer = receivedIsoMessage.getField48Tag(0x38)?.split("\\")?.get(0) ?: ""
         val billName = receivedIsoMessage.getField48Tag(0x51)?.split("\\")?.get(0) ?: ""
         setStatusToSettle(sendMessage.tranDate, sendMessage.tranTime)
-        var responseMessage = ""
-        if (receivedIsoMessage.hasField(47)) {
-            if (receivedIsoMessage.getBytes(47) != null) responseMessage =
-                ISOUtil.hexString(
-                    receivedIsoMessage.getBytes(
-                        47
-                    )
-                )
-        }
+//        var responseMessage = ""
+//        if (receivedIsoMessage.hasField(47)) {
+//            if (receivedIsoMessage.getBytes(47) != null) responseMessage =
+//                ISOUtil.hexString(
+//                    receivedIsoMessage.getBytes(
+//                        47
+//                    )
+//                )
+//        }
         var ss = receivedIsoMessage.getField48Tag(0x44)?.split("\\")?.get(0) ?: ""
         val ltv = Ltv().also { it.unpack(receivedIsoMessage.getBytes(48)) }
 
@@ -100,7 +103,7 @@ class BillPayTransaction(
 
         return BaseTransactionResponse.BillPayTransactionResponse(
             responseCode = 0,
-            responseMessage = responseMessage,
+            responseMessage = R.string.empty_message,
             reasonCode = null,
             rrn = receivedIsoMessage.rrn ?: "",
             trace = if (receivedIsoMessage.hasField(38)) {
@@ -124,7 +127,7 @@ class BillPayTransaction(
             )
             return FailedTransactionResponse(
                 responseCode = -1,
-                responseMessage = "خطا در دریافت اطلاعات",
+                responseMessage = ResponseMessageContainer.RC_1.messageId,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,
@@ -134,13 +137,18 @@ class BillPayTransaction(
                 posCode = null
             )
         } else {
-            if (receivedIsoMessage.respCode != 80)
+            if (receivedIsoMessage.respCode != 80 && receivedIsoMessage.respCode > 0)
                 clearTransactionFromQueue(sendMessage.tranDate, sendMessage.tranTime)
             val cardIssuer = receivedIsoMessage.getField48Tag(0x38)?.split("\\")?.get(0) ?: ""
             deleteTransaction(
                 sendMessage.tranDate,
                 sendMessage.tranTime
             )
+            var dateTimeOfServer: String? = null
+            if (receivedIsoMessage.getBytes(48) != null) {
+                val ltv: Ltv = Ltv().also { it.unpack(receivedIsoMessage.getBytes(48)) }
+                dateTimeOfServer = ltv?.getNode(0x50)
+            }
             return FailedTransactionResponse(
                 responseCode = receivedIsoMessage.respCode,
                 reasonCode = null,
@@ -150,9 +158,10 @@ class BillPayTransaction(
                 time = request.time,
                 maskedPan = (request as BillPayTransactionRequest).pan,
                 amount = request.amount,
-                responseMessage = "",
+                responseMessage = R.string.empty_message,
                 cardIssuer = cardIssuer,
                 posCode = receivedIsoMessage.getField48Tag(0x98) ?: "",
+                dateTimeOfServer = dateTimeOfServer
             )
         }
     }

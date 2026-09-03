@@ -1,38 +1,40 @@
 package com.example.totanpay.data.di
 
 
-import com.example.totanpay.data.repository.BalanceRepository
-import com.example.totanpay.data.repository.BalanceRepositoryImpl
-import com.example.totanpay.data.repository.BillRepository
-import com.example.totanpay.data.repository.BillRepositoryImpl
-import com.example.totanpay.data.repository.ConfigurationRepository
-import com.example.totanpay.data.repository.ConfigurationRepositoryImpl
-import com.example.totanpay.data.repository.ConnectionRepository
-import com.example.totanpay.data.repository.ConnectionRepositoryImpl
+import com.example.totanpay.data.repository.balance.BalanceRepository
+import com.example.totanpay.data.repository.balance.BalanceRepositoryImpl
+import com.example.totanpay.data.repository.bill.BillRepository
+import com.example.totanpay.data.repository.bill.BillRepositoryImpl
+import com.example.totanpay.data.repository.configiuration.ConfigurationRepository
+import com.example.totanpay.data.repository.configiuration.ConfigurationRepositoryImpl
+import com.example.totanpay.data.repository.settings.connection.ConnectionRepository
+import com.example.totanpay.data.repository.settings.connection.ConnectionRepositoryImpl
 import com.example.totanpay.data.repository.DeviceRepository
 import com.example.totanpay.data.repository.DeviceRepositoryImpl
-import com.example.totanpay.data.repository.DeviceSettingsRepository
-import com.example.totanpay.data.repository.DeviceSettingsRepositoryImpl
-import com.example.totanpay.data.repository.IccCardRepository
-import com.example.totanpay.data.repository.IccCardRepositoryImpl
-import com.example.totanpay.data.repository.LogRepository
-import com.example.totanpay.data.repository.LogRepositoryImpl
+import com.example.totanpay.data.repository.settings.device_settings.DeviceSettingsRepository
+import com.example.totanpay.data.repository.settings.device_settings.DeviceSettingsRepositoryImpl
+import com.example.totanpay.data.repository.settings.device_settings.IccCardRepository
+import com.example.totanpay.data.repository.settings.device_settings.IccCardRepositoryImpl
+import com.example.totanpay.data.repository.log.LogRepository
+import com.example.totanpay.data.repository.log.LogRepositoryImpl
 import com.example.totanpay.data.repository.MainRepository
 import com.example.totanpay.data.repository.MainRepositoryImpl
-import com.example.totanpay.data.repository.MerchantSettingsRepository
-import com.example.totanpay.data.repository.MerchantSettingsRepositoryImpl
-import com.example.totanpay.data.repository.PrintCustomerSettingsRepository
-import com.example.totanpay.data.repository.PrintCustomerSettingsRepositoryImpl
-import com.example.totanpay.data.repository.PurchaseRepository
-import com.example.totanpay.data.repository.PurchaseRepositoryImpl
-import com.example.totanpay.data.repository.ReportRepository
-import com.example.totanpay.data.repository.ReportRepositoryImpl
-import com.example.totanpay.data.repository.SupervisorSettingsRepository
-import com.example.totanpay.data.repository.SupervisorSettingsRepositoryImpl
-import com.example.totanpay.data.repository.TopUpRepository
-import com.example.totanpay.data.repository.TopUpRepositoryImpl
-import com.example.totanpay.data.repository.VoucherRepository
-import com.example.totanpay.data.repository.VoucherRepositoryImpl
+import com.example.totanpay.data.repository.settings.merchant.MerchantSettingsRepository
+import com.example.totanpay.data.repository.settings.merchant.MerchantSettingsRepositoryImpl
+import com.example.totanpay.data.repository.settings.print_customer_setting.PrintCustomerSettingsRepository
+import com.example.totanpay.data.repository.settings.print_customer_setting.PrintCustomerSettingsRepositoryImpl
+import com.example.totanpay.data.repository.purchase.PurchaseRepository
+import com.example.totanpay.data.repository.purchase.PurchaseRepositoryImpl
+import com.example.totanpay.data.repository.settings.CurrentLanguageRepository
+import com.example.totanpay.data.repository.settings.CurrentLanguageRepositoryImpl
+import com.example.totanpay.data.repository.settings.report.ReportRepository
+import com.example.totanpay.data.repository.settings.report.ReportRepositoryImpl
+import com.example.totanpay.data.repository.settings.supervisor.SupervisorSettingsRepository
+import com.example.totanpay.data.repository.settings.supervisor.SupervisorSettingsRepositoryImpl
+import com.example.totanpay.data.repository.topup.TopUpRepository
+import com.example.totanpay.data.repository.topup.TopUpRepositoryImpl
+import com.example.totanpay.data.repository.voucher.VoucherRepository
+import com.example.totanpay.data.repository.voucher.VoucherRepositoryImpl
 import dagger.Binds
 import dagger.Module
 import dagger.hilt.InstallIn
@@ -106,4 +108,12 @@ interface RepositoryModule {
     @Binds
     @Singleton
     fun bindConfigurationRepository(repositoryImp: ConfigurationRepositoryImpl): ConfigurationRepository
+
+
+    @Binds
+    @Singleton
+    fun bindCurrentLanguageRepository(repositoryImp: CurrentLanguageRepositoryImpl): CurrentLanguageRepository
+
+
+
 }

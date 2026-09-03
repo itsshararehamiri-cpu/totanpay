@@ -120,27 +120,4 @@ fun PriceTextInput(
         }
     }
 }
-@Composable
-@Preview
-fun PriceTextInputPreview() {
-    TotanPayTheme {
-        Column(
-            Modifier
-                .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-        ) {
-            PriceTextInput(
-                modifier = TextInputModifier
-                    .layoutId("amountInput"), errorMessage = stringResource(R.string.enter_amount_or_select),
-                title = stringResource(R.string.enter_amount_or_select),
-                trailerTitle = stringResource(id = R.string.currency),
-                value = "", hasError = false, onNextClicked = {
 
-                }
-            ) {
-
-            }
-        }
-
-    }
-}

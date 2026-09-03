@@ -16,7 +16,7 @@ interface LightModeDao {
     suspend fun update(mode: LightModeEntity)
 
     @Query("SELECT * FROM light_mode  LIMIT 1")
-    fun getFlow(): Flow<LightModeEntity>?
+    fun getFlow(): Flow<LightModeEntity?>
 
 
     @Query("SELECT * FROM light_mode  LIMIT 1")

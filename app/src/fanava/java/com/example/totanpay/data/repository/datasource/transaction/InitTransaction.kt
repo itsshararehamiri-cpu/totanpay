@@ -1,5 +1,7 @@
 package com.example.totanpay.data.repository.datasource.transaction
 
+import android.util.Log
+import com.example.totanpay.R
 import com.example.totanpay.data.repository.datasource.convertString
 import com.example.totanpay.data.repository.datasource.transaction.connection.IConnection
 import com.example.totanpay.data.repository.datasource.transaction.request.InitTransactionRequest
@@ -12,7 +14,7 @@ class InitTransaction(
     request: InitTransactionRequest,
     private val macGenerator: IMacGenerator,
     iConnection: IConnection
-) : BaseTransaction(request, iConnection, {}, {}) {
+) : BaseTransaction(request, iConnection, {}, {},{true}) {
     override val isReversible: Boolean
         get() = false
     override val type: Int
@@ -55,7 +57,7 @@ class InitTransaction(
                             val bn = acc[2].split("\\\\".toRegex()).dropLastWhile { it.isEmpty() }
                                 .toTypedArray()
                             if (bn.size >= 2) {
-                                accountMerchant.bankName = bn[1]
+                                accountMerchant.englishBankName = bn[1]
                                 accountMerchant.farsiBankName = convertString(bn[0])
 
                             } else {
@@ -63,7 +65,7 @@ class InitTransaction(
                             }
                         }
                         accountMerchant.number = (acc[0])
-                        accountMerchant.isActive = (true)
+                        accountMerchant.isActive = true
                     }
                     accountMerchants.add(accountMerchant)
                 }
@@ -73,6 +75,7 @@ class InitTransaction(
             merchantPhone = ltv.getNode(0x34)!!.split("\\")[0].trim(),
             merchantId = receivedIsoMessage.getString("42"),
             merchantName = ltv.getNode(0x31)!!.split("\\")[0].trim().trim(),
+            englishMerchantName = ltv.getNode(0x31)!!.split("\\")[1].trim().trim(),
             0,
             null,
             null,
@@ -87,20 +90,26 @@ class InitTransaction(
         return if (receivedIsoMessage == null) {
             FailedTransactionResponse(
                 responseCode = -1,
-                responseMessage = "خطا در دریافت اطلاعات",
+                responseMessage = ResponseMessageContainer.RC_1.messageId,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,
                 stan = sendMessage.stan, posCode = null
             )
         } else {
+            var dateTimeOfServer: String? = null
+            if (receivedIsoMessage.getBytes(48) != null) {
+                val ltv: Ltv = Ltv().also { it.unpack(receivedIsoMessage.getBytes(48)) }
+                dateTimeOfServer = ltv?.getNode(0x50)
+            }
             FailedTransactionResponse(
                 responseCode = receivedIsoMessage.respCode,
-                responseMessage = "",
+                responseMessage = R.string.empty_message,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,
                 stan = sendMessage.stan, posCode = receivedIsoMessage.getField48Tag(0x98) ?: "",
+                dateTimeOfServer = dateTimeOfServer
             )
         }
     }

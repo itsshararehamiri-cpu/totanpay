@@ -4,15 +4,18 @@ import android.content.Context
 import android.graphics.Bitmap
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.totanpay.data.repository.DeviceSettingsRepository
+import com.example.totanpay.common.ResultTransactionUiState
+import com.example.totanpay.data.repository.settings.device_settings.DeviceSettingsRepository
 import com.example.totanpay.data.repository.MainRepository
-import com.example.totanpay.data.repository.PrintCustomerSettingsRepository
-import com.example.totanpay.data.repository.PrintStatus
+import com.example.totanpay.data.repository.settings.print_customer_setting.PrintCustomerSettingsRepository
+import com.example.totanpay.data.repository.settings.merchant.PrintStatus
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
+import com.example.totanpay.data.repository.settings.merchant.MerchantSettingsRepository
 import com.example.totanpay.data.util.getPersianDate
 import com.example.totanpay.data.util.toEnglishNumber
 import com.google.gson.Gson
 import dagger.hilt.android.lifecycle.HiltViewModel
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.update
@@ -24,10 +27,11 @@ import javax.inject.Inject
 class VoucherSuccessResultViewModel @Inject constructor(
     private val mainRepository: MainRepository,
     private val printCustomerSettingsRepository: PrintCustomerSettingsRepository,
-    private val deviceSettingRepository: DeviceSettingsRepository
+    private val deviceSettingRepository: DeviceSettingsRepository,
+    private val merchantSettingsRepository: MerchantSettingsRepository
 ) : ViewModel() {
-    private val _uiState = MutableStateFlow(PurchaseSuccessResultUiState())
-    val uiState: StateFlow<PurchaseSuccessResultUiState> = _uiState
+    private val _uiState = MutableStateFlow(ResultTransactionUiState())
+    val uiState: StateFlow<ResultTransactionUiState> = _uiState
 
     init {
         viewModelScope.launch {
@@ -38,48 +42,136 @@ class VoucherSuccessResultViewModel @Inject constructor(
     fun init(response: String) {
         viewModelScope.launch {
             val result = Gson().fromJson(response, ResponseTransaction::class.java)
-            var printStatus =
-                printCustomerSettingsRepository.getPrintStatus()
-            if (printStatus == PrintStatus.PRINTING_WITH_MIN_AMOUNT && printCustomerSettingsRepository.getMinimumAmountForPrint()
-                    .  toEnglishNumber()  .toLong() <= result.amount.toEnglishNumber()
-                    .toLong()
-            ) {
-                printStatus = PrintStatus.ALWAYS_PRINTING
-            }
-
             _uiState.update {
                 it.copy(
-                    result = result.copy(date = getPersianDate(result.date)),
-                    printStatus = printStatus
+                    result = result.copy(date = getPersianDate(result.date))
                 )
             }
+            mainRepository.settlementReverse()
+        }
+    }
+
+    fun getPrintStatus() {
+        viewModelScope.launch { val result = _uiState.value.result
+        val printStatus = printCustomerSettingsRepository.getPrintStatus()
+        val merchantStatus = merchantSettingsRepository.getPrinStatus()
+
+        var showPrintForCustomer = false
+        var shouldAutoPrintCustomerReceipt = false
+
+        when (printStatus) {
+            PrintStatus.NO_PRINTING -> {
+                showPrintForCustomer = false
+                shouldAutoPrintCustomerReceipt = false
+                changePrintStatus()
+            }
+            PrintStatus.PRINT -> {
+                val isAutoPrintEnabled = printCustomerSettingsRepository.getAutoPrintCustomerReceipt()
+                if (!isAutoPrintEnabled) {
+                    showPrintForCustomer = true
+                    shouldAutoPrintCustomerReceipt = false
+                } else {
+                    val minAmountStr = printCustomerSettingsRepository.getMinimumAmountForPrint()
+                        .trim().toEnglishNumber()
+                    val transactionAmount = result!!.amount.toEnglishNumber().toLongOrNull() ?: 0L
+                    val minAmount = minAmountStr.takeIf { it.isNotBlank() }?.toLongOrNull()
+
+                    if (minAmount == null || transactionAmount >= minAmount) {
+                        showPrintForCustomer = false
+                        shouldAutoPrintCustomerReceipt = true
+                    } else {
+                        showPrintForCustomer = true
+                        shouldAutoPrintCustomerReceipt = false
+                    }
+                }
+            }
+        }
+
+        val showPrintForMerchant = merchantStatus == PrintStatus.PRINT
+
+        _uiState.update {
+            it.copy(
+                customerPrintStatus = printStatus,
+                merchantPrintStatus = merchantStatus,
+                showPrintForCustomer = showPrintForCustomer,
+                showPrintForMerchant = showPrintForMerchant,
+                autoPrintCustomerReceipt = shouldAutoPrintCustomerReceipt
+            )
+        }
+    }}
+
+
+    fun printCustomerReceipt(bitmap: Bitmap, context: Context) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(showPrintForCustomer = false, autoPrintCustomerReceipt = false) }
+            mainRepository.print(
+                bitmap, context,
+                onSuccess = {
+                    viewModelScope.launch(Dispatchers.Main.immediate) {
+                        changePrintStatus()
+                    }
+                },
+                onFailed = { errorMessage ->
+                    _uiState.update { it.copy(errorInPrint = errorMessage) }
+                }
+            )
+        }
+    }
+
+    fun printMerchantReceipt(bitmap: Bitmap, context: Context) {
+        viewModelScope.launch {
+            _uiState.update { it.copy(showPrintForMerchant = false) }
+            mainRepository.print(
+                bitmap, context,
+                onSuccess = { },
+                onFailed = { errorMessage ->
+                    _uiState.update { it.copy(errorInPrint = errorMessage) }
+                }
+            )
         }
     }
 
     fun changePrintStatus() {
-        viewModelScope.launch {
-            if (_uiState.value.result != null)
-                if (_uiState.value.result!!.date != null && _uiState.value.result!!.time != null)
-                    mainRepository.changePrintStatusOfTransactionInQueue(
-                        _uiState.value!!.result!!.date,
-                        _uiState.value.result!!.time
-                    )
+        viewModelScope.launch(Dispatchers.Main.immediate) {
+            try {
+                val result = _uiState.value.result ?: return@launch
+                val date = result.date ?: return@launch
+                val time = result.time ?: return@launch
+                mainRepository.changePrintStatusOfTransactionInQueue(date, time)
+            } catch (_: Exception) {
+                // جلوگیری از کرش؛ آپدیت وضعیت چاپ اختیاری است
+            }
         }
     }
 
-    fun print(bitmap: Bitmap, context: Context) {
+    fun clearErrorMessage() {
         viewModelScope.launch {
-            mainRepository.print(bitmap, context, onSuccess = {}, onFailed = {})
+            _uiState.update { it.copy(errorInPrint = "") }
         }
     }
-
 
 }
 
-data class PurchaseSuccessResultUiState(
-    val result: ResponseTransaction? = null,
-    val error: String = "",
-    val printStatus: PrintStatus = PrintStatus.ALWAYS_PRINTING,
-    val playbackSound: Boolean = false
-
-)
+//data class PurchaseSuccessResultUiState(
+//    val result: ResponseTransaction? = null,
+//    val error: String = "",
+//    val customerPrintStatus: PrintStatus = PrintStatus.NO_PRINTING,
+//    val merchantPrintStatus: PrintStatus = PrintStatus.NO_PRINTING,
+//    val showPrintForCustomer: Boolean = false,
+//    val showPrintForMerchant: Boolean = false,
+//    val autoPrintCustomerReceipt: Boolean = false,
+//    val playbackSound: Boolean = false,
+//    val errorInPrint: String = ""
+//)
+//val result: ResponseTransaction? = null,
+//val error: String = "",
+//val customerPrintStatus: PrintStatus = PrintStatus.NO_PRINTING,
+//val merchantPrintStatus: PrintStatus = PrintStatus.NO_PRINTING,
+//val autoPrintCustomerReceipt: Boolean=false,
+//val customerReceiptPrinted: Boolean = false,
+//val merchantReceiptPrinted: Boolean = false,
+//val responseForCallerApp: String? = null,
+//val playbackSound: Boolean = false,
+//val errorInPrint: String = "",
+//val   showPrintForMerchant: Boolean=false,
+//val   showPrintForCustomer: Boolean=false,

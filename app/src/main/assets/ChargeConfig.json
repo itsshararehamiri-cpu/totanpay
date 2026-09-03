@@ -7,7 +7,7 @@
 			"operatorName":"همراه اول",
 			"operatorCode":"MCI",
 			"dynamicValue":0,
-			"chargeList":[50000,100000,200000]
+			"chargeList":[100000,200000,500000,1000000]
 		},
 		{
 			"code":17,
@@ -15,7 +15,8 @@
 			"operatorName":"رایتل",
 			"operatorCode":"Rightel",
 			"dynamicValue":0,
-			"chargeList":[50000,100000,200000]
+			"chargeList":[100000,200000,500000,1000000]
+
 		},
 		{
 			"code":11,
@@ -23,7 +24,8 @@
 			"operatorName":"ایرانسل",
 			"operatorCode":"Irancell",
 			"dynamicValue":0,
-			"chargeList":[50000,100000,200000]
+			"chargeList":[100000,200000,500000,1000000]
+
 		}
 	]
 }

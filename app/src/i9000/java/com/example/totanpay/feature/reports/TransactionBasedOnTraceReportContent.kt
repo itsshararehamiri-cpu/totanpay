@@ -3,11 +3,19 @@ package com.example.totanpay.feature.reports
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentWidth
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.RadioButton
+import androidx.compose.material3.RadioButtonDefaults
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -16,14 +24,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
+import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.layoutId
 import coil.ImageLoader
 import coil.compose.rememberAsyncImagePainter
@@ -38,18 +48,21 @@ import com.example.totanpay.common.mainButtonModifier
 import com.example.totanpay.data.util.isNotNumber
 import com.example.totanpay.data.util.toEnglishNumber
 import com.example.totanpay.feature.purchase.ReceiptContent
+import com.example.totanpay.receipt.ReceiptType
 import com.example.totanpay.ui.TextInputModifier
 import com.example.totanpay.ui.component.TextInput
 import com.example.totanpay.ui.component.button.BackButton
 import com.example.totanpay.ui.component.button.MainButton
 import com.example.totanpay.ui.theme.Dimensions.LOADING_HEIGHT
-import com.example.totanpay.ui.theme.TotanPayTheme
+import com.example.totanpay.ui.theme.END_PADDING
+import com.example.totanpay.ui.theme.START_PADDING
 
 @Composable
-fun TransactionBasedOnTraceReportContent(
+fun TransactionBasedOnTraceReportContent(errorInPrint: String,
     uiState: SearchTransactionUiState,
     onBackClicked: () -> Unit,
-    onConfirm: (String) -> Unit,
+    onConfirm: (String, Boolean) -> Unit,
+                                         clearPrintErrorMessage:()-> Unit,
     onPrintClicked: () -> Unit
 ) {
     val keyboard = LocalSoftwareKeyboardController.current
@@ -59,11 +72,14 @@ fun TransactionBasedOnTraceReportContent(
     var hasError by remember {
         mutableStateOf(false)
     }
+    var traceIsSelected by remember { mutableStateOf(true) }
     Box(
         modifier =  Modifier.fillMaxSize() ){
         ConstraintLayout(
         ConstraintSet {
             val toolBar = createRefFor("toolBar")
+            val traceRadioButton=createRefFor("traceRadioButton")
+            val rrnRadioButton=createRefFor("rrnRadioButton")
             val traceInputText = createRefFor("traceInputText")
             val confirm = createRefFor("confirm")
             val result = createRefFor("mainContentReceipt")
@@ -86,8 +102,22 @@ fun TransactionBasedOnTraceReportContent(
                 end.linkTo(parent.end)
                 start.linkTo(parent.start)
             }
-            constrain(traceInputText) {
+            constrain(traceRadioButton) {
                 top.linkTo(toolBar.bottom)
+                end.linkTo(parent.end)
+                start.linkTo(rrnRadioButton.end)
+                width= Dimension.fillToConstraints
+            }
+            constrain(rrnRadioButton) {
+                top.linkTo(traceRadioButton.top)
+                bottom.linkTo(traceRadioButton.bottom)
+                end.linkTo(traceRadioButton.start)
+                start.linkTo(parent.start)
+                width= Dimension.fillToConstraints
+                height=Dimension.fillToConstraints
+            }
+            constrain(traceInputText) {
+                top.linkTo(traceRadioButton.bottom)
                 end.linkTo(parent.end)
                 start.linkTo(parent.start)
             }
@@ -125,11 +155,88 @@ fun TransactionBasedOnTraceReportContent(
             ) {
                 onBackClicked()
             }
+            Box(
+                modifier = Modifier
+                    .padding(start = END_PADDING, end = START_PADDING, top = 3.dp)
+                    .fillMaxWidth()
+                    .border(
+                        width = 1.dp, brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
+                                MaterialTheme.colorScheme.onBackground.copy(alpha = 1f)
+                            )
+                        ), shape = RoundedCornerShape(16.dp)
+                    )
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
+                    .layoutId("rrnRadioButton")
+
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = traceIsSelected, onClick = {
+                            traceIsSelected=true
+                        }, colors = RadioButtonDefaults.colors(
+                            selectedColor = MaterialTheme.colorScheme.primary,
+                            unselectedColor = androidx.compose.ui.graphics.Color.Gray
+                        )
+                    )
+                    Text(
+                        modifier = Modifier.wrapContentWidth(),
+                        text = stringResource(R.string.trace),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.fillMaxWidth(1f))
+                }
+            }
+            Box(
+                modifier = Modifier
+                    .padding(start = END_PADDING, end = START_PADDING, top = 3.dp)
+                    .fillMaxWidth()
+                    .border(
+                        width = 1.dp, brush = Brush.horizontalGradient(
+                            colors = listOf(
+                                MaterialTheme.colorScheme.onBackground.copy(alpha = 0.8f),
+                                MaterialTheme.colorScheme.onBackground.copy(alpha = 1f)
+                            )
+                        ), shape = RoundedCornerShape(16.dp)
+                    )
+                    .clip(RoundedCornerShape(8.dp))
+                    .background(MaterialTheme.colorScheme.surface, RoundedCornerShape(8.dp))
+                    .layoutId("traceRadioButton")
+
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = !traceIsSelected, onClick = {
+                            traceIsSelected=false
+                        }, colors = RadioButtonDefaults.colors(
+                            selectedColor = MaterialTheme.colorScheme.primary,
+                            unselectedColor = androidx.compose.ui.graphics.Color.Gray
+                        )
+                    )
+                    Text(
+                        modifier = Modifier.wrapContentWidth(),
+                        text = stringResource(R.string.rrn),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.fillMaxWidth(1f))
+                }
+            }
             TextInput(
                 modifier = TextInputModifier
                     .layoutId("traceInputText"),
-                errorMessage = stringResource(R.string.plz_enter_trace),
-                title = stringResource(id = R.string.trace),
+                errorMessage = stringResource(if(traceIsSelected)R.string.plz_enter_trace
+                else R.string.plz_enter_rrn),
+                title = stringResource(id =if(traceIsSelected) R.string.trace else R.string.rrn),
                 value = trace, hasError = hasError, onNextClicked = {
                     keyboard?.hide()
                 }, isSmall =false,onValueChange = {
@@ -144,7 +251,7 @@ fun TransactionBasedOnTraceReportContent(
             ) {
                 hasError = false
                 if (trace.isNotEmpty())
-                    onConfirm(trace.trim())
+                    onConfirm(trace.trim(),traceIsSelected)
                 else {
                     hasError = true
                 }
@@ -194,8 +301,16 @@ fun TransactionBasedOnTraceReportContent(
             ) {
                 onBackClicked()
             }
-            ReceiptResultContainer(printTitle = stringResource(id = R.string.print),
-                onPrintButtonClicked = { onPrintClicked() },
+            ReceiptResultContainer(showCustomerPrintButton = true,
+                showMerchantPrintButton = false,
+                printTitle = stringResource(id = R.string.print),
+                errorInPrint =errorInPrint,
+                onCustomerPrintButtonClicked = { onPrintClicked() },
+                onMerchantPrintButtonClicked = {},
+
+                clearPrintErrorMessage = {
+                    clearPrintErrorMessage()
+                },
                 onBackButtonClicked = {
                     onBackClicked()
                 }) {
@@ -203,7 +318,7 @@ fun TransactionBasedOnTraceReportContent(
                     isPaperReceipt = false,
                     modifier = Modifier.layoutId("receipt"), isSuccess = true
                 ) {
-                    ReceiptContent(false, uiState.result)
+                    ReceiptContent(false, uiState.result,ReceiptType.CUSTOMER_RECEIPT)
                 }
             }
         }
@@ -214,15 +329,4 @@ fun TransactionBasedOnTraceReportContent(
         }
     }
 }
-}
-
-@Composable
-@Preview
-fun TransactionBasedOnTraceReportContentPreview() {
-    TotanPayTheme {
-        TransactionBasedOnTraceReportContent(
-            uiState = SearchTransactionUiState(),
-            onBackClicked = { },
-            onConfirm = {}, onPrintClicked = {})
-    }
 }

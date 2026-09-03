@@ -1,5 +1,6 @@
 package com.example.totanpay.ui.component.button
 
+import android.util.Log
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.border
@@ -19,6 +20,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import com.example.totanpay.LocalLanguageState
 import com.example.totanpay.R
 import com.example.totanpay.data.Operator
 import com.example.totanpay.ui.theme.TotanPayTheme
@@ -27,9 +29,11 @@ import com.example.totanpay.ui.theme.TotanPayTheme
 fun OperatorButton(isSmall:Boolean,
     isSelected: Boolean = false, operator: Operator, modifier: Modifier, onClick: (Operator) -> Unit
 ) {
-    Row(modifier = modifier .padding(horizontal = 4.dp)
+    val isFarsi= LocalLanguageState.current.isFarsiSelected.value
+     Row(modifier = modifier
+        .padding(horizontal = 4.dp)
         .clip(RoundedCornerShape(8.dp))
-        .height(if(isSmall)50.dp else 40.dp)
+        .height(if (isSmall) 50.dp else 40.dp)
         .border(
             1.dp,
             if (isSelected) operator.borderColor else MaterialTheme.colorScheme.outline,
@@ -43,7 +47,7 @@ fun OperatorButton(isSmall:Boolean,
         Image(
             modifier = Modifier
                 .padding(horizontal = 8.dp)
-                .size(if(isSmall)40.dp else 32.dp)
+                .size(if (isSmall) 40.dp else 32.dp)
                 .align(Alignment.CenterVertically),
             painter = painterResource(id = operator.imaged),
             contentDescription = "back_button"
@@ -52,30 +56,9 @@ fun OperatorButton(isSmall:Boolean,
             modifier = Modifier
                 .padding(end = 8.dp)
                 .align(Alignment.CenterVertically),
-            text = operator.persianName,
+            text =if(isFarsi) operator.persianName else operator.englishName,
             color = MaterialTheme.colorScheme.onBackground,
             style = MaterialTheme.typography.bodyMedium
         )
-    }
-}
-
-
-@Composable
-@Preview
-fun OperatorButtonPreview() {
-    TotanPayTheme {
-        OperatorButton(isSmall = true,
-            isSelected = true, Operator(
-                code = 11,
-                persianName = "ایرانسل",
-                englishName = "irancel",
-                voucherChargeMSG = "",
-                borderColor = Color.Yellow,
-                imaged = R.drawable.ic_irancel,
-                chargeList = listOf()
-            ), modifier = Modifier
-        ) {
-
-        }
     }
 }

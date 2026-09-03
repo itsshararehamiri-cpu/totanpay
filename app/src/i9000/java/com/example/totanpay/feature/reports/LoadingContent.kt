@@ -227,18 +227,9 @@ fun LoadingContent(
         if (showErrorInPrint)
             ShowToast(
                 modifier = Modifier.align(Alignment.BottomCenter),
-                message = errorMessagePrint.ifEmpty { "خطا در چاپ" }
+                message = errorMessagePrint
             ) {
                 onEndShowPrintErrorMessage()
             }
     }
 }
-
-@Composable
-@Preview
-fun LoadingContentPreview() {
-    TotanPayTheme {
-        // LoadingContent()
-    }
-}
-

@@ -42,7 +42,7 @@ class TotanPayApplication : Application() {
             }
         }
         setupLogback()
-        scheduleLogUploadWorker()
+       // scheduleLogUploadWorker()
     }
 
     private fun scheduleLogUploadWorker() {

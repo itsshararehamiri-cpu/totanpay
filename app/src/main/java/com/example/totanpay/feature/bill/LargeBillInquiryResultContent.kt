@@ -151,7 +151,7 @@ fun LargeBillInquiryResultContent(
             )
             Spacer(modifier = Modifier.weight(1f))
             Text(
-                text = "${amount.formatAmount()} ریال",
+                text =stringResource(R.string.amount_with_currency,amount.formatAmount()),
                 modifier = Modifier
                     .wrapContentWidth()
                     .padding(start = 2.dp)

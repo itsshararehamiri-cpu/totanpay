@@ -273,7 +273,7 @@ fun LoadingContent(
                     }
                 }
                 if (uiState.showNotFound) {
-                    NotFoundTransaction(title = stringResource(id = R.string.details_of_transactions),modifier = Modifier.layoutId("notFound")){
+                    NotFoundTransaction(modifier = Modifier.layoutId("notFound")){
                         onBackClicked()
                     }
                 }

@@ -16,7 +16,12 @@ interface TransactionLogDao {
 
 
     @Query("SELECT * FROM transaction_log WHERE stan=:stan")
-    fun getByStan(stan: String): TransactionLogEntity?//, respCode: Int?
+    fun getByStan(stan: String): TransactionLogEntity?
+
+
+
+    @Query("SELECT * FROM transaction_log WHERE rrn=:rrn")
+    fun getByRrn(rrn: String): TransactionLogEntity?//, respCode: Int?
 
     @Update
     fun update(transactionLog: TransactionLogEntity)
@@ -74,4 +79,8 @@ interface TransactionLogDao {
 
     @Query("DELETE  FROM transaction_log WHERE dateTransaction=:date and timeTransaction=:time")
     fun deleteByDateTime(date: String, time: String)
+
+
+    @Query("DELETE FROM transaction_log")
+    suspend fun clearTable()
 }

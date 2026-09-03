@@ -14,13 +14,16 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.totanpay.R
@@ -34,128 +37,132 @@ fun Keypad(
     onTikKeyClicked: () -> Unit,
     onClearKeyClicked: () -> Unit
 ) {
-    Column(modifier = modifier.fillMaxWidth()) {
-        Row(modifier = Modifier.fillMaxWidth()) {
-            DigitKey(
-                number = "3", modifier = Modifier
-                    .padding(horizontal = 7.dp)
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                onKeyClicked(it)
-            }
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+        Column(modifier = modifier.fillMaxWidth()) {
+            Row(modifier = Modifier.fillMaxWidth()) {
+                DigitKey(
+                    number = "1", modifier = Modifier
+                        .padding(horizontal = 7.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    onKeyClicked(it)
+                }
+                DigitKey(
+                    number = "2", modifier = Modifier
+                        .padding(horizontal = 7.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    onKeyClicked(it)
+                }
+                DigitKey(
+                    number = "3", modifier = Modifier
+                        .padding(horizontal = 7.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    onKeyClicked(it)
+                }
 
-            DigitKey(
-                number = "2", modifier = Modifier
-                    .padding(horizontal = 7.dp)
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                onKeyClicked(it)
-            }
-            DigitKey(
-                number = "1", modifier = Modifier
-                    .padding(horizontal = 7.dp)
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                onKeyClicked(it)
-            }
 
-        }
-        Row(
-            modifier = Modifier
-                .padding(top = 10.dp)
-                .fillMaxWidth()
-        ) {
-            DigitKey(
-                number = "6", modifier = Modifier
-                    .padding(horizontal = 7.dp)
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                onKeyClicked(it)
             }
-            DigitKey(
-                number = "5", modifier = Modifier
-                    .padding(horizontal = 7.dp)
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                onKeyClicked(it)
-            }
-            DigitKey(
-                number = "4", modifier = Modifier
-                    .padding(horizontal = 7.dp)
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                onKeyClicked(it)
-            }
-        }
-        Row(
-            modifier = Modifier
-                .padding(top = 10.dp)
-                .fillMaxWidth()
-        ) {
-
-            DigitKey(
-                number = "9", modifier = Modifier
-                    .padding(horizontal = 7.dp)
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                onKeyClicked(it)
-            }
-            DigitKey(
-                number = "8", modifier = Modifier
-                    .padding(horizontal = 7.dp)
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                onKeyClicked(it)
-            }
-            DigitKey(
-                number = "7", modifier = Modifier
-                    .padding(horizontal = 7.dp)
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                onKeyClicked(it)
-            }
-
-        }
-        Row(
-            modifier = Modifier
-                .padding(top = 10.dp)
-                .fillMaxWidth()
-        ) {
-
-            TickKey(
+            Row(
                 modifier = Modifier
-                    .padding(horizontal = 7.dp)
+                    .padding(top = 10.dp)
                     .fillMaxWidth()
-                    .weight(1f)
             ) {
-                onTikKeyClicked()
-            }
-            DigitKey(
-                number = "0", modifier = Modifier
-                    .padding(horizontal = 7.dp)
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                onKeyClicked(it)
-            }
-            ClearKey(
-                modifier = Modifier
-                    .padding(horizontal = 7.dp)
-                    .fillMaxWidth()
-                    .weight(1f)
-            ) {
-                onClearKeyClicked()
-            }
 
+                DigitKey(
+                    number = "4", modifier = Modifier
+                        .padding(horizontal = 7.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    onKeyClicked(it)
+                }
+
+                DigitKey(
+                    number = "5", modifier = Modifier
+                        .padding(horizontal = 7.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    onKeyClicked(it)
+                }
+                DigitKey(
+                    number = "6", modifier = Modifier
+                        .padding(horizontal = 7.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    onKeyClicked(it)
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .fillMaxWidth()
+            ) {
+
+
+                DigitKey(
+                    number = "7", modifier = Modifier
+                        .padding(horizontal = 7.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    onKeyClicked(it)
+                }
+                DigitKey(
+                    number = "8", modifier = Modifier
+                        .padding(horizontal = 7.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    onKeyClicked(it)
+                }
+                DigitKey(
+                    number = "9", modifier = Modifier
+                        .padding(horizontal = 7.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    onKeyClicked(it)
+                }
+            }
+            Row(
+                modifier = Modifier
+                    .padding(top = 10.dp)
+                    .fillMaxWidth()
+            ) {
+
+                TickKey(
+                    modifier = Modifier
+                        .padding(horizontal = 7.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    onTikKeyClicked()
+                }
+                DigitKey(
+                    number = "0", modifier = Modifier
+                        .padding(horizontal = 7.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    onKeyClicked(it)
+                }
+                ClearKey(
+                    modifier = Modifier
+                        .padding(horizontal = 7.dp)
+                        .fillMaxWidth()
+                        .weight(1f)
+                ) {
+                    onClearKeyClicked()
+                }
+
+            }
         }
     }
 
@@ -226,21 +233,5 @@ fun ClearKey(modifier: Modifier, onKeyClicked: () -> Unit) {
                 MaterialTheme.colorScheme.onBackground,
             )
         )
-    }
-}
-
-@Composable
-@Preview
-fun KeyPreview() {
-    TotanPayTheme {
-        // DigitKey(number = "1", Modifier.fillMaxWidth())
-    }
-}
-
-@Composable
-@Preview
-fun KeypadPreview() {
-    TotanPayTheme {
-        // Keypad(Modifier)
     }
 }

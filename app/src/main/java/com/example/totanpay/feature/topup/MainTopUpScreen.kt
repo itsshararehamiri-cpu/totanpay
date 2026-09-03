@@ -33,7 +33,6 @@ import com.example.totanpay.R
 import com.example.totanpay.common.BackButtonModifier
 import com.example.totanpay.common.mainButtonModifier
 import com.example.totanpay.data.Operator
-import com.example.totanpay.data.repository.datasource.formatAmount
 import com.example.totanpay.data.repository.datasource.transaction.TransactionType
 import com.example.totanpay.data.util.getAllCharges
 import com.example.totanpay.data.util.isNotNumber
@@ -41,7 +40,6 @@ import com.example.totanpay.data.util.isValidPhoneNumber
 import com.example.totanpay.ui.ListModifier
 import com.example.totanpay.ui.TextInputModifier
 import com.example.totanpay.ui.component.MobileTextInput
-import com.example.totanpay.ui.component.PriceTextInput
 import com.example.totanpay.ui.component.ShowToast
 import com.example.totanpay.ui.component.button.BackButton
 import com.example.totanpay.ui.component.button.MainButton
@@ -133,7 +131,7 @@ fun MainTopUpScreen(
                 .background(MaterialTheme.colorScheme.background)
         ) {
             BackButton(
-                title = TransactionType.TOPUP.title,
+                title = context.getString(TransactionType.TOPUP.title),
                 modifier = BackButtonModifier.layoutId("toolBar")
             ) {
                 onBackButton()
@@ -162,7 +160,7 @@ fun MainTopUpScreen(
                 onNextClicked = {
                     keyboard?.hide()
                 })
-            val operators: List<Operator>? = getAllCharges(context = context)
+            val operators: List<Operator>? = remember { getAllCharges(context = context) }
             LazyRow(
                 modifier = ListModifier.layoutId("operators")
             ) {

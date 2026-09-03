@@ -170,7 +170,7 @@ fun TransactionBasedOnTraceReportContent(
             }
         }
         if (uiState.showNotFounding && !uiState.showProgress) {
-            NotFoundTransaction(title = stringResource(id = R.string.report_based_on_trace),modifier = Modifier.layoutId("notFound")){
+            NotFoundTransaction(modifier = Modifier.layoutId("notFound")){
                 onBackClicked()
             }
         }

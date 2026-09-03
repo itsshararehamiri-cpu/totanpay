@@ -14,14 +14,3 @@ fun SetApportionmentDialog(titleMessage:String,onDismiss: () -> Unit, onConfirmB
         onConfirmButtonClicked()
     }
 }
-
-@Composable
-@Preview
-fun SetApportionmentDialogPreview(){
-TotanPayTheme {
-    SettingsDataTimeDialog(titleMessage =  "لطفا محدوده زمانی دستگاه را روی تهران تنظیم نمایید", onDismiss = {
-    }, onConfirmButtonClicked = {
-
-    })
-}
-}

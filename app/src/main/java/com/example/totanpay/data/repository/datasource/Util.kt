@@ -29,16 +29,8 @@ fun String?.mask(): String {
         "${take(6)}****${takeLast(4)}" else ""
 }
 
-fun getSwitchMessage(code: Int): String {
-    return when (code) {
-        0 -> "تراکنش موفق"
-
-        else -> "خطای نامشخص"
-    }
-}
 
 fun getDateOfTransaction(): String {
-    // TODO: get from sdk 
     val date: Date = Date()
     val df = SimpleDateFormat("MMdd", Locale.US)
     return df.format(date)
