@@ -25,12 +25,9 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.layoutId
 import com.example.totanpay.R
-import com.example.totanpay.ui.ReturnBackToMainButtonModifier
 import com.example.totanpay.ui.SmallPrintButtonModifier
-import com.example.totanpay.ui.SmallReturnBackToMainButtonModifier
 import com.example.totanpay.ui.component.ShowToast
 import com.example.totanpay.ui.component.button.PrintButton
-import com.example.totanpay.ui.component.button.ReturnBackToMainButton
 import com.example.totanpay.ui.theme.Dimensions.BUTTON_HEIGHT
 
 @Composable
@@ -60,7 +57,6 @@ fun ReceiptResultContainer(
             ConstraintSet {
                 val receipt = createRefFor("receipt")
                 val printButtonsArea = createRefFor("printButtonsArea")
-                val returnBackButton = createRefFor("returnBackButton")
 
                 constrain(receipt) {
                     top.linkTo(parent.top, 20.dp)
@@ -69,17 +65,11 @@ fun ReceiptResultContainer(
                     bottom.linkTo(printButtonsArea.top)
                 }
                 constrain(printButtonsArea) {
-                    bottom.linkTo(returnBackButton.top, 5.dp)
+                    bottom.linkTo(parent.bottom, 10.dp)
                     start.linkTo(parent.start, 10.dp)
                     end.linkTo(parent.end, 10.dp)
                     width = Dimension.fillToConstraints
                     height = Dimension.wrapContent
-                }
-                constrain(returnBackButton) {
-                    bottom.linkTo(parent.bottom)
-                    end.linkTo(parent.end, 0.dp)
-                    start.linkTo(parent.start, 0.dp)
-                    width = Dimension.fillToConstraints
                 }
             }, modifier = Modifier
                 .background(MaterialTheme.colorScheme.background)
@@ -119,17 +109,6 @@ fun ReceiptResultContainer(
                         secondClicked=false
                     }
 
-            }
-            ReturnBackToMainButton(
-                isSmall = isSmall(context),
-                modifier =
-                    if (isSmall(context))
-                        SmallReturnBackToMainButtonModifier.layoutId("returnBackButton") else ReturnBackToMainButtonModifier
-
-                        .layoutId("returnBackButton")
-
-            ) {
-                onBackButtonClicked()
             }
         }
         if (showErrorToast) {
