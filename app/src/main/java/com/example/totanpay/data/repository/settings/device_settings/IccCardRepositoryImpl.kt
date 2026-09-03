@@ -45,11 +45,17 @@ class IccCardRepositoryImpl @Inject constructor(
     private suspend fun selectFirstApplet(): String? {
         return withContext(ioDispatcher) {
             try {
+                Log.d("TAG", "selecftFirstApplet: hjjhjhj${ApduUtil.getSelectFirstAppletCommand()}")
+
                 val responseBuffer: ByteArray? =
                     device.sendApdu(ISOUtil.hex2byte(ApduUtil.getSelectFirstAppletCommand()))
+                Log.d("TAG", "selecftFirstApplet: hjjhjhj${ISOUtil.hexString(responseBuffer)}")
+
                 return@withContext if (responseBuffer == null) {
                     null
                 } else if (!ApduUtil.apduResponseIsSuccess(responseBuffer)) {
+                    Log.d("TAG", "selecftFirstAppledt: hjjhjhj${ApduUtil.apduResponseIsSuccess(responseBuffer)}")
+
                     null
                 } else {
                     ISOUtil.hexString(responseBuffer)
@@ -264,9 +270,11 @@ class IccCardRepositoryImpl @Inject constructor(
         return withContext(ioDispatcher) {
             try {
                 val selectAppletResult: String? = selectFirstApplet()
+                Log.d("TAG", "confirmFirstPddin: dddddddddddd$selectAppletResult")
                 if (selectAppletResult == null) false
                 else {
                     val verifyPinResult: String? = verifyFirstPin(pin)
+                    Log.d("TAG", "confirmFirstPddin: ddddddddddddd$verifyPinResult")
                     verifyPinResult != null
                 }
             } catch (e: Exception) {

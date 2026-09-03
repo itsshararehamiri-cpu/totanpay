@@ -192,9 +192,9 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
     @SuppressLint("MissingPermission")
     override fun getSerial(): String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-          Build.getSerial()
+         // Build.getSerial()
          ///  "98282013260916"
-          // "98282013260916"
+           "98282013260916"
           //  "98262351307754"
         } else {
             DeviceManager().deviceId
@@ -411,12 +411,26 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
 
     override suspend fun sendApdu(byteArray: ByteArray): ByteArray? {
         try {
+            Log.d(TAG, "sendApdu request: ${ISOUtil.hexString(byteArray)}")
+
+            if (icReader == null) {
+                Log.e(TAG, "sendApdu: icReader is NULL")
+                return null
+            }
+
             val rspData = icReader!!.exchangeApdu(0, byteArray)
+
+            if (rspData == null) {
+                Log.e(TAG, "sendApdu: exchangeApdu returned NULL")
+                return null
+            }
+
+            Log.d(TAG, "sendApdu response: ${ISOUtil.hexString(rspData)}")
+
             return rspData
+
         } catch (e: Exception) {
-            Log.d(TAG, "sendApdu cause" + e.cause)
-            Log.d(TAG, "message: " + e.message)
-            e.printStackTrace()
+            Log.e(TAG, "sendApdu exception", e)
             return null
         }
     }
