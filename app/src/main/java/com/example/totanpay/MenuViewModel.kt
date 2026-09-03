@@ -163,10 +163,20 @@ class MenuViewModel @Inject constructor(
     }
 
     fun balance(context: Context) {
+        Log.d("TAG", "balance: dddddd")
         viewModelScope.launch {
+            Log.d("TAG", "balance: dddddda")
+
             _uiState.update { it.copy(showBatteryStatusMessage = false) }
+            Log.d("TAG", "balance: ddddddb")
+
             if (isNetworkAvailable(context)) {
+                Log.d("TAG", "balance: ddddddc")
+
                 val isConfigured = mainRepository.isConfigured()
+                Log.d("TAG", "balance: ddddddd$isConfigured")
+                Log.d("TAG", "balance: ddddddd${deviceRepository.batteryIsEnough()}")
+
                 if (isConfigured) {
                     if (deviceRepository.batteryIsEnough()) {
                         deviceRepository.disableHome()
