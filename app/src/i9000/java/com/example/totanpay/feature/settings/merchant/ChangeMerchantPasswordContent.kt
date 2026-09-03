@@ -5,6 +5,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -16,8 +17,10 @@ import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import com.example.totanpay.R
@@ -98,45 +101,49 @@ fun ChangeMerchantPasswordContent(
             ) {
                 onBackClicked()
             }
-            TextInput(
-                modifier = TextInputModifier
-                    .layoutId("password"),
-                hasError = passwordHasError, errorMessage = passwordErrorMessage,
-                title = stringResource(id = R.string.password),
-                value = passwordValue, onNextClicked = {
-                    focusManager.moveFocus(FocusDirection.Next)
-                }, isSmall = false, onValueChange = {
-                    if (!it.trim().isNotNumber())
-                        if (it.trim().length <= 4) {
-                            passwordErrorMessage = ""
-                            passwordHasError = false
-                            passwordValue = it
-                        } else {
-                            passwordErrorMessage =
-                                context.getString(R.string.length_of_pass_be_four)
-                            passwordHasError = true
-                        }
-                })
-            TextInput(
-                modifier = TextInputModifier
-                    .layoutId("repeatPassword"),
-                hasError = repeatPasswordHaseError, errorMessage = repeatPasswordErrorMessage,
-                title = stringResource(id = R.string.repeat_password),
-                value = repeatPasswordValue,
-                onNextClicked = {
-                    keyboard?.hide()
-                }, isSmall = false, onValueChange = {
-                    if (!it.trim().isNotNumber())
-                        if (it.trim().length <= 4) {
-                            repeatPasswordErrorMessage = ""
-                            repeatPasswordHaseError = false
-                            repeatPasswordValue = it
-                        } else {
-                            repeatPasswordErrorMessage =
-                                context.getString(R.string.length_of_pass_be_four)
-                            repeatPasswordHaseError = true
-                        }
-                })
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                TextInput(
+                    modifier = TextInputModifier
+                        .layoutId("password"),
+                    hasError = passwordHasError, errorMessage = passwordErrorMessage,
+                    title = stringResource(id = R.string.password),
+                    value = passwordValue, onNextClicked = {
+                        focusManager.moveFocus(FocusDirection.Next)
+                    }, isSmall = false, onValueChange = {
+                        if (!it.trim().isNotNumber())
+                            if (it.trim().length <= 4) {
+                                passwordErrorMessage = ""
+                                passwordHasError = false
+                                passwordValue = it
+                            } else {
+                                passwordErrorMessage =
+                                    context.getString(R.string.length_of_pass_be_four)
+                                passwordHasError = true
+                            }
+                    })
+            }
+            CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
+                TextInput(
+                    modifier = TextInputModifier
+                        .layoutId("repeatPassword"),
+                    hasError = repeatPasswordHaseError, errorMessage = repeatPasswordErrorMessage,
+                    title = stringResource(id = R.string.repeat_password),
+                    value = repeatPasswordValue,
+                    onNextClicked = {
+                        keyboard?.hide()
+                    }, isSmall = false, onValueChange = {
+                        if (!it.trim().isNotNumber())
+                            if (it.trim().length <= 4) {
+                                repeatPasswordErrorMessage = ""
+                                repeatPasswordHaseError = false
+                                repeatPasswordValue = it
+                            } else {
+                                repeatPasswordErrorMessage =
+                                    context.getString(R.string.length_of_pass_be_four)
+                                repeatPasswordHaseError = true
+                            }
+                    })
+            }
             MainButton(
                 modifier = Modifier.mainButtonModifier(isSmall = false)
                     .layoutId("confirm")

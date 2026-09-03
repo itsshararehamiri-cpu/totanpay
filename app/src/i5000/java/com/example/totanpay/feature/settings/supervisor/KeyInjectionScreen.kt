@@ -16,6 +16,7 @@ import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -27,11 +28,13 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -207,6 +210,7 @@ fun KeyInjectionScreen(viewModel: KeyInjectionViewModel, onBackClicked: () -> Un
                             .fillMaxWidth()
                             .background(MaterialTheme.colorScheme.surface)
                     ) {
+                        CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
                         TextField(
                             modifier = Modifier
                                 .textFieldModifier(isSmall(context = context))
@@ -270,6 +274,7 @@ fun KeyInjectionScreen(viewModel: KeyInjectionViewModel, onBackClicked: () -> Un
                                 color = MaterialTheme.colorScheme.onSurface
                             )
                         )
+                        }
                     }
                 }
             }
