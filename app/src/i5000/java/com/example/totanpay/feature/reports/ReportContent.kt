@@ -19,7 +19,7 @@ import com.example.totanpay.ui.component.compound.I5000SettingsItem
 import com.example.totanpay.ui.theme.TotanPayTheme
 
 @Composable
-fun ReportContent(
+fun ReportContent(currentLanguageIsFarsi: Boolean,
     onBackClicked: () -> Unit, onLastTransactionClicked: () -> Unit,
     onDetailsOfTransactionsClicked: () -> Unit, onReportBasedOnTraceClicked: () -> Unit
 ) {
@@ -85,6 +85,7 @@ fun ReportContent(
 fun ReportContentPreview() {
     TotanPayTheme {
         ReportContent(
+            currentLanguageIsFarsi = true,
             onBackClicked = {},
             onLastTransactionClicked = {},
             onDetailsOfTransactionsClicked = {},
