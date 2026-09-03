@@ -34,6 +34,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
+import com.example.totanpay.LocalLanguageState
 import com.example.totanpay.R
 import com.example.totanpay.data.util.formatAmount
 import com.example.totanpay.ui.theme.MARGIN_TOP_Bill_INQUERY_ROW
@@ -43,10 +44,11 @@ fun BillInquiryResultContent(
     amount: String, billId: String,
     paymentId: String,
     serviceDesc: String?,
-    billType: String?,
+    englishServiceDesc: String?,
     onPayment: () -> Unit,
     onBackClicked: () -> Unit
 ) {
+    val isFarsi = LocalLanguageState.current.isFarsiSelected.value
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
@@ -119,11 +121,11 @@ fun BillInquiryResultContent(
                         second = paymentId,
                         textColor = MaterialTheme.colorScheme.onSurface, isPaperReceipt = false
                     )
-                    if (!serviceDesc.isNullOrEmpty())
+                    if ((!serviceDesc.isNullOrEmpty() && isFarsi) || (!englishServiceDesc.isNullOrEmpty() && !isFarsi))
                         com.example.totanpay.common.receipt.RowReceipt(
                             modifier = Modifier.padding(top = MARGIN_TOP_Bill_INQUERY_ROW),
                             first = stringResource(id = R.string.service_desc),
-                            second = serviceDesc,
+                            second = if (isFarsi) serviceDesc!! else englishServiceDesc!!,
                             textColor = MaterialTheme.colorScheme.onSurface, isPaperReceipt = false
                         )
                 }

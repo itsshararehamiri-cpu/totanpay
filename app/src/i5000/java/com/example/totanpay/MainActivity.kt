@@ -11,7 +11,10 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalLayoutDirection
+import androidx.compose.ui.unit.LayoutDirection
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -32,6 +35,7 @@ import com.example.totanpay.feature.settings.SettingsRoutes
 import com.example.totanpay.feature.settings.settingNavigation
 import com.example.totanpay.feature.voucher.navigation.VoucherRoutes
 import com.example.totanpay.ui.theme.TotanPayTheme
+import com.example.totanpay.util.LocaleHelper
 import com.example.totanpay.util.PermissionUtil
 import com.example.totanpay.util.RuntimePermissionManager
 import com.google.accompanist.systemuicontroller.rememberSystemUiController
@@ -55,7 +59,13 @@ class MainActivity : ComponentActivity() {
         setContent {
             val sharedViewModel: MainViewModel = viewModel()
             val dataFlow by sharedViewModel.dataFlow.collectAsStateWithLifecycle()
-            TotanPayTheme(darkTheme = dataFlow) {
+            val isFarsiSelected by sharedViewModel.isFarsiSelected.collectAsStateWithLifecycle()
+            val globalLanguageState = remember { LanguageState() }
+            globalLanguageState.isFarsiSelected.value = isFarsiSelected
+            CompositionLocalProvider(LocalLanguageState provides globalLanguageState) {
+            CompositionLocalProvider(LocalLayoutDirection provides if (isFarsiSelected) LayoutDirection.Rtl else LayoutDirection.Ltr) {
+            TotanPayTheme(darkTheme = dataFlow, isFarsi = isFarsiSelected) {
+                LocaleHelper.setLocale(this, if (!isFarsiSelected) "en" else "fa")
                 val systemUiController = rememberSystemUiController()
                 if (dataFlow) {
                     systemUiController.setSystemBarsColor(
@@ -136,6 +146,8 @@ class MainActivity : ComponentActivity() {
                         settingNavigation(navController)
                     }
                 }
+            }
+            }
             }
         }
         requestPermission()

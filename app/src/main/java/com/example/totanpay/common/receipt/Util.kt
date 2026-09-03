@@ -24,7 +24,7 @@ fun getFontWeight(isPaperReceipt: Boolean, context: Context): FontWeight {
     return if (isPaperReceipt)
     {
         if (isSmall(context)) {
-            FontWeight.Bold
+            FontWeight.ExtraBold
         } else {
             FontWeight.Medium
         }
@@ -55,7 +55,7 @@ fun getFontSizeAmount(isPaperReceipt: Boolean, context: Context): TextUnit {
 
 fun getFontWeightUnSuccess(isPaperReceipt: Boolean, context: Context): FontWeight {
     return if (isPaperReceipt) if (isSmall(context)) {
-        FontWeight.Bold
+        FontWeight.ExtraBold
     } else {
         FontWeight.Medium
     } else FontWeight.Normal

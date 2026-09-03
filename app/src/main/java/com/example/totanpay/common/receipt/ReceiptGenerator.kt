@@ -528,16 +528,10 @@ fun AddAmount(
             color = textColor,
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontSize = getFontSize(isPaperReceipt, context),
-                fontWeight = if (isSmall(context)) FontWeight.Bold else {
-                    if (isPaperReceipt) {
-                        if (isSmall(context)) {
-                            FontWeight.Bold
-                        } else {
-                            FontWeight.ExtraBold
-                        }
-                    } else {
-                        FontWeight.Bold
-                    }
+                fontWeight = if (isSmall(context)) {
+                    if (isPaperReceipt) FontWeight.Black else FontWeight.Bold
+                } else {
+                    if (isPaperReceipt) FontWeight.ExtraBold else FontWeight.Bold
                 }
             ),
             textAlign = TextAlign.Start

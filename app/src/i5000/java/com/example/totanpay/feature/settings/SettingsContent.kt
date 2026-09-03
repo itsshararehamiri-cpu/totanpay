@@ -1,157 +1,194 @@
 package com.example.totanpay.feature.settings
 
+import android.content.Intent
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
+import androidx.compose.material3.SwitchDefaults
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.layout.layoutId
+import androidx.compose.ui.graphics.ColorFilter
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
-import androidx.constraintlayout.compose.ConstraintLayout
-import androidx.constraintlayout.compose.ConstraintSet
-import androidx.constraintlayout.compose.Dimension
 import com.example.totanpay.R
 import com.example.totanpay.ui.component.compound.I5000SettingsItem
-
+import com.example.totanpay.ui.theme.Green50
 
 @Composable
-fun SettingsContent(
+fun SettingsContent(isFarsiSelected: Boolean,
     uiState: SettingsUiState,
     onBackClicked: () -> Unit,
-    onMerchantSettingsClicked: () -> Unit,
-    onSupervisorSettingsClicked: () -> Unit,
-    onConfirmExitPassword: () -> Unit,
-    onReportsClicked: () -> Unit,
-    hideMerchantPasswordDialog: () -> Unit,
-    hideSupervisorPasswordDialog: () -> Unit,
-    hideReportPasswordDialog: () -> Unit,
-    hideExitPasswordDialog: () -> Unit,
     validateSupervisorPassword: (String) -> Unit,
     validateMerchantPassword: (String) -> Unit,
     validateReportPassword: (String) -> Unit,
-    validateExitPassword: (String) -> Unit
+    validateExitPassword: (String) -> Unit, onIsFarsiLanguageSelected: (Boolean) -> Unit
 ) {
     val scrollState = rememberScrollState()
+    val context = LocalContext.current
+    var showExitPasswordDialog: Boolean by remember { mutableStateOf(false) }
+    var showSupervisorPasswordDialog: Boolean by remember { mutableStateOf(false) }
+    var showMerchantPasswordDialog: Boolean by remember { mutableStateOf(false) }
+    var showReportPasswordDialog: Boolean by remember { mutableStateOf(false) }
+    var isEnglishLanguageSelected: Boolean by remember { mutableStateOf(true) }
+    LaunchedEffect(isFarsiSelected) {
+        isEnglishLanguageSelected = !isFarsiSelected
+    }
     Box(
-        modifier = Modifier
-            .fillMaxSize()  .verticalScroll(scrollState)
-
+        modifier = Modifier.fillMaxSize()
     ) {
-        ConstraintLayout(
-            ConstraintSet {
-                val supervisorSettings = createRefFor("supervisorSettings")
-                val merchantSettings = createRefFor("merchantSettings")
-                val reports = createRefFor("reports")
-                val exit = createRefFor("exit")
-
-                constrain(supervisorSettings) {
-                    top.linkTo(parent.top,28.dp)
-                    end.linkTo(parent.end)
-                    start.linkTo(parent.start)
-                }
-                constrain(merchantSettings) {
-                    top.linkTo(supervisorSettings.bottom,10.dp)
-                    end.linkTo(supervisorSettings.end)
-                    start.linkTo(supervisorSettings.start)
-                    width = Dimension.fillToConstraints
-                }
-                constrain(reports) {
-                    top.linkTo(merchantSettings.bottom,10.dp)
-                    end.linkTo(supervisorSettings.end)
-                    start.linkTo(supervisorSettings.start)
-                    width = Dimension.fillToConstraints
-                }
-                constrain(exit) {
-                    top.linkTo(reports.bottom,10.dp)
-                    end.linkTo(supervisorSettings.end)
-                    start.linkTo(supervisorSettings.start)
-                    width = Dimension.fillToConstraints
-                }
-            }, modifier = Modifier
+        Box(
+            modifier = Modifier
                 .fillMaxSize()
-                .background(MaterialTheme.colorScheme.background).padding(bottom = 20.dp)
+                .background(MaterialTheme.colorScheme.background)
+                .verticalScroll(scrollState)
         ) {
-            I5000SettingsItem(
-                modifier = Modifier.background(Color.White)
-                    .layoutId("supervisorSettings"),
-                iconImageId = R.drawable.ic_i5000_supervisor_settings,
-                title = stringResource(id = R.string.supervisor_settings)
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 20.dp, bottom = 20.dp)
             ) {
-                onSupervisorSettingsClicked()
-            }
-            I5000SettingsItem(
-                modifier = Modifier.background(Color.White)
-                    .layoutId("merchantSettings"),
-                iconImageId = R.drawable.ic_i5000_merchant_settings,
-                title = stringResource(id = R.string.merchant_settings)
-            ) {
-                onMerchantSettingsClicked()
-            }
-            I5000SettingsItem(
-                modifier = Modifier.background(Color.White)
-                    .layoutId("reports"),
-                iconImageId = R.drawable.ic_i5000_reports,
-                title = stringResource(id = R.string.reports)
-            ) {
-                onReportsClicked()
-            }
-            I5000SettingsItem(
-                modifier = Modifier.background(Color.White)
-                    .layoutId("exit"),
-                iconImageId = R.drawable.ic_i5000_exit,
-                title = stringResource(id = R.string.exit), textColor = Color(0XFFED1C22)
-            ) {
-                onConfirmExitPassword()
+                I5000SettingsItem(
+                    modifier = Modifier.background(Color.White),
+                    iconImageId = R.drawable.ic_i5000_supervisor_settings,
+                    title = stringResource(id = R.string.supervisor_settings)
+                ) {
+                    showSupervisorPasswordDialog = true
+                }
+                I5000SettingsItem(
+                    modifier = Modifier.background(Color.White),
+                    iconImageId = R.drawable.ic_i5000_merchant_settings,
+                    title = stringResource(id = R.string.merchant_settings)
+                ) {
+                    showMerchantPasswordDialog = true
+                }
+                I5000SettingsItem(
+                    modifier = Modifier.background(Color.White),
+                    iconImageId = R.drawable.ic_i5000_reports,
+                    title = stringResource(id = R.string.reports)
+                ) {
+                    showReportPasswordDialog = true
+                }
+                I5000SettingsItem(
+                    modifier = Modifier.background(Color.White),
+                    iconImageId = R.drawable.ic_setting_connection,
+                    title = stringResource(id = R.string.connection_to_net)
+                ) {
+                    val intent = Intent(android.provider.Settings.ACTION_WIRELESS_SETTINGS)
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+                    context.startActivity(intent)
+                }
+                Row(
+                    Modifier
+                        .fillMaxWidth()
+                        .height(44.dp)
+                        .background(Color.White)
+                        .padding(horizontal = 12.dp),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_moon),
+                        contentDescription = "",
+                        modifier = Modifier.size(20.dp),
+                        colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary)
+                    )
+                    Text(
+                        text = stringResource(id = R.string.english_language),
+                        modifier = Modifier.padding(start = 10.dp),
+                        color = MaterialTheme.colorScheme.onSurface,
+                        style = MaterialTheme.typography.bodyMedium
+                    )
+                    Spacer(modifier = Modifier.weight(1f))
+                    Switch(
+                        checked = isEnglishLanguageSelected,
+                        onCheckedChange = {
+                            isEnglishLanguageSelected = it
+                            onIsFarsiLanguageSelected(!it)
+                        },
+                        colors = SwitchDefaults.colors(
+                            checkedTrackColor = Green50
+                        )
+                    )
+                }
+                I5000SettingsItem(
+                    modifier = Modifier.background(Color.White),
+                    iconImageId = R.drawable.ic_i5000_exit,
+                    title = stringResource(id = R.string.exit), textColor = Color(0XFFED1C22)
+                ) {
+                    showExitPasswordDialog = true
+                }
             }
         }
-        if (uiState.showExitPasswordDialog) {
+        if (showExitPasswordDialog) {
             EnterPasswordBottomDialog(modifier = Modifier.align(Alignment.BottomCenter),
-                errorMessage = uiState.existPasswordError,
+                errorMessage = stringResource(
+                    if (uiState.existPasswordError != -1)
+                        uiState.existPasswordError else R.string.empty_message
+                ),
                 onConfirmButtonClicked = {
                     validateExitPassword(it)
                 },
                 onCancelButtonClicked = {
-                    hideExitPasswordDialog()
+                    showExitPasswordDialog = false
                 })
         }
-        if (uiState.showSupervisorPasswordDialog) {
+        if (showSupervisorPasswordDialog) {
             EnterPasswordBottomDialog(modifier = Modifier.align(Alignment.BottomCenter),
-                errorMessage = uiState.supervisorPasswordError,
+                errorMessage = stringResource(
+                    if (uiState.supervisorPasswordError != -1)
+                        uiState.supervisorPasswordError else R.string.empty_message
+                ),
                 onCancelButtonClicked = {
-                    hideSupervisorPasswordDialog()
+                    showSupervisorPasswordDialog = false
                 }) {
                 validateSupervisorPassword(it)
             }
         }
-        if (uiState.showMerchantPasswordDialog) {
+        if (showMerchantPasswordDialog) {
             EnterPasswordBottomDialog(modifier = Modifier.align(Alignment.BottomCenter),
-                errorMessage = uiState.merchantPasswordError,
+                errorMessage = stringResource(
+                    if (uiState.merchantPasswordError != -1)
+                        uiState.merchantPasswordError else R.string.empty_message
+                ),
                 onCancelButtonClicked = {
-                    hideMerchantPasswordDialog()
+                    showMerchantPasswordDialog = false
                 }) {
                 validateMerchantPassword(it)
             }
         }
-        if (uiState.showReportPasswordDialog) {
+        if (showReportPasswordDialog) {
             EnterPasswordBottomDialog(modifier = Modifier.align(Alignment.BottomCenter),
-                errorMessage = uiState.reportPasswordError,
+                errorMessage = stringResource(
+                    if (uiState.reportPasswordError != -1)
+                        uiState.reportPasswordError else
+                            R.string.empty_message
+                ),
                 onCancelButtonClicked = {
-                    hideReportPasswordDialog()
+                    showReportPasswordDialog = false
                 }) {
                 validateReportPassword(it)
             }
         }
     }
 }
-
-
-
-
-
