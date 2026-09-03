@@ -121,7 +121,7 @@ fun MainVoucherScreen(onConfirm: (String, String) -> Unit, onBackButtonClicked: 
                     }
                 ) {
                     BackButton(
-                        title = TransactionType.VOUCHER.title, modifier = BackButtonModifier
+                        title = stringResource(TransactionType.VOUCHER.title), modifier = BackButtonModifier
                             .layoutId("toolBar")
                     ) {
                         onBackButtonClicked()

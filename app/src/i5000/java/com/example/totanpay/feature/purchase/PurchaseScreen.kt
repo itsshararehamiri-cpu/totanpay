@@ -32,6 +32,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.layoutId
 import com.example.totanpay.R
 import com.example.totanpay.common.PurchasePriceTextInputModifier
+import com.example.totanpay.ui.TextInputModifier
 import com.example.totanpay.ui.component.PurchasePriceTextInput
 import com.example.totanpay.ui.theme.Green50
 import com.example.totanpay.ui.theme.TotanPayTheme
@@ -75,6 +76,7 @@ fun PurchaseScreen(
 
 
         PurchasePriceTextInput(
+            textInputModifier = TextInputModifier,
             modifier = Modifier
                 .PurchasePriceTextInputModifier(isSmall = true)
                 .layoutId("purchasePriceTextInput"),

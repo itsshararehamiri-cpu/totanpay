@@ -241,14 +241,14 @@ fun KeyInjectionScreen(viewModel: KeyInjectionViewModel, onBackClicked: () -> Un
                                 errorMessage = ""
                                 if ((isFirstPinKey && firstPinKey.isNotEmpty()) || (isSecondPinKey && secondPinKey.isNotEmpty())) {
                                     if (isFirstPinKey) {
-                                        viewModel.verifyFirstPin(firstPinKey.trim())
+                                        viewModel.verifyFirstPin(firstPinKey.trim(), context = context)
                                         firstPinKey = ""
                                         textFieldValueState = TextFieldValue(
                                             ""
                                         )
                                     }
                                     if (isSecondPinKey) {
-                                        viewModel.verifySecondPin(secondPinKey.trim())
+                                        viewModel.verifySecondPin(secondPinKey.trim(), context = context)
                                         secondPinKey = ""
                                     }
                                 } else {
