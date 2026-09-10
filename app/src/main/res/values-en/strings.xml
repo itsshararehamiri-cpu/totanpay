@@ -69,6 +69,7 @@
 
     <string name="bill_id">Bill ID</string>
     <string name="payment_id">Payment ID</string>
+    <string name="enter_bill_and_payment_id">Enter bill and payment ID</string>
     <string name="in_bill_inquery">Bill Inquiry in Progress</string>
     <string name="bill_inquery">Bill Inquiry</string>
     <string name="service_desc">Bill Type</string>

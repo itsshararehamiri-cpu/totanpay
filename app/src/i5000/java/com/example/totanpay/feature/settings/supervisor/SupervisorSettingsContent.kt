@@ -77,28 +77,31 @@ fun SupervisorSettingsContent(
             I5000SettingsItem(
                 modifier = Modifier,
                 iconImageId = R.drawable.ic_i5000_connection_settings,
-                title = stringResource(id = R.string.connection_settings)
+                title = stringResource(id = R.string.connection_settings),
+                height = 36.dp
             ) {
                 onConnectionSettingsClicked()
             }
             I5000SettingsItem(
                 modifier = Modifier,
                 iconImageId = R.drawable.ic_i5000_key_injection,
-                title = stringResource(id = R.string.key_injection)
+                title = stringResource(id = R.string.key_injection),
+                height = 36.dp
             ) {
                 onKeyInjectionSettingsClicked()
             }
             I5000SettingsItem(
                 modifier = Modifier,
                 iconImageId = null,
-                title = stringResource(id = R.string.set_percent_of_tax_irancell_charge)
+                title = stringResource(id = R.string.set_percent_of_tax_irancell_charge),
+                height = 36.dp
             ) {
                 showSetTaxForIrancellChargeDialog = true
             }
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .height(44.dp)
+                    .height(36.dp)
                     .padding(horizontal = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -122,14 +125,16 @@ fun SupervisorSettingsContent(
             I5000SettingsItem(
                 modifier = Modifier,
                 iconImageId = R.drawable.ic_i5000_configuration_settings,
-                title = stringResource(id = R.string.configuration)
+                title = stringResource(id = R.string.configuration),
+                height = 36.dp
             ) {
                 onConfigurationClicked()
             }
             I5000SettingsItem(
                 modifier = Modifier,
                 iconImageId = null,
-                title = stringResource(id = R.string.get_terminal_info)
+                title = stringResource(id = R.string.get_terminal_info),
+                height = 36.dp
             ) {
                 onGetTerminalInfoClicked()
             }

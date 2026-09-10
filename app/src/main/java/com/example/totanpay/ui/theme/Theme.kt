@@ -107,7 +107,7 @@ fun TotanPayTheme(
 
         MaterialTheme(
             colorScheme = colorScheme,
-            typography = typography(isFarsi),
+            typography = if (isSmall) typographyI5000(isFarsi) else typography(isFarsi),
             content = content
         )
 

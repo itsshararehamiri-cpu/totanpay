@@ -131,81 +131,81 @@ fun typographyI5000(isFarsi: Boolean):Typography{
    return Typography(
         displayLarge = TextStyle(//zzzzzzzzzzzzzzzzzzzz
             fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.Medium,
             fontSize = 34.sp,
             lineHeight = 41.sp,
             //letterSpacing = 0.5.sp
         ),
         displayMedium = TextStyle(//zzzzzzzzzzzz
             fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.Medium,
             fontSize = 18.sp,
             lineHeight = 23.sp),
         displaySmall = TextStyle(//zzzzzzzzzzzzzzzzzz
             fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.Medium,
             fontSize = 20.sp,
             lineHeight = 24.sp,
             letterSpacing = 0.5.sp
         ),
         headlineLarge = TextStyle(
             fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.Medium,
             fontSize = 13.sp,
             lineHeight = 24.sp,
             letterSpacing = 0.5.sp
         ),
         headlineMedium = TextStyle(
             fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.Medium,
             fontSize = 13.sp,
             lineHeight = 24.sp,
             letterSpacing = 0.5.sp
         ),
         headlineSmall = TextStyle(
             fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.Medium,
             fontSize = 20.sp,
             lineHeight = 24.sp,
             letterSpacing = 0.5.sp
         ),
         bodyLarge = TextStyle(//zzzzzzzzzzzzzzzzzzzz
             fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.Medium,
             fontSize = 22.sp,
             lineHeight = 18.sp,
             letterSpacing = 0.0.sp
         ),
         bodyMedium = TextStyle(//okkkkkkkkkk
             fontFamily = fontFamily,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.SemiBold,
             fontSize = 24.sp,
             lineHeight =LINE_HEIGHT_RECEIPT,
             letterSpacing = 0.5.sp
         ),
         bodySmall = TextStyle(
             fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.Medium,
             fontSize = 15.sp,
             lineHeight = 24.sp,
             letterSpacing = 0.5.sp
         ),
         titleLarge = TextStyle(
             fontFamily = fontFamily,
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.Medium,
             fontSize = 22.sp,
             lineHeight = 28.sp,
             letterSpacing = 0.sp
         ),
         titleMedium = TextStyle(//zzzzzzzzzzz
             fontFamily = fontFamily,
-            fontWeight = FontWeight.Medium,
+            fontWeight = FontWeight.SemiBold,
             fontSize = 24.sp,
             lineHeight = 29.sp,
             //  letterSpacing = 0.sp
         ),
         titleSmall = TextStyle(//okkkkkkkkkkkkkkkkkk
-            fontWeight = FontWeight.SemiBold,
+            fontWeight = FontWeight.Bold,
             fontFamily = fontFamily,
             fontSize = 16.sp,
             lineHeight = 19.sp,
@@ -215,19 +215,21 @@ fun typographyI5000(isFarsi: Boolean):Typography{
             fontFamily = fontFamily,
             fontSize = 20.sp,
             lineHeight = 13.sp,
+            fontWeight = FontWeight.Medium,
             letterSpacing = 0.5.sp
         ),
         labelMedium = TextStyle(//zzzzzzzzzzzzzzzzzzz
             fontFamily = fontFamily,
             fontSize = 19.sp,
             lineHeight = 17.sp,
-            fontWeight = FontWeight.Normal
+            fontWeight = FontWeight.Medium
             // letterSpacing = 0.5.sp
         ),
         labelSmall = TextStyle(//zzzzz
             fontFamily = fontFamily,
             fontSize = 22.sp,//11
             lineHeight = 13.sp,//13
+            fontWeight = FontWeight.Medium,
             letterSpacing = 0.5.sp//0.5
         )
     )

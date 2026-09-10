@@ -74,17 +74,17 @@ fun MerchantSettingsContent(
                     start.linkTo(parent.start)
                 }
                 constrain(printerSettings) {
-                    top.linkTo(a.bottom, 10.dp)
+                    top.linkTo(a.bottom, 2.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
                 constrain(changeMerchantPassword) {
-                    top.linkTo(printerSettings.bottom, 10.dp)
+                    top.linkTo(printerSettings.bottom, 2.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
                 constrain(enableAndDisableVoice) {
-                    top.linkTo(changeMerchantPassword.bottom, 10.dp)
+                    top.linkTo(changeMerchantPassword.bottom, 2.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
@@ -95,7 +95,7 @@ fun MerchantSettingsContent(
 //                    width = Dimension.fillToConstraints
 //                }
                 constrain(chooseTheme) {
-                    top.linkTo(enableAndDisableVoice.bottom, 10.dp)
+                    top.linkTo(enableAndDisableVoice.bottom, 2.dp)
                     end.linkTo(enableAndDisableVoice.end)
                     start.linkTo(enableAndDisableVoice.start)
                     width = Dimension.fillToConstraints
@@ -111,21 +111,24 @@ fun MerchantSettingsContent(
             I5000SettingsItem(
                 modifier = Modifier.layoutId("a"),
                 iconImageId = R.drawable.ic_i5000_account_management,
-                title = stringResource(id = R.string.account_management)
+                title = stringResource(id = R.string.account_management),
+                height = 36.dp
             ) {
                 onA()
             }
             I5000SettingsItem(
                 modifier = Modifier.layoutId("printerSettings"),
                 iconImageId = R.drawable.ic_i5000_print_settings,
-                title = stringResource(id = R.string.printer_settings)
+                title = stringResource(id = R.string.printer_settings),
+                height = 36.dp
             ) {
                 onPrinterSettings()
             }
             I5000SettingsItem(
                 modifier = Modifier.layoutId("changeMerchantPassword"),
                 iconImageId = R.drawable.ic_i5000_chane_password,
-                title = stringResource(id = R.string.change_merchant_password)
+                title = stringResource(id = R.string.change_merchant_password),
+                height = 36.dp
             ) {
                 onChangeMerchantPassword()
 
@@ -134,7 +137,7 @@ fun MerchantSettingsContent(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
+                    .height(44.dp)
                     .background(Color.White)
                     .layoutId("enableAndDisableVoice"), contentAlignment = Alignment.Center
             ) {
@@ -179,7 +182,7 @@ fun MerchantSettingsContent(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(56.dp)
+                    .height(44.dp)
                     .background(Color.White)
                     .layoutId("chooseTheme"), contentAlignment = Alignment.Center
             ) {

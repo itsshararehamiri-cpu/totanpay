@@ -146,7 +146,7 @@ fun EnterPasswordBottomDialog(
                         .layoutId("title"),
                     color = MaterialTheme.colorScheme.onSurface,
                     textAlign = TextAlign.Center,
-                    style = MaterialTheme.typography.labelLarge .copy(fontWeight = FontWeight.Bold)
+                    style = MaterialTheme.typography.labelLarge .copy(fontWeight = FontWeight.ExtraBold)
 
                 )
                 CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Ltr) {
@@ -282,7 +282,7 @@ fun CustomReceivedCodeDigitPlacement2(
         textStyle = MaterialTheme.typography.bodyLarge.copy(
             textDirection = TextDirection.Ltr,
             color = Color.Black,
-            fontWeight = FontWeight.Normal,
+            fontWeight = FontWeight.Medium,
            textAlign = TextAlign.Center
         ), keyboardOptions = KeyboardOptions.Default.copy(
             keyboardType = KeyboardType.Number,

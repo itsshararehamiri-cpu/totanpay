@@ -209,13 +209,13 @@ fun ReadCardContent(
                         text = stringResource(R.string.balance_transaction_fee),
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier,
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium)
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
                     )
                     Text(
                         text = "1440".formatAmount(),
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier,
-                        style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.ExtraBold)
                     )
                     Text(
                         text = stringResource(R.string.currency),
@@ -231,13 +231,13 @@ fun ReadCardContent(
                         text =amountTitle,
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier,
-                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.Medium)
+                        style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
                     )
                     Text(
                         text = amountValue.formatAmount(),
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier,
-                        style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Bold)
+                        style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.ExtraBold)
                     )
                     Text(
                         text = stringResource(R.string.currency),
@@ -253,7 +253,7 @@ fun ReadCardContent(
                     color = DeepBlue,
                     textAlign = TextAlign.Center,
                     modifier = Modifier.layoutId("extraMessage"),
-                    style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.Medium)
+                    style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.SemiBold)
                 )
             }
 //            Image(

@@ -5,12 +5,13 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -29,6 +30,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
@@ -74,28 +76,27 @@ fun MainBillScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .verticalScroll(rememberScrollState())
     ) {
         ConstraintLayout(
             ConstraintSet {
                 val scan = createRefFor("scan")
-                val billId = createRefFor("billId")
-                val payId = createRefFor("payId")
+                val title = createRefFor("title")
+                val fieldsRow = createRefFor("fieldsRow")
 
                 constrain(scan) {
-                    top.linkTo(parent.top, 30.dp)
+                    top.linkTo(parent.top, 24.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
-                constrain(billId) {
-                    top.linkTo(scan.bottom)
+                constrain(title) {
+                    top.linkTo(scan.bottom, 8.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
-                constrain(payId) {
-                    top.linkTo(billId.bottom)
-                    end.linkTo(billId.end)
-                    start.linkTo(billId.start)
+                constrain(fieldsRow) {
+                    top.linkTo(title.bottom, 10.dp)
+                    end.linkTo(parent.end)
+                    start.linkTo(parent.start)
                     width = Dimension.fillToConstraints
                 }
             }, modifier = Modifier
@@ -127,57 +128,74 @@ fun MainBillScreen(
                 )
             }
 
-            TextInput(
-                modifier = TextInputModifier.focusRequester(billIdFocusRequester)
-                    .layoutId("billId"),
-                hasError = billIdHasError, errorMessage = billIdError,
-                title = stringResource(id = R.string.bill_id),
-                value = billIdValue, onValueChange = {
-                    if (!it.trim().isNotNumber() && it.length <= 13)
-                        billIdValue = it
-                }, isSmall = true,
-                onNextClicked = {
-                    focusManager.moveFocus(FocusDirection.Next)
-                })
-            TextInput(
-                modifier = TextInputModifier
-                    .layoutId("payId"),
-                hasError = payIdHasError, errorMessage = payIdError,
-                title = stringResource(id = R.string.payment_id),
-                value = payIdValue, onValueChange = {
-                    if (!it.trim().isNotNumber() && it.length <= 13)
-                        payIdValue = it
-                }, isSmall = true, onNextClicked = {
-                    billIdHasError = false
-                    payIdHasError = false
-                    billIdError = ""
-                    payIdError = ""
-                    if (billIdValue.isNotEmpty() && payIdValue.isNotEmpty()) {
-                        if (billIdValue.length in 6..13 && payIdValue.length in 6..13)
-                            onConfirmBillAndPaymentId(billIdValue, payIdValue)
-                        else {
-                            if (billIdValue.length !in 6..13) {
-                                showErrorMessage = context.getString(R.string.bill_id_is_not_valid)
-                                billIdError = context.getString(R.string.bill_id_is_not_valid)
-                            }
-                            if (payIdValue.length !in 6..13) {
-                                showErrorMessage = context.getString(R.string.pay_id_is_not_valid)
-                                payIdError = context.getString(R.string.pay_id_is_not_valid)
-                            }
-                        }
-                    } else {
-                        if (billIdValue.isEmpty()) {
-                            billIdHasError = true
-                            billIdError = context.getString(R.string.bill_id_is_not_entered)
-                        }
-                        if (payIdValue.isEmpty()) {
-                            payIdHasError = true
-                            payIdError = context.getString(R.string.pay_id_is_not_entered)
-                        }
-                        showToast = true
-                    }
+            Text(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 18.dp)
+                    .layoutId("title"),
+                text = stringResource(id = R.string.enter_bill_and_payment_id),
+                color = MaterialTheme.colorScheme.onBackground,
+                style = MaterialTheme.typography.titleMedium,
+                textAlign = TextAlign.Center
+            )
 
-                })
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .layoutId("fieldsRow")
+            ) {
+                TextInput(
+                    modifier = TextInputModifier.focusRequester(billIdFocusRequester)
+                        .weight(1f),
+                    hasError = billIdHasError, errorMessage = billIdError,
+                    title = stringResource(id = R.string.bill_id),
+                    value = billIdValue, onValueChange = {
+                        if (!it.trim().isNotNumber() && it.length <= 13)
+                            billIdValue = it
+                    }, isSmall = true,
+                    onNextClicked = {
+                        focusManager.moveFocus(FocusDirection.Next)
+                    })
+                TextInput(
+                    modifier = TextInputModifier
+                        .weight(1f),
+                    hasError = payIdHasError, errorMessage = payIdError,
+                    title = stringResource(id = R.string.payment_id),
+                    value = payIdValue, onValueChange = {
+                        if (!it.trim().isNotNumber() && it.length <= 13)
+                            payIdValue = it
+                    }, isSmall = true, onNextClicked = {
+                        billIdHasError = false
+                        payIdHasError = false
+                        billIdError = ""
+                        payIdError = ""
+                        if (billIdValue.isNotEmpty() && payIdValue.isNotEmpty()) {
+                            if (billIdValue.length in 6..13 && payIdValue.length in 6..13)
+                                onConfirmBillAndPaymentId(billIdValue, payIdValue)
+                            else {
+                                if (billIdValue.length !in 6..13) {
+                                    showErrorMessage = context.getString(R.string.bill_id_is_not_valid)
+                                    billIdError = context.getString(R.string.bill_id_is_not_valid)
+                                }
+                                if (payIdValue.length !in 6..13) {
+                                    showErrorMessage = context.getString(R.string.pay_id_is_not_valid)
+                                    payIdError = context.getString(R.string.pay_id_is_not_valid)
+                                }
+                            }
+                        } else {
+                            if (billIdValue.isEmpty()) {
+                                billIdHasError = true
+                                billIdError = context.getString(R.string.bill_id_is_not_entered)
+                            }
+                            if (payIdValue.isEmpty()) {
+                                payIdHasError = true
+                                payIdError = context.getString(R.string.pay_id_is_not_entered)
+                            }
+                            showToast = true
+                        }
+
+                    })
+            }
         }
         if (showToast) {
             ShowToast(

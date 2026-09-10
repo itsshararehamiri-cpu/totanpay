@@ -17,6 +17,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.totanpay.LocalLanguageState
 import com.example.totanpay.R
@@ -28,13 +29,14 @@ fun I5000SettingsItem(
     iconImageId: Int?,
     title: String,
     textColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onSurface,
+    height: Dp = 44.dp,
     onItemClicked: () -> Unit
 ) {
     val isRtl = LocalLanguageState.current.isFarsiSelected.value
     Row(
         modifier = modifier
             .fillMaxWidth()
-            .height(44.dp)
+            .height(height)
             .clickable { onItemClicked() }
             .padding(horizontal = 12.dp),
         verticalAlignment = Alignment.CenterVertically
@@ -53,7 +55,7 @@ fun I5000SettingsItem(
             color = textColor,
             style = MaterialTheme.typography.bodyMedium.copy(
                 fontSize = FONT_SIZE_14,
-                fontWeight = FontWeight.Medium
+                fontWeight = FontWeight.SemiBold
             ),
             modifier = Modifier.weight(1f)
         )
