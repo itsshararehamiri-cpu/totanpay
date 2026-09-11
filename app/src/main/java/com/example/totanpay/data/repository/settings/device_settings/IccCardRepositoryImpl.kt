@@ -23,6 +23,21 @@ class IccCardRepositoryImpl @Inject constructor(
     private val ioDispatcher: CoroutineDispatcher
 ) : IccCardRepository {
     val tag = "IccCardRepositoryImpl"
+
+    private suspend fun sendApduWithRetry(
+        command: ByteArray,
+        retries: Int = 3,
+        retryDelayMs: Long = 300
+    ): ByteArray? {
+        repeat(retries) { attempt ->
+            val response = device.sendApdu(command)
+            if (response != null) return response
+            Log.e(tag, "sendApduWithRetry: attempt ${attempt + 1}/$retries got no response")
+            if (attempt < retries - 1) delay(retryDelayMs)
+        }
+        return null
+    }
+
     override suspend fun detectCard(): Boolean {
         return withContext(ioDispatcher) {
             var detected: Boolean
@@ -48,7 +63,7 @@ class IccCardRepositoryImpl @Inject constructor(
                 Log.d("TAG", "selecftFirstApplet: hjjhjhj${ApduUtil.getSelectFirstAppletCommand()}")
 
                 val responseBuffer: ByteArray? =
-                    device.sendApdu(ISOUtil.hex2byte(ApduUtil.getSelectFirstAppletCommand()))
+                    sendApduWithRetry(ISOUtil.hex2byte(ApduUtil.getSelectFirstAppletCommand()))
                 Log.d("TAG", "selecftFirstApplet: hjjhjhj${responseBuffer?.let { ISOUtil.hexString(it) }}")
 
                 return@withContext if (responseBuffer == null) {
@@ -194,13 +209,21 @@ class IccCardRepositoryImpl @Inject constructor(
     override suspend fun readPublicKey(): String? {
         return withContext(ioDispatcher) {
             try {
-                var responseBuffer: ByteArray? =
-                    device.sendApdu(ISOUtil.hex2byte(ApduUtil.getReadPublicKeyCommand()))
-                var responseLength = responseBuffer!!.size
-                val publicKeyExponent = ISOUtil.hexString(responseBuffer, 0, responseLength - 2)
-                responseBuffer = device.sendApdu(ISOUtil.hex2byte(ApduUtil.getExponentCommand()))
-                responseLength = responseBuffer!!.size
-                val publicKeyData = ISOUtil.hexString(responseBuffer, 0, responseLength - 2)
+                val exponentResponse =
+                    sendApduWithRetry(ISOUtil.hex2byte(ApduUtil.getReadPublicKeyCommand()))
+                if (exponentResponse == null) {
+                    Log.e(tag, "readPublicKey: no response for exponent command")
+                    return@withContext null
+                }
+                val publicKeyExponent =
+                    ISOUtil.hexString(exponentResponse, 0, exponentResponse.size - 2)
+                val dataResponse =
+                    sendApduWithRetry(ISOUtil.hex2byte(ApduUtil.getExponentCommand()))
+                if (dataResponse == null) {
+                    Log.e(tag, "readPublicKey: no response for modulus command")
+                    return@withContext null
+                }
+                val publicKeyData = ISOUtil.hexString(dataResponse, 0, dataResponse.size - 2)
                 val spec =
                     RSAPublicKeySpec(
                         BigInteger(publicKeyData, 16),
@@ -236,13 +259,20 @@ class IccCardRepositoryImpl @Inject constructor(
     override suspend fun readPrivateKey(): PrivateKey? {
       return withContext(ioDispatcher) {
           try {
-              var responseBuffer: ByteArray? =
-                  device.sendApdu(ISOUtil.hex2byte(ApduUtil.getReadPrivateKeyCommand()))
-              var responseLength = responseBuffer!!.size
-              val privateKeyExponent = ISOUtil.hexString(responseBuffer, 0, responseLength - 2)
-              responseBuffer = device.sendApdu(ISOUtil.hex2byte("ACBD010180"))
-              responseLength = responseBuffer!!.size
-              val privateKeyData = ISOUtil.hexString(responseBuffer, 0, responseLength - 2)
+              val exponentResponse =
+                  sendApduWithRetry(ISOUtil.hex2byte(ApduUtil.getReadPrivateKeyCommand()))
+              if (exponentResponse == null) {
+                  Log.e(tag, "readPrivateKey: no response for exponent command")
+                  return@withContext null
+              }
+              val privateKeyExponent =
+                  ISOUtil.hexString(exponentResponse, 0, exponentResponse.size - 2)
+              val dataResponse = sendApduWithRetry(ISOUtil.hex2byte("ACBD010180"))
+              if (dataResponse == null) {
+                  Log.e(tag, "readPrivateKey: no response for modulus command")
+                  return@withContext null
+              }
+              val privateKeyData = ISOUtil.hexString(dataResponse, 0, dataResponse.size - 2)
               val privateSpec = RSAPrivateKeySpec(
                   BigInteger(privateKeyData, 16),
                   BigInteger(privateKeyExponent, 16)
