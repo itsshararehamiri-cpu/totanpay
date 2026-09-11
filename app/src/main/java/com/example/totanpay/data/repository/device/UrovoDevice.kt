@@ -52,9 +52,7 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
         pinPad.deleteKey(KeyType.ENCDEC_KEY, INDEX_TEK)
         pinPad.deleteKey(KeyType.PIN_KEY, INDEX_PIN)
         val result = pinPad.loadMainKey(
-            index,
-            masterKey,
-            null
+            index, masterKey, null
         )
         writeMacKey(masterKey, INDEX_WK)
     }
@@ -113,9 +111,12 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
 
     override fun getPinBlock(
         context: Context,
-        pan: String, onError: (String) -> Unit,
-        onInput: (Int) -> Unit, onConfirm: (String) -> Unit,
-        onCancel: () -> Unit, onTimeOut: () -> Unit
+        pan: String,
+        onError: (String) -> Unit,
+        onInput: (Int) -> Unit,
+        onConfirm: (String) -> Unit,
+        onCancel: () -> Unit,
+        onTimeOut: () -> Unit
     ) {
         val pinPadBundle = Bundle()
         pinPadBundle.putString("cardNo", pan.toEnglishNumber())
@@ -127,8 +128,7 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
         pinPadBundle.putBoolean("onlinePin", true)
         pinPadBundle.putInt("PINKeyNo", INDEX_PIN)
         pinPadBundle.putLong(
-            "timeOutMS",
-            (30 * 1000).toLong().toString().toEnglishNumber().toLong()
+            "timeOutMS", (30 * 1000).toLong().toString().toEnglishNumber().toLong()
         )
 //        pinPadBundle.putString("title", context.getString(R.string.enter_pin))
 //
@@ -152,11 +152,7 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
         val textColor = intArrayOf(
             -0xa8de,  // عنوان اول
             -0xde690d,  // عنوان دوم
-            Color.BLACK,
-            Color.BLACK,
-            Color.BLACK,
-            Color.BLACK,
-            Color.BLACK
+            Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK, Color.BLACK
         )
 
         pinPadBundle.putIntArray("textColor", textColor)
@@ -166,8 +162,7 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
             }
 
             override fun onConfirm(p0: ByteArray?, p1: Boolean) {
-                if (p0 != null)
-                    onConfirm(String(p0).toEnglishNumber())
+                if (p0 != null) onConfirm(String(p0).toEnglishNumber())
             }
 
             override fun onConfirm_dukpt(p0: ByteArray?, p1: ByteArray?) {
@@ -192,10 +187,10 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
     @SuppressLint("MissingPermission")
     override fun getSerial(): String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-         // Build.getSerial()
-         ///  "98282013260916"
-           "98282013260916"
-          //  "98262351307754"
+            // Build.getSerial()
+            ///  "98282013260916"
+            "98282013260916"
+            //  "98262351307754"
         } else {
             DeviceManager().deviceId
         }
@@ -220,10 +215,7 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
 
 
     override suspend fun print(
-        bitmap: Bitmap,
-        context: Context,
-        onSuccess: () -> Unit,
-        onFailed: (String) -> Unit
+        bitmap: Bitmap, context: Context, onSuccess: () -> Unit, onFailed: (String) -> Unit
     ) {
         printerMutex.withLock {
             val printManager: PrinterProviderImpl? = PrinterProviderImpl.getInstance(context)
@@ -290,8 +282,9 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
             }
         }
     }
+
     override suspend fun getPrinterError(
-    ) : String{
+    ): String {
         printerMutex.withLock {
             val printManager: PrinterProviderImpl? = PrinterProviderImpl.getInstance(context)
             try {
@@ -329,12 +322,7 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
     override fun encrypt(data: ByteArray): ByteArray? {
         val out = ByteArray(data.size)
         val result = pinPad.calculateDes(
-            Constant.DesMode.ENC,
-            Constant.Algorithm.DES_ECB,
-            KeyType.MAIN_KEY,
-            INDEX_MK,
-            data,
-            out
+            Constant.DesMode.ENC, Constant.Algorithm.DES_ECB, KeyType.MAIN_KEY, INDEX_MK, data, out
         )
         return out
     }
@@ -344,10 +332,7 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
         val result = pinPad.calculateDes(
             Constant.DesMode.DEC,//DEC
             Constant.Algorithm.DES_ECB,//DES_ECB
-            KeyType.MAIN_KEY,
-            INDEX_MK,
-            data,
-            out
+            KeyType.MAIN_KEY, INDEX_MK, data, out
         )
         return out
     }
@@ -358,6 +343,8 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
         var ret = 0
         try {
             ret = icReader!!.powerUp(cardType, atrData)
+            Log.d(TAG, "powerOnIcCard: $ret")
+
             if (ret == 0) return true
         } catch (e: RemoteException) {
             Log.e("TAG", "powerOnIcCard: ", e.cause)
@@ -377,6 +364,8 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
         try {
             //outputText("powerDown")
             val status = icReader!!.powerDown(0)
+            Log.d(TAG, "powerOffIcCard: $status")
+
             //outputText("" + status)
         } catch (e: java.lang.Exception) {
             Log.d("TAG", "onClick cause " + e.cause)
@@ -400,8 +389,8 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
     override fun isIcCardDetect(): Boolean {
         try {
             val status = icReader!!.isCardIn
-            if (status)
-                return true
+            Log.d(TAG, "isIcCardDetect: $status")
+            if (status) return true
         } catch (e: Exception) {
             Log.d("TAG", "onClick:cause " + e.cause)
             Log.d("TAG", "onClick: message" + e.message)
@@ -411,8 +400,11 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
 
     override suspend fun sendApdu(byteArray: ByteArray): ByteArray? {
         try {
+            Log.d(TAG, "sendApdu: icReader=$icReader")
+            Log.d(TAG, "sendApdu: apdu=${ISOUtil.hexString(byteArray)}")
+            Log.d(TAG, "sendApdu: calling exchangeApdu slot=0")
             Log.d(TAG, "sendApdu request: ${ISOUtil.hexString(byteArray)}")
-
+            delay(1000)
             if (icReader == null) {
                 Log.e(TAG, "sendApdu: icReader is NULL")
                 return null
@@ -493,8 +485,7 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
             context.getString(R.string.plz_put_barcode_front_device)
         )
         bundle.putString(
-            com.urovo.sdk.scanner.utils.Constant.Scankey.downPromptString,
-            ""
+            com.urovo.sdk.scanner.utils.Constant.Scankey.downPromptString, ""
         )
         bundle.putString(com.urovo.sdk.scanner.utils.Constant.Scankey.title, "")
         try {
@@ -505,8 +496,7 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
                 40,
                 object : ScannerListener {
                     override fun onSuccess(data: String?, byData: ByteArray) {
-                        if (data != null)
-                            onSuccess(data)
+                        if (data != null) onSuccess(data)
                     }
 
                     override fun onError(error: Int, message: String?) {
@@ -531,23 +521,19 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
     override suspend fun getKCv(): KCV {
         val masterResult = ByteArray(16)
         pinPad.calculateDes(
-            0, 1, KeyType.MAIN_KEY, INDEX_MK,
-            ISOUtil.hex2byte("0000000000000000"), masterResult
+            0, 1, KeyType.MAIN_KEY, INDEX_MK, ISOUtil.hex2byte("0000000000000000"), masterResult
         )
         val dataResult = ByteArray(16)
         pinPad.calculateDes(
-            0, 1, KeyType.ENCDEC_KEY, INDEX_TEK,
-            ISOUtil.hex2byte("0000000000000000"), dataResult
+            0, 1, KeyType.ENCDEC_KEY, INDEX_TEK, ISOUtil.hex2byte("0000000000000000"), dataResult
         )
         val pinResult = ByteArray(16)
         pinPad.calculateDes(
-            0, 1, KeyType.PIN_KEY, INDEX_PIN,
-            ISOUtil.hex2byte("0000000000000000"), pinResult
+            0, 1, KeyType.PIN_KEY, INDEX_PIN, ISOUtil.hex2byte("0000000000000000"), pinResult
         )
         val macResult = ByteArray(16)
         pinPad.calculateDes(
-            0, 1, KeyType.MAC_KEY, INDEX_WK,
-            ISOUtil.hex2byte("0000000000000000"), macResult
+            0, 1, KeyType.MAC_KEY, INDEX_WK, ISOUtil.hex2byte("0000000000000000"), macResult
         )
         return KCV(
             master = ISOUtil.hexString(masterResult).take(6),
