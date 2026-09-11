@@ -49,7 +49,6 @@ import com.example.totanpay.data.repository.datasource.transaction.TransactionTy
 import com.example.totanpay.data.util.isNotNumber
 import com.example.totanpay.ui.component.TextInputContainer
 import com.example.totanpay.ui.component.button.BackButton
-import com.example.totanpay.ui.priceFilter
 import kotlinx.coroutines.launch
 
 @Composable
@@ -203,9 +202,6 @@ fun PurchaseIdScreen(onConfirmButtonClicked: (String) -> Unit, onBackButtonClick
                         textDirection = TextDirection.Ltr,
                         color = MaterialTheme.colorScheme.onSurface
                     ),
-                    visualTransformation = { annotatedString ->
-                        priceFilter(annotatedString.text)
-                    },
                 )
             }
         }

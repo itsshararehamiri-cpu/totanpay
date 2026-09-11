@@ -35,6 +35,7 @@ import com.example.totanpay.common.textFieldModifier
 import com.example.totanpay.data.util.isNotNumber
 import com.example.totanpay.data.util.toEnglishNumber
 import com.example.totanpay.ui.TextInputModifier
+import com.example.totanpay.ui.amountInWords
 import com.example.totanpay.ui.priceFilter
 import com.example.totanpay.ui.theme.TotanPayTheme
 
@@ -51,7 +52,14 @@ fun PriceTextInput(
     onValueChange: (String) -> Unit
 ) {
     val textFieldValue = TextFieldValue(text = value, selection = TextRange(value.length))
-    TextInputContainer(modifier = modifier, title = title, hasError = hasError, errorMessage, isSmall = isSmall) {
+    TextInputContainer(
+        modifier = modifier,
+        title = title,
+        hasError = hasError,
+        errorMessage = errorMessage,
+        isSmall = isSmall,
+        helperText = amountInWords(value, trailerTitle)
+    ) {
         ConstraintLayout(
             ConstraintSet {
                 val trailer = createRefFor("trailer")

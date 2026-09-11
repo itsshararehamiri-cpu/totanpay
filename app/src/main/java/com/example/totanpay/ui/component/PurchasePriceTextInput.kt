@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import com.example.totanpay.data.util.isNotNumber
+import com.example.totanpay.ui.amountInWords
 import com.example.totanpay.ui.priceFilter
 
 @Composable
@@ -42,8 +43,9 @@ fun PurchasePriceTextInput( textInputModifier: Modifier,
         modifier = modifier,
         title = title,
         hasError = hasError,
-        errorMessage,
-        isSmall = isSmall
+        errorMessage = errorMessage,
+        isSmall = isSmall,
+        helperText = amountInWords(value, trailerTitle)
     ) {
         ConstraintLayout(
             ConstraintSet {

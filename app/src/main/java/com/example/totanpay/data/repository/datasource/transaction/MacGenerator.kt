@@ -1,5 +1,6 @@
 package com.example.totanpay.data.repository.datasource.transaction
 
+import android.util.Log
 import com.example.totanpay.data.repository.device.IDevice
 import com.example.totanpay.data.util.toEnglishNumber
 import org.jpos.iso.ISOUtil
@@ -13,6 +14,7 @@ interface IMacGenerator {
 
 class MacGeneratorImpl @Inject constructor(private val device: IDevice) : IMacGenerator {
     override fun getMac(msg: IsoMessage, index: Int): ByteArray {
+        Log.d("TAG", "getMac: ddddddd$index")
         val macField = (if (msg.maxField > 64) 128 else 64).toString().toEnglishNumber()
         msg.set(macField, "0000000000000000".toEnglishNumber())
         with(msg.pack().dropLast(8).toByteArray()) {

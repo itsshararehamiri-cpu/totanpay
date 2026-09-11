@@ -62,6 +62,10 @@ class ConfigurationRepositoryImpl @Inject constructor(
                 if(previousTerminalId!= logonTransactionResponse.data.terminalId.trim()){
                     reportLocalDataSource.clearReports()
                 }
+                Log.d("TAG", "logon: data->${logonTransactionResponse.data.dataKey}")
+                Log.d("TAG", "logon: pin->${logonTransactionResponse.data.pinKey}")
+                Log.d("TAG", "logon: mac->${logonTransactionResponse.data.macKey}")
+
                 deviceRepository.writeDataKey(ISOUtil.hexString(logonTransactionResponse.data.dataKey))
                 deviceRepository.writePinKey(ISOUtil.hexString(logonTransactionResponse.data.pinKey))
                 deviceRepository.writeMacKey(ISOUtil.hexString(logonTransactionResponse.data.macKey))

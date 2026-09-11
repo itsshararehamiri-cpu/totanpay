@@ -4,7 +4,6 @@ import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -29,6 +28,7 @@ import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -36,6 +36,7 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import com.example.totanpay.R
 import com.example.totanpay.ui.component.compound.I5000SettingsItem
+import com.example.totanpay.ui.theme.FONT_SIZE_14
 import com.example.totanpay.ui.theme.Green50
 
 @Composable
@@ -137,8 +138,9 @@ fun MerchantSettingsContent(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(44.dp)
+                    .height(36.dp)
                     .background(Color.White)
+                    .padding(horizontal = 12.dp)
                     .layoutId("enableAndDisableVoice"), contentAlignment = Alignment.Center
             ) {
                 Row(
@@ -150,22 +152,23 @@ fun MerchantSettingsContent(
                     Image(
                         painter = painterResource(id = R.drawable.ic_i5000_enable_voice),
                         contentDescription = "",
-                        modifier = Modifier
-                            .padding(start = 4.dp)
-                            .size(28.dp),
+                        modifier = Modifier.size(20.dp),
                         contentScale = ContentScale.Fit
                     )
 
                     Text(
                         text = stringResource(id = R.string.enable_and_disable_voice),
-                        modifier = Modifier.padding(start = 10.dp),
+                        modifier = Modifier
+                            .padding(start = 10.dp)
+                            .weight(1f),
                         color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodyLarge
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = FONT_SIZE_14,
+                            fontWeight = FontWeight.SemiBold
+                        )
 
                     )
-                    Spacer(modifier = Modifier.weight(1f))
                     Switch(
-                        modifier = Modifier.padding(end = 30.dp, top = 0.dp),
                         checked = playSoundIsEnabled,
                         onCheckedChange = {
                             playSoundIsEnabled = it
@@ -182,8 +185,9 @@ fun MerchantSettingsContent(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(44.dp)
+                    .height(36.dp)
                     .background(Color.White)
+                    .padding(horizontal = 12.dp)
                     .layoutId("chooseTheme"), contentAlignment = Alignment.Center
             ) {
                 Row(
@@ -195,21 +199,22 @@ fun MerchantSettingsContent(
                     Image(
                         painter = painterResource(id = R.drawable.ic_i5000_light_mode),
                         contentDescription = "",
-                        modifier = Modifier
-                            .padding(start = 4.dp)
-                            .size(28.dp),
+                        modifier = Modifier.size(20.dp),
                         contentScale = ContentScale.Fit)
 
                     Text(
                         text = stringResource(id = R.string.dark_mode),
-                        modifier = Modifier.padding(start = 10.dp),
+                        modifier = Modifier
+                            .padding(start = 10.dp)
+                            .weight(1f),
                         color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodyLarge
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = FONT_SIZE_14,
+                            fontWeight = FontWeight.SemiBold
+                        )
 
                     )
-                    Spacer(modifier = Modifier.weight(1f))
                     Switch(
-                        modifier = Modifier.padding(end = 30.dp, top = 0.dp),
                         checked = themeIsDarkStatus,
                         onCheckedChange = {
                             themeIsDarkStatus = it

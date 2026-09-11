@@ -64,6 +64,10 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
 
     override fun writeMacKey(macKey: ByteArray, index: Int) {
         val result = pinPad.loadWorkKey(KeyType.MAC_KEY, INDEX_MK, index, macKey, null)
+        Log.d(TAG, "writeMacKey: $result")
+        Log.d(TAG, "writeMacKey: $INDEX_MK")
+        Log.d(TAG, "writeMacKey: ${ISOUtil.hexString(macKey)}")
+
     }
 
     override fun writeDataKey(dataKey: ByteArray) {
@@ -76,6 +80,10 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
 
     override fun getMac(data: ByteArray, index: Int): ByteArray {
         val result = pinPad.calcMAC(index.toString().toEnglishNumber().toInt(), data, 0x11)
+        Log.d(TAG, "getMac: dddddddhh$index")
+        Log.d(TAG, "getMac: dddddddhh$result")
+        Log.d(TAG, "getMac: dddddddhh${ISOUtil.hexString(data)}")
+
         return result
     }
 

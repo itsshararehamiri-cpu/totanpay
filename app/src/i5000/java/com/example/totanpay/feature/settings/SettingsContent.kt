@@ -6,7 +6,6 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -31,9 +30,12 @@ import androidx.compose.ui.graphics.ColorFilter
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.example.totanpay.R
+import com.example.totanpay.ui.component.HorizontalDivider
 import com.example.totanpay.ui.component.compound.I5000SettingsItem
+import com.example.totanpay.ui.theme.FONT_SIZE_14
 import com.example.totanpay.ui.theme.Green50
 
 @Composable
@@ -76,6 +78,10 @@ fun SettingsContent(isFarsiSelected: Boolean,
                 ) {
                     showSupervisorPasswordDialog = true
                 }
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                    isPaperReceipt = false
+                )
                 I5000SettingsItem(
                     modifier = Modifier.background(Color.White),
                     iconImageId = R.drawable.ic_i5000_merchant_settings,
@@ -83,6 +89,10 @@ fun SettingsContent(isFarsiSelected: Boolean,
                 ) {
                     showMerchantPasswordDialog = true
                 }
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                    isPaperReceipt = false
+                )
                 I5000SettingsItem(
                     modifier = Modifier.background(Color.White),
                     iconImageId = R.drawable.ic_i5000_reports,
@@ -90,6 +100,10 @@ fun SettingsContent(isFarsiSelected: Boolean,
                 ) {
                     showReportPasswordDialog = true
                 }
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                    isPaperReceipt = false
+                )
                 I5000SettingsItem(
                     modifier = Modifier.background(Color.White),
                     iconImageId = R.drawable.ic_setting_connection,
@@ -99,6 +113,10 @@ fun SettingsContent(isFarsiSelected: Boolean,
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
                     context.startActivity(intent)
                 }
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                    isPaperReceipt = false
+                )
                 Row(
                     Modifier
                         .fillMaxWidth()
@@ -115,11 +133,13 @@ fun SettingsContent(isFarsiSelected: Boolean,
                     )
                     Text(
                         text = stringResource(id = R.string.english_language),
-                        modifier = Modifier.padding(start = 10.dp),
+                        modifier = Modifier.padding(start = 10.dp).weight(1f),
                         color = MaterialTheme.colorScheme.onSurface,
-                        style = MaterialTheme.typography.bodyMedium
+                        style = MaterialTheme.typography.bodyMedium.copy(
+                            fontSize = FONT_SIZE_14,
+                            fontWeight = FontWeight.SemiBold
+                        )
                     )
-                    Spacer(modifier = Modifier.weight(1f))
                     Switch(
                         checked = isEnglishLanguageSelected,
                         onCheckedChange = {
@@ -131,6 +151,10 @@ fun SettingsContent(isFarsiSelected: Boolean,
                         )
                     )
                 }
+                HorizontalDivider(
+                    modifier = Modifier.padding(horizontal = 12.dp),
+                    isPaperReceipt = false
+                )
                 I5000SettingsItem(
                     modifier = Modifier.background(Color.White),
                     iconImageId = R.drawable.ic_i5000_exit,
