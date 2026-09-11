@@ -49,7 +49,7 @@ class IccCardRepositoryImpl @Inject constructor(
 
                 val responseBuffer: ByteArray? =
                     device.sendApdu(ISOUtil.hex2byte(ApduUtil.getSelectFirstAppletCommand()))
-                Log.d("TAG", "selecftFirstApplet: hjjhjhj${ISOUtil.hexString(responseBuffer)}")
+                Log.d("TAG", "selecftFirstApplet: hjjhjhj${responseBuffer?.let { ISOUtil.hexString(it) }}")
 
                 return@withContext if (responseBuffer == null) {
                     null
