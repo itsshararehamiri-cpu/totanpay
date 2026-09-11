@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -38,9 +39,10 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.totanpay.R
 import com.example.totanpay.data.util.isNotNumber
-import com.example.totanpay.ui.TextInputModifier
 import com.example.totanpay.ui.component.ShowToast
 import com.example.totanpay.ui.component.TextInput
+import com.example.totanpay.ui.theme.END_PADDING
+import com.example.totanpay.ui.theme.START_PADDING
 
 @Composable
 fun MainBillScreen(
@@ -84,17 +86,17 @@ fun MainBillScreen(
                 val fieldsRow = createRefFor("fieldsRow")
 
                 constrain(scan) {
-                    top.linkTo(parent.top, 24.dp)
+                    top.linkTo(parent.top, 14.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
                 constrain(title) {
-                    top.linkTo(scan.bottom, 8.dp)
+                    top.linkTo(scan.bottom, 6.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
                 constrain(fieldsRow) {
-                    top.linkTo(title.bottom, 10.dp)
+                    top.linkTo(title.bottom, 8.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                     width = Dimension.fillToConstraints
@@ -145,9 +147,11 @@ fun MainBillScreen(
                     .layoutId("fieldsRow")
             ) {
                 TextInput(
-                    modifier = TextInputModifier
-                        .focusRequester(billIdFocusRequester)
-                        .fillMaxWidth(),
+                    modifier = Modifier
+                        .padding(start = END_PADDING, end = START_PADDING)
+                        .fillMaxWidth()
+                        .wrapContentHeight()
+                        .focusRequester(billIdFocusRequester),
                     hasError = billIdHasError, errorMessage = billIdError,
                     title = "",
                     placeholder = stringResource(id = R.string.bill_id),
@@ -159,9 +163,10 @@ fun MainBillScreen(
                         focusManager.moveFocus(FocusDirection.Next)
                     })
                 TextInput(
-                    modifier = TextInputModifier
+                    modifier = Modifier
+                        .padding(start = END_PADDING, end = START_PADDING, top = 8.dp)
                         .fillMaxWidth()
-                        .padding(top = 10.dp),
+                        .wrapContentHeight(),
                     hasError = payIdHasError, errorMessage = payIdError,
                     title = "",
                     placeholder = stringResource(id = R.string.payment_id),

@@ -435,7 +435,7 @@ fun AddPurchaseId(
             .fillMaxWidth(),
     ) {
         Text(
-            text = stringResource(R.string.payment_id),
+            text = stringResource(R.string.purchase_id_label),
             modifier = Modifier
                 .wrapContentWidth()
                 .padding(end = if (isPaperReceipt) 0.dp else PADDING_SIDE_ROW_RECEIPT)

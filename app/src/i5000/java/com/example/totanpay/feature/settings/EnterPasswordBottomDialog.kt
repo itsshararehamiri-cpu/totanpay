@@ -259,40 +259,42 @@ fun CustomReceivedCodeDigitPlacement2(
             )
         )
     }
-    OutlinedTextField(
-        value = textFieldValueState,
-        onValueChange = {
-            if (it.text.isEmpty()) {
-                textFieldValueState = TextFieldValue("")
-                onValueChange("")
-            } else if (it.text.length <= 1) {
-                textFieldValueState = TextFieldValue("*", selection = TextRange(value.length))
-                onValueChange(it.text)
-            }
-        },
-        singleLine = true,
-        modifier = modifier
-            .size(56.dp),
-        colors = TextFieldDefaults.colors().copy(
-            disabledTextColor = Color.Gray,
-            disabledContainerColor = Color.White,
-            cursorColor = Color.Blue,
-            errorCursorColor = Color.Red
-        ),
-        textStyle = MaterialTheme.typography.bodyLarge.copy(
-            textDirection = TextDirection.Ltr,
-            color = Color.Black,
-            fontWeight = FontWeight.Medium,
-           textAlign = TextAlign.Center
-        ), keyboardOptions = KeyboardOptions.Default.copy(
-            keyboardType = KeyboardType.Number,
-            imeAction = ImeAction.Done
-        ),
-        keyboardActions = KeyboardActions(onNext = {
+    CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
+        OutlinedTextField(
+            value = textFieldValueState,
+            onValueChange = {
+                if (it.text.isEmpty()) {
+                    textFieldValueState = TextFieldValue("")
+                    onValueChange("")
+                } else if (it.text.length <= 1) {
+                    textFieldValueState = TextFieldValue("*", selection = TextRange(value.length))
+                    onValueChange(it.text)
+                }
+            },
+            singleLine = true,
+            modifier = modifier
+                .size(56.dp),
+            colors = TextFieldDefaults.colors().copy(
+                disabledTextColor = Color.Gray,
+                disabledContainerColor = Color.White,
+                cursorColor = Color.Blue,
+                errorCursorColor = Color.Red
+            ),
+            textStyle = MaterialTheme.typography.bodyLarge.copy(
+                textDirection = TextDirection.Ltr,
+                color = Color.Black,
+                fontWeight = FontWeight.Medium,
+               textAlign = TextAlign.Center
+            ), keyboardOptions = KeyboardOptions.Default.copy(
+                keyboardType = KeyboardType.Number,
+                imeAction = ImeAction.Done
+            ),
+            keyboardActions = KeyboardActions(onNext = {
 
-        }, onDone = {
-            onDone()
-        })
-    )
+            }, onDone = {
+                onDone()
+            })
+        )
+    }
 
 }

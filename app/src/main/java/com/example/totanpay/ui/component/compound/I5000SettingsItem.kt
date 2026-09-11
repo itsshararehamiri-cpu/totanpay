@@ -21,7 +21,7 @@ import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.example.totanpay.LocalLanguageState
 import com.example.totanpay.R
-import com.example.totanpay.ui.theme.FONT_SIZE_14
+import com.example.totanpay.ui.theme.FONT_SIZE_16
 
 @Composable
 fun I5000SettingsItem(
@@ -29,7 +29,7 @@ fun I5000SettingsItem(
     iconImageId: Int?,
     title: String,
     textColor: androidx.compose.ui.graphics.Color = MaterialTheme.colorScheme.onSurface,
-    height: Dp = 44.dp,
+    height: Dp = 56.dp,
     onItemClicked: () -> Unit
 ) {
     val isRtl = LocalLanguageState.current.isFarsiSelected.value
@@ -45,16 +45,16 @@ fun I5000SettingsItem(
             Image(
                 painter = painterResource(id = iconImageId),
                 contentDescription = "",
-                modifier = Modifier.size(20.dp),
+                modifier = Modifier.size(24.dp),
                 contentScale = ContentScale.Fit
             )
-            Spacer(modifier = Modifier.width(10.dp))
+            Spacer(modifier = Modifier.width(12.dp))
         }
         Text(
             text = title,
             color = textColor,
             style = MaterialTheme.typography.bodyMedium.copy(
-                fontSize = FONT_SIZE_14,
+                fontSize = FONT_SIZE_16,
                 fontWeight = FontWeight.SemiBold
             ),
             modifier = Modifier.weight(1f)
@@ -64,7 +64,7 @@ fun I5000SettingsItem(
                 id = if (isRtl) R.drawable.ic_arrow_left_gray else R.drawable.ic_arrow_right
             ),
             contentDescription = "",
-            modifier = Modifier.size(14.dp)
+            modifier = Modifier.size(16.dp)
         )
     }
 }

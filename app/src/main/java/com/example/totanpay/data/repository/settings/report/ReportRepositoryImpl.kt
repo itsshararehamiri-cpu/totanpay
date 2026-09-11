@@ -61,40 +61,29 @@ class ReportRepositoryImpl @Inject constructor(
         selectedTransactions: String?
     ): List<ResponseTransaction>? {
         return withContext(ioDispatcher) {
-            val jsonObject = JSONObject(selectedTransactions)
-            val purchaseIsSelected = jsonObject.getString("purchaseType") == "has"
-            val billPayIsSelected = jsonObject.getString("billPayType") == "has"
-            val voucherIsSelected = jsonObject.getString("voucherType") == "has"
-            val topUpIsSelected = jsonObject.getString("topupType") == "has"
-            var toAmountTemp = "-1"
-            if (toAmount == "-1") toAmountTemp =
-                dataSource.getMaximumAmountOfTransactions().toString()
-            else toAmountTemp =
-                if (toAmount.isNullOrEmpty()) dataSource.getMaximumAmountOfTransactions()
-                    .toString() else toAmount
-            val detailsTransactions =
-                if (fromDate != null && toDate != null && !fromAmount.isNullOrEmpty() && !toAmount.isNullOrEmpty() && !selectedTransactions.isNullOrEmpty()) dataSource.getDetailsTransaction(
-                    fromDate = ((fromDate.time / 1000)..(toDate.time / 1000)).first,
-                    toDate = ((fromDate.time / 1000)..(toDate.time / 1000)).last,
-                    fromAmount = fromAmount,
-                    toAmount = toAmountTemp,
-                    purchaseIsSelected = purchaseIsSelected,
-                    voucherIsSelected = voucherIsSelected,
-                    topupIsSelected = topUpIsSelected,
-                    billPayIsSelected = billPayIsSelected
-                )
-                else {
-                    dataSource.getDetailsTransaction(
-                        fromDate = ((fromDate!!.time / 1000)..(toDate!!.time / 1000)).first,
-                        toDate = ((fromDate.time / 1000)..(toDate.time / 1000)).last,
-                        fromAmount = fromAmount!!,
-                        toAmount = toAmount!!,
-                        purchaseIsSelected = purchaseIsSelected,
-                        voucherIsSelected = voucherIsSelected,
-                        topupIsSelected = topUpIsSelected,
-                        billPayIsSelected = billPayIsSelected
-                    )
-                }
+            val jsonObject = selectedTransactions?.takeIf { it.isNotEmpty() }?.let { JSONObject(it) }
+            val purchaseIsSelected = jsonObject?.optString("purchaseType") != "dontHas"
+            val billPayIsSelected = jsonObject?.optString("billPayType") != "dontHas"
+            val voucherIsSelected = jsonObject?.optString("voucherType") != "dontHas"
+            val topUpIsSelected = jsonObject?.optString("topupType") != "dontHas"
+
+            val fromAmountValue = fromAmount.takeUnless { it.isNullOrEmpty() || it == "-1" } ?: "0"
+            val toAmountValue = toAmount.takeUnless { it.isNullOrEmpty() || it == "-1" }
+                ?: dataSource.getMaximumAmountOfTransactions().toString()
+
+            val fromDateSeconds = fromDate?.let { it.time / 1000 } ?: 0L
+            val toDateSeconds = toDate?.let { it.time / 1000 } ?: (System.currentTimeMillis() / 1000)
+
+            val detailsTransactions = dataSource.getDetailsTransaction(
+                fromDate = minOf(fromDateSeconds, toDateSeconds),
+                toDate = maxOf(fromDateSeconds, toDateSeconds),
+                fromAmount = fromAmountValue,
+                toAmount = toAmountValue,
+                purchaseIsSelected = purchaseIsSelected,
+                voucherIsSelected = voucherIsSelected,
+                topupIsSelected = topUpIsSelected,
+                billPayIsSelected = billPayIsSelected
+            )
             detailsTransactions?.map {
                 it.toResponseTransaction()
             }?.map {

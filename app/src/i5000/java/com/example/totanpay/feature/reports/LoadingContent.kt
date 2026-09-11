@@ -34,6 +34,8 @@ import com.example.totanpay.R
 import com.example.totanpay.common.BackButtonModifier
 import com.example.totanpay.common.receipt.AddNumberOfAllTransactions
 import com.example.totanpay.common.receipt.AddSumOfAllTransactions
+import com.example.totanpay.data.repository.datasource.transaction.TransactionType
+import com.example.totanpay.data.util.formatAmount
 import com.example.totanpay.ui.component.ShowToast
 import com.example.totanpay.ui.component.button.BackButton
 import com.example.totanpay.ui.component.button.PrintButton
@@ -42,6 +44,22 @@ import com.example.totanpay.ui.component.report.HeaderRow
 import com.example.totanpay.ui.theme.Dimensions.BUTTON_HEIGHT
 import com.example.totanpay.ui.theme.Dimensions.LOADING_HEIGHT
 import com.example.totanpay.ui.theme.TotanPayTheme
+import org.json.JSONObject
+
+private fun selectedTransactionTypesOf(json: String): List<TransactionType> {
+    if (json.isEmpty()) return emptyList()
+    return try {
+        val obj = JSONObject(json)
+        buildList {
+            if (obj.optString("purchaseType") == "has") add(TransactionType.PURCHASE)
+            if (obj.optString("billPayType") == "has") add(TransactionType.BILL_PAY)
+            if (obj.optString("voucherType") == "has") add(TransactionType.VOUCHER)
+            if (obj.optString("topupType") == "has") add(TransactionType.TOPUP)
+        }
+    } catch (e: Exception) {
+        emptyList()
+    }
+}
 
 @Composable
 fun LoadingContent(
@@ -61,6 +79,7 @@ fun LoadingContent(
                 val inProcessing = createRefFor("inProcessing")
                 val list = createRefFor("list")
                 val toolBar = createRefFor("toolBar")
+                val filterSummary = createRefFor("filterSummary")
                 val header = createRefFor("header")
                 val notFound = createRefFor("notFound")
                 val printSum = createRefFor("printSum")
@@ -84,8 +103,14 @@ fun LoadingContent(
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
-                constrain(header) {
+                constrain(filterSummary) {
                     top.linkTo(toolBar.bottom)
+                    end.linkTo(parent.end)
+                    start.linkTo(parent.start)
+                    width = Dimension.fillToConstraints
+                }
+                constrain(header) {
+                    top.linkTo(filterSummary.bottom)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
@@ -103,7 +128,7 @@ fun LoadingContent(
                     start.linkTo(parent.start)
                 }
                 constrain(sumOfTransactions) {
-                    top.linkTo(toolBar.bottom, 20.dp)
+                    top.linkTo(filterSummary.bottom, 20.dp)
                     end.linkTo(parent.end, 12.dp)
                     start.linkTo(parent.start, 12.dp)
                     width = Dimension.fillToConstraints
@@ -184,6 +209,43 @@ fun LoadingContent(
                             .layoutId("toolBar")
                     ) {
                         onBackClicked()
+                    }
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .layoutId("filterSummary")
+                    ) {
+                        val types = selectedTransactionTypesOf(uiState.selectedTransactionTypes)
+                        val typesLabel = types.joinToString("، ") { stringResource(it.title) }
+                        val hasDateFilter = uiState.fromDate.isNotEmpty() && uiState.toDate.isNotEmpty()
+                        val hasAmountFilter = (uiState.fromAmount.isNotEmpty() && uiState.fromAmount != "0") ||
+                                (uiState.toAmount.isNotEmpty() && uiState.toAmount != "-1")
+                        if (typesLabel.isNotEmpty() || hasDateFilter || hasAmountFilter) {
+                            androidx.compose.foundation.layout.Column(
+                                modifier = Modifier
+                                    .fillMaxWidth()
+                                    .padding(horizontal = 12.dp, vertical = 6.dp)
+                            ) {
+                                if (typesLabel.isNotEmpty())
+                                    Text(
+                                        text = "${stringResource(id = R.string.transaction_type)}: $typesLabel",
+                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                                        style = MaterialTheme.typography.labelMedium
+                                    )
+                                if (hasDateFilter)
+                                    Text(
+                                        text = "${stringResource(id = R.string.from_date)} ${uiState.fromDate} ${stringResource(id = R.string.to_date)} ${uiState.toDate}",
+                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                                        style = MaterialTheme.typography.labelMedium
+                                    )
+                                if (hasAmountFilter)
+                                    Text(
+                                        text = "${stringResource(id = R.string.from_amount)} ${uiState.fromAmount.formatAmount()} ${stringResource(id = R.string.to_amount)} ${uiState.toAmount.formatAmount()}",
+                                        color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
+                                        style = MaterialTheme.typography.labelMedium
+                                    )
+                            }
+                        }
                     }
                     if (showDetails) {
                         HeaderRow(

@@ -36,7 +36,7 @@ import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
 import com.example.totanpay.R
 import com.example.totanpay.ui.component.compound.I5000SettingsItem
-import com.example.totanpay.ui.theme.FONT_SIZE_14
+import com.example.totanpay.ui.theme.FONT_SIZE_16
 import com.example.totanpay.ui.theme.Green50
 
 @Composable
@@ -75,17 +75,17 @@ fun MerchantSettingsContent(
                     start.linkTo(parent.start)
                 }
                 constrain(printerSettings) {
-                    top.linkTo(a.bottom, 2.dp)
+                    top.linkTo(a.bottom, 10.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
                 constrain(changeMerchantPassword) {
-                    top.linkTo(printerSettings.bottom, 2.dp)
+                    top.linkTo(printerSettings.bottom, 10.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
                 constrain(enableAndDisableVoice) {
-                    top.linkTo(changeMerchantPassword.bottom, 2.dp)
+                    top.linkTo(changeMerchantPassword.bottom, 10.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
@@ -96,7 +96,7 @@ fun MerchantSettingsContent(
 //                    width = Dimension.fillToConstraints
 //                }
                 constrain(chooseTheme) {
-                    top.linkTo(enableAndDisableVoice.bottom, 2.dp)
+                    top.linkTo(enableAndDisableVoice.bottom, 10.dp)
                     end.linkTo(enableAndDisableVoice.end)
                     start.linkTo(enableAndDisableVoice.start)
                     width = Dimension.fillToConstraints
@@ -113,7 +113,7 @@ fun MerchantSettingsContent(
                 modifier = Modifier.layoutId("a"),
                 iconImageId = R.drawable.ic_i5000_account_management,
                 title = stringResource(id = R.string.account_management),
-                height = 36.dp
+                height = 52.dp
             ) {
                 onA()
             }
@@ -121,7 +121,7 @@ fun MerchantSettingsContent(
                 modifier = Modifier.layoutId("printerSettings"),
                 iconImageId = R.drawable.ic_i5000_print_settings,
                 title = stringResource(id = R.string.printer_settings),
-                height = 36.dp
+                height = 52.dp
             ) {
                 onPrinterSettings()
             }
@@ -129,7 +129,7 @@ fun MerchantSettingsContent(
                 modifier = Modifier.layoutId("changeMerchantPassword"),
                 iconImageId = R.drawable.ic_i5000_chane_password,
                 title = stringResource(id = R.string.change_merchant_password),
-                height = 36.dp
+                height = 52.dp
             ) {
                 onChangeMerchantPassword()
 
@@ -138,7 +138,7 @@ fun MerchantSettingsContent(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(36.dp)
+                    .height(52.dp)
                     .background(Color.White)
                     .padding(horizontal = 12.dp)
                     .layoutId("enableAndDisableVoice"), contentAlignment = Alignment.Center
@@ -152,7 +152,7 @@ fun MerchantSettingsContent(
                     Image(
                         painter = painterResource(id = R.drawable.ic_i5000_enable_voice),
                         contentDescription = "",
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(24.dp),
                         contentScale = ContentScale.Fit
                     )
 
@@ -163,7 +163,7 @@ fun MerchantSettingsContent(
                             .weight(1f),
                         color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = FONT_SIZE_14,
+                            fontSize = FONT_SIZE_16,
                             fontWeight = FontWeight.SemiBold
                         )
 
@@ -185,7 +185,7 @@ fun MerchantSettingsContent(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(36.dp)
+                    .height(52.dp)
                     .background(Color.White)
                     .padding(horizontal = 12.dp)
                     .layoutId("chooseTheme"), contentAlignment = Alignment.Center
@@ -199,7 +199,7 @@ fun MerchantSettingsContent(
                     Image(
                         painter = painterResource(id = R.drawable.ic_i5000_light_mode),
                         contentDescription = "",
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(24.dp),
                         contentScale = ContentScale.Fit)
 
                     Text(
@@ -209,7 +209,7 @@ fun MerchantSettingsContent(
                             .weight(1f),
                         color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = FONT_SIZE_14,
+                            fontSize = FONT_SIZE_16,
                             fontWeight = FontWeight.SemiBold
                         )
 

@@ -95,7 +95,7 @@ fun TextInput(
                             style = MaterialTheme.typography.bodyMedium.copy(
                                 textDirection = TextDirection.Ltr
                             ),
-                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
                         )
                     }
                 } else null

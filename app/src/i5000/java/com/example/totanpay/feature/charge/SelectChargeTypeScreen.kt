@@ -153,6 +153,7 @@ fun SelectChargeTypeScreen(
                     },
                     onVoucherSelected = {
                         isTopUpSelected = false
+                        onConfirm(false, null)
                     })
                 if (isTopUpSelected)
                     MobileTextInput(

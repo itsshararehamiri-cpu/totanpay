@@ -35,7 +35,7 @@ import androidx.compose.ui.unit.dp
 import com.example.totanpay.R
 import com.example.totanpay.ui.component.HorizontalDivider
 import com.example.totanpay.ui.component.compound.I5000SettingsItem
-import com.example.totanpay.ui.theme.FONT_SIZE_14
+import com.example.totanpay.ui.theme.FONT_SIZE_16
 import com.example.totanpay.ui.theme.Green50
 
 @Composable
@@ -79,7 +79,7 @@ fun SettingsContent(isFarsiSelected: Boolean,
                     showSupervisorPasswordDialog = true
                 }
                 HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 12.dp),
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                     isPaperReceipt = false
                 )
                 I5000SettingsItem(
@@ -90,7 +90,7 @@ fun SettingsContent(isFarsiSelected: Boolean,
                     showMerchantPasswordDialog = true
                 }
                 HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 12.dp),
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                     isPaperReceipt = false
                 )
                 I5000SettingsItem(
@@ -101,7 +101,7 @@ fun SettingsContent(isFarsiSelected: Boolean,
                     showReportPasswordDialog = true
                 }
                 HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 12.dp),
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                     isPaperReceipt = false
                 )
                 I5000SettingsItem(
@@ -114,13 +114,13 @@ fun SettingsContent(isFarsiSelected: Boolean,
                     context.startActivity(intent)
                 }
                 HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 12.dp),
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                     isPaperReceipt = false
                 )
                 Row(
                     Modifier
                         .fillMaxWidth()
-                        .height(44.dp)
+                        .height(56.dp)
                         .background(Color.White)
                         .padding(horizontal = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
@@ -128,7 +128,7 @@ fun SettingsContent(isFarsiSelected: Boolean,
                     Image(
                         painter = painterResource(id = R.drawable.ic_moon),
                         contentDescription = "",
-                        modifier = Modifier.size(20.dp),
+                        modifier = Modifier.size(24.dp),
                         colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onSecondary)
                     )
                     Text(
@@ -136,7 +136,7 @@ fun SettingsContent(isFarsiSelected: Boolean,
                         modifier = Modifier.padding(start = 10.dp).weight(1f),
                         color = MaterialTheme.colorScheme.onSurface,
                         style = MaterialTheme.typography.bodyMedium.copy(
-                            fontSize = FONT_SIZE_14,
+                            fontSize = FONT_SIZE_16,
                             fontWeight = FontWeight.SemiBold
                         )
                     )
@@ -152,7 +152,7 @@ fun SettingsContent(isFarsiSelected: Boolean,
                     )
                 }
                 HorizontalDivider(
-                    modifier = Modifier.padding(horizontal = 12.dp),
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp),
                     isPaperReceipt = false
                 )
                 I5000SettingsItem(

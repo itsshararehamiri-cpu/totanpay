@@ -212,7 +212,7 @@ fun ReadCardContent(
                         style = MaterialTheme.typography.titleMedium.copy(fontWeight = FontWeight.SemiBold)
                     )
                     Text(
-                        text = "1440".formatAmount(),
+                        text = "1800".formatAmount(),
                         color = MaterialTheme.colorScheme.onBackground,
                         modifier = Modifier,
                         style = MaterialTheme.typography.displaySmall.copy(fontWeight = FontWeight.ExtraBold)

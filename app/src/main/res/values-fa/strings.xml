@@ -76,6 +76,7 @@
 
     <string name="bill_id">شناسه قبض</string>
     <string name="payment_id">شناسه پرداخت</string>
+    <string name="purchase_id_label">شناسه خرید</string>
     <string name="enter_bill_and_payment_id">شناسه قبض و پرداخت را وارد کنید</string>
     <string name="in_bill_inquery">در حال استعلام قبض</string>
     <string name="bill_inquery">استعلام قبض</string>

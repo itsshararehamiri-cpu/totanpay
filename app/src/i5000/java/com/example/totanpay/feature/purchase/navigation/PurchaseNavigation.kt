@@ -75,7 +75,23 @@ fun NavGraphBuilder.purchaseNavigation(
                 navController.navigate("read_card?amount=$amount&purchaseId=$it&packageName=$packageName")
             })
         }
-        composable(route = "read_card?amount={amount}&c={purchaseId}&packageName={packageName}") { backStack ->
+        composable(
+            route = "read_card?amount={amount}&purchaseId={purchaseId}&packageName={packageName}",
+            arguments = listOf(
+                navArgument("amount") {
+                    type = NavType.StringType
+                    nullable = false
+                },
+                navArgument("purchaseId") {
+                    type = NavType.StringType
+                    nullable = true
+                },
+                navArgument("packageName") {
+                    type = NavType.StringType
+                    nullable = true
+                }
+            )
+        ) { backStack ->
             val amount = backStack.arguments?.getString("amount") ?: ""
             val purchaseId = backStack.arguments?.getString("purchaseId") ?: ""
             val packageName = backStack.arguments?.getString("packageName")

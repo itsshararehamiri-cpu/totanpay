@@ -55,6 +55,9 @@ class DetailsTransactionViewModel @Inject constructor(
                         ),
                         fromTime = "${fromDate.hour}:${fromDate.minute}",
                         toTime = "${toDate.hour}:${toDate.minute}",
+                        fromAmount = fromAmount ?: "",
+                        toAmount = toAmount ?: "",
+                        selectedTransactionTypes = selectedTransactions ?: "",
                         numberOfTransactions = transactions.size.toString(),
                         sumOfTransactions = transactions.sumOf {transaction->
                             transaction.amount.toLong()
@@ -91,5 +94,8 @@ data class DetailsTransactionUiState(
     val fromDate: String = "",
     val fromTime: String = "",
     val toDate: String = "",
-    val toTime: String = ""
+    val toTime: String = "",
+    val fromAmount: String = "",
+    val toAmount: String = "",
+    val selectedTransactionTypes: String = ""
 )

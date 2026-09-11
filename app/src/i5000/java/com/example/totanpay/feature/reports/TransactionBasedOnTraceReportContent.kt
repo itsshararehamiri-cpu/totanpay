@@ -9,6 +9,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
@@ -46,10 +48,11 @@ import com.example.totanpay.data.util.isNotNumber
 import com.example.totanpay.data.util.toEnglishNumber
 import com.example.totanpay.feature.purchase.ReceiptContent
 import com.example.totanpay.receipt.ReceiptType
-import com.example.totanpay.ui.TextInputModifier
 import com.example.totanpay.ui.component.TextInput
 import com.example.totanpay.ui.component.button.MainButton
 import com.example.totanpay.ui.theme.Dimensions.LOADING_HEIGHT
+import com.example.totanpay.ui.theme.END_PADDING
+import com.example.totanpay.ui.theme.START_PADDING
 import com.example.totanpay.ui.theme.TotanPayTheme
 
 @Composable
@@ -92,7 +95,7 @@ fun TransactionBasedOnTraceReportContent(errorInPrint: String,
                 start.linkTo(parent.start)
             }
             constrain(rrnRadioButton) {
-                top.linkTo(parent.top, 6.dp)
+                top.linkTo(parent.top, 4.dp)
                 end.linkTo(parent.end)
                 start.linkTo(parent.start)
                 width = Dimension.percent(0.5f)
@@ -105,12 +108,12 @@ fun TransactionBasedOnTraceReportContent(errorInPrint: String,
                 width = Dimension.percent(0.5f)
             }
             constrain(traceInputText) {
-                top.linkTo(rrnRadioButton.bottom, 4.dp)
+                top.linkTo(rrnRadioButton.bottom, 2.dp)
                 end.linkTo(parent.end)
                 start.linkTo(parent.start)
             }
             constrain(confirm) {
-                bottom.linkTo(parent.bottom, 8.dp)
+                top.linkTo(traceInputText.bottom, 10.dp)
                 end.linkTo(parent.end)
                 start.linkTo(parent.start)
             }
@@ -180,7 +183,10 @@ fun TransactionBasedOnTraceReportContent(errorInPrint: String,
                 Spacer(modifier = Modifier.fillMaxWidth(1f))
             }
             TextInput(
-                modifier = TextInputModifier
+                modifier = Modifier
+                    .padding(start = END_PADDING, end = START_PADDING, top = 6.dp)
+                    .fillMaxWidth()
+                    .wrapContentHeight()
                     .layoutId("traceInputText"),
                 errorMessage = stringResource(
                     if (traceIsSelected) R.string.plz_enter_trace
@@ -189,6 +195,12 @@ fun TransactionBasedOnTraceReportContent(errorInPrint: String,
                 title = stringResource(id = if (traceIsSelected) R.string.trace else R.string.rrn),
                 value = trace, hasError = hasError, onNextClicked = {
                     keyboard?.hide()
+                    hasError = false
+                    if (trace.isNotEmpty())
+                        onConfirm(trace.trim(), traceIsSelected)
+                    else {
+                        hasError = true
+                    }
                 }, isSmall = isSmall(context = LocalContext.current), onValueChange = {
                     if (!it.trim().toEnglishNumber().isNotNumber())
                         trace = it.trim()
@@ -199,6 +211,7 @@ fun TransactionBasedOnTraceReportContent(errorInPrint: String,
                     .mainButtonModifier(isSmall = isSmall(context = LocalContext.current))
                     .layoutId("confirm")
             ) {
+                keyboard?.hide()
                 hasError = false
                 if (trace.isNotEmpty())
                     onConfirm(trace.trim(), traceIsSelected)

@@ -35,7 +35,7 @@ import com.example.totanpay.ui.component.ShowToast
 import com.example.totanpay.ui.component.compound.I5000SettingsItem
 import com.example.totanpay.ui.component.dialog.MessageDialog
 import com.example.totanpay.ui.component.dialog.SetTaxForChargeDialog
-import com.example.totanpay.ui.theme.FONT_SIZE_14
+import com.example.totanpay.ui.theme.FONT_SIZE_16
 import com.example.totanpay.ui.theme.Green50
 
 @Composable
@@ -81,33 +81,33 @@ fun SupervisorSettingsContent(
                 modifier = Modifier,
                 iconImageId = R.drawable.ic_i5000_connection_settings,
                 title = stringResource(id = R.string.connection_settings),
-                height = 36.dp
+                height = 52.dp
             ) {
                 onConnectionSettingsClicked()
             }
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp), isPaperReceipt = false)
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp), isPaperReceipt = false)
             I5000SettingsItem(
                 modifier = Modifier,
                 iconImageId = R.drawable.ic_i5000_key_injection,
                 title = stringResource(id = R.string.key_injection),
-                height = 36.dp
+                height = 52.dp
             ) {
                 onKeyInjectionSettingsClicked()
             }
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp), isPaperReceipt = false)
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp), isPaperReceipt = false)
             I5000SettingsItem(
                 modifier = Modifier,
                 iconImageId = null,
                 title = stringResource(id = R.string.set_percent_of_tax_irancell_charge),
-                height = 36.dp
+                height = 52.dp
             ) {
                 showSetTaxForIrancellChargeDialog = true
             }
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp), isPaperReceipt = false)
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp), isPaperReceipt = false)
             Row(
                 Modifier
                     .fillMaxWidth()
-                    .height(36.dp)
+                    .height(52.dp)
                     .padding(horizontal = 12.dp),
                 verticalAlignment = Alignment.CenterVertically
             ) {
@@ -115,7 +115,7 @@ fun SupervisorSettingsContent(
                     text = stringResource(id = R.string.enable_mac_on_key_injection),
                     color = MaterialTheme.colorScheme.onSurface,
                     style = MaterialTheme.typography.bodyMedium.copy(
-                        fontSize = FONT_SIZE_14,
+                        fontSize = FONT_SIZE_16,
                         fontWeight = FontWeight.SemiBold
                     ),
                     modifier = Modifier.weight(1f)
@@ -131,21 +131,21 @@ fun SupervisorSettingsContent(
                     )
                 )
             }
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp), isPaperReceipt = false)
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp), isPaperReceipt = false)
             I5000SettingsItem(
                 modifier = Modifier,
                 iconImageId = R.drawable.ic_i5000_configuration_settings,
                 title = stringResource(id = R.string.configuration),
-                height = 36.dp
+                height = 52.dp
             ) {
                 onConfigurationClicked()
             }
-            HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp), isPaperReceipt = false)
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp, vertical = 4.dp), isPaperReceipt = false)
             I5000SettingsItem(
                 modifier = Modifier,
                 iconImageId = null,
                 title = stringResource(id = R.string.get_terminal_info),
-                height = 36.dp
+                height = 52.dp
             ) {
                 onGetTerminalInfoClicked()
             }
