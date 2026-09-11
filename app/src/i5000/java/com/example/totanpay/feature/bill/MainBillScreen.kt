@@ -86,17 +86,17 @@ fun MainBillScreen(
                 val fieldsRow = createRefFor("fieldsRow")
 
                 constrain(scan) {
-                    top.linkTo(parent.top, 14.dp)
+                    top.linkTo(parent.top, 6.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
                 constrain(title) {
-                    top.linkTo(scan.bottom, 6.dp)
+                    top.linkTo(scan.bottom, 4.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
                 constrain(fieldsRow) {
-                    top.linkTo(title.bottom, 8.dp)
+                    top.linkTo(title.bottom, 4.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                     width = Dimension.fillToConstraints
@@ -115,7 +115,7 @@ fun MainBillScreen(
                 Image(
                     painter = painterResource(id = R.drawable.scan__2_),
                     contentDescription = "",
-                    modifier = Modifier.size(60.dp),
+                    modifier = Modifier.size(40.dp),
                     contentScale = ContentScale.FillBounds,
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.outlineVariant)
                 )
@@ -123,7 +123,7 @@ fun MainBillScreen(
                     painter = painterResource(id = R.drawable.scan__1_),
                     contentDescription = "",
                     modifier = Modifier
-                        .size(60.dp)
+                        .size(40.dp)
                         .align(Alignment.Center),
                     contentScale = ContentScale.FillBounds,
                     colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.primary)
@@ -137,7 +137,7 @@ fun MainBillScreen(
                     .layoutId("title"),
                 text = stringResource(id = R.string.enter_bill_and_payment_id),
                 color = MaterialTheme.colorScheme.onBackground,
-                style = MaterialTheme.typography.titleMedium,
+                style = MaterialTheme.typography.titleSmall,
                 textAlign = TextAlign.Center
             )
 
@@ -164,7 +164,7 @@ fun MainBillScreen(
                     })
                 TextInput(
                     modifier = Modifier
-                        .padding(start = END_PADDING, end = START_PADDING, top = 8.dp)
+                        .padding(start = END_PADDING, end = START_PADDING, top = 6.dp)
                         .fillMaxWidth()
                         .wrapContentHeight(),
                     hasError = payIdHasError, errorMessage = payIdError,
