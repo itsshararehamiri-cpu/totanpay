@@ -7,6 +7,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.material3.TextField
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
@@ -30,6 +31,7 @@ fun TextInput(
     modifier: Modifier,
     textInputModifier: Modifier=Modifier,
     title: String,
+    placeholder: String = "",
     value: String,
     hasError: Boolean = false,
     errorMessage: String,
@@ -85,7 +87,18 @@ fun TextInput(
                 textStyle = MaterialTheme.typography.bodyMedium.copy(
                     textDirection = TextDirection.Ltr,
                     color = MaterialTheme.colorScheme.onSurface
-                )
+                ),
+                placeholder = if (placeholder.isNotEmpty()) {
+                    {
+                        Text(
+                            text = placeholder,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                textDirection = TextDirection.Ltr
+                            ),
+                            color = MaterialTheme.colorScheme.onSurfaceVariant
+                        )
+                    }
+                } else null
             )
         }
     }

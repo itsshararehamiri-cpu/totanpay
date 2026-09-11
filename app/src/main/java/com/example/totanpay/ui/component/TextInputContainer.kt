@@ -27,6 +27,7 @@ fun TextInputContainer(
     hasError: Boolean = false,
     errorMessage: String,
     isSmall: Boolean,
+    helperText: String? = null,
     content: @Composable () -> Unit
 ) {
     Column(
@@ -34,7 +35,7 @@ fun TextInputContainer(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.Start
     ) {
-        Text(
+        if (title.isNotEmpty()) Text(
             modifier = Modifier
                 .padding(start = if (isSmall) 10.dp else 5.dp)
                 .fillMaxWidth()
@@ -75,6 +76,19 @@ fun TextInputContainer(
             text = errorMessage,
             style = MaterialTheme.typography.labelSmall,
             color = Red,
+            textAlign = TextAlign.Start
+        )
+        if (!helperText.isNullOrEmpty()) Text(
+            modifier = Modifier
+                .padding(
+                    start = if (isSmall) 8.dp else 5.dp,
+                    top = 5.dp
+                )
+                .fillMaxWidth()
+                .align(Alignment.CenterHorizontally),
+            text = helperText,
+            style = MaterialTheme.typography.labelSmall,
+            color = MaterialTheme.colorScheme.onSurfaceVariant,
             textAlign = TextAlign.Start
         )
     }

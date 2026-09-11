@@ -23,16 +23,19 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.example.totanpay.R
 import com.example.totanpay.data.util.toEnglishNumber
+import com.example.totanpay.ui.component.HorizontalDivider
 import com.example.totanpay.ui.component.Loading
 import com.example.totanpay.ui.component.ShowToast
 import com.example.totanpay.ui.component.compound.I5000SettingsItem
 import com.example.totanpay.ui.component.dialog.MessageDialog
 import com.example.totanpay.ui.component.dialog.SetTaxForChargeDialog
+import com.example.totanpay.ui.theme.FONT_SIZE_14
 import com.example.totanpay.ui.theme.Green50
 
 @Composable
@@ -82,6 +85,7 @@ fun SupervisorSettingsContent(
             ) {
                 onConnectionSettingsClicked()
             }
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp), isPaperReceipt = false)
             I5000SettingsItem(
                 modifier = Modifier,
                 iconImageId = R.drawable.ic_i5000_key_injection,
@@ -90,6 +94,7 @@ fun SupervisorSettingsContent(
             ) {
                 onKeyInjectionSettingsClicked()
             }
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp), isPaperReceipt = false)
             I5000SettingsItem(
                 modifier = Modifier,
                 iconImageId = null,
@@ -98,6 +103,7 @@ fun SupervisorSettingsContent(
             ) {
                 showSetTaxForIrancellChargeDialog = true
             }
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp), isPaperReceipt = false)
             Row(
                 Modifier
                     .fillMaxWidth()
@@ -108,7 +114,10 @@ fun SupervisorSettingsContent(
                 Text(
                     text = stringResource(id = R.string.enable_mac_on_key_injection),
                     color = MaterialTheme.colorScheme.onSurface,
-                    style = MaterialTheme.typography.bodyMedium,
+                    style = MaterialTheme.typography.bodyMedium.copy(
+                        fontSize = FONT_SIZE_14,
+                        fontWeight = FontWeight.SemiBold
+                    ),
                     modifier = Modifier.weight(1f)
                 )
                 Switch(
@@ -122,6 +131,7 @@ fun SupervisorSettingsContent(
                     )
                 )
             }
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp), isPaperReceipt = false)
             I5000SettingsItem(
                 modifier = Modifier,
                 iconImageId = R.drawable.ic_i5000_configuration_settings,
@@ -130,6 +140,7 @@ fun SupervisorSettingsContent(
             ) {
                 onConfigurationClicked()
             }
+            HorizontalDivider(modifier = Modifier.padding(horizontal = 12.dp), isPaperReceipt = false)
             I5000SettingsItem(
                 modifier = Modifier,
                 iconImageId = null,
