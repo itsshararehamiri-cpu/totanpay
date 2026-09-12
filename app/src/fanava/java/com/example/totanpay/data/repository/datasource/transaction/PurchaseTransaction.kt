@@ -1,6 +1,7 @@
 package com.example.totanpay.data.repository.datasource.transaction
 
 
+import android.util.Log
 import com.example.totanpay.R
 import com.example.totanpay.data.repository.datasource.transaction.connection.IConnection
 import com.example.totanpay.data.repository.datasource.transaction.request.PurchaseTransactionRequest
@@ -42,6 +43,8 @@ class PurchaseTransaction(
         get() = true
 
     override suspend fun buildMessage() {
+        Log.d("TAG", "buildMessadge: dddd->${(request as PurchaseTransactionRequest).purchaseId}")
+
         with(sendMessage) {
             mti = "0200"
             processCode = "000000"
@@ -59,6 +62,7 @@ class PurchaseTransaction(
                 setVersion(request.appVersion)
                 setTerminalLanguage(request.terminalLanguage)
                 if (!request.purchaseId.isNullOrEmpty()) {
+                    Log.d("TAG", "buildMessadge: dddd")
                     setPurchaseId(request.purchaseId)
                 }
                 setTerminalConnectionType(request.terminalConnectionType)

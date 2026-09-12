@@ -215,8 +215,9 @@ fun LoadingContent(
                             .fillMaxWidth()
                             .layoutId("filterSummary")
                     ) {
+                        val context=LocalContext.current
                         val types = selectedTransactionTypesOf(uiState.selectedTransactionTypes)
-                        val typesLabel = types.joinToString("، ") { stringResource(it.title) }
+                        val typesLabel = types.joinToString("، ") { context.getString(it.title) }
                         val hasDateFilter = uiState.fromDate.isNotEmpty() && uiState.toDate.isNotEmpty()
                         val hasAmountFilter = (uiState.fromAmount.isNotEmpty() && uiState.fromAmount != "0") ||
                                 (uiState.toAmount.isNotEmpty() && uiState.toAmount != "-1")
