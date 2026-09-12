@@ -86,17 +86,17 @@ fun MainBillScreen(
                 val fieldsRow = createRefFor("fieldsRow")
 
                 constrain(scan) {
-                    top.linkTo(parent.top, 6.dp)
+                    top.linkTo(parent.top, 4.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
                 constrain(title) {
-                    top.linkTo(scan.bottom, 4.dp)
+                    top.linkTo(scan.bottom, 2.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
                 constrain(fieldsRow) {
-                    top.linkTo(title.bottom, 4.dp)
+                    top.linkTo(title.bottom, 2.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                     width = Dimension.fillToConstraints
@@ -155,6 +155,7 @@ fun MainBillScreen(
                     hasError = billIdHasError, errorMessage = billIdError,
                     title = "",
                     placeholder = stringResource(id = R.string.bill_id),
+                    placeholderStyle = MaterialTheme.typography.bodySmall,
                     value = billIdValue, onValueChange = {
                         if (!it.trim().isNotNumber() && it.length <= 13)
                             billIdValue = it
@@ -164,12 +165,13 @@ fun MainBillScreen(
                     })
                 TextInput(
                     modifier = Modifier
-                        .padding(start = END_PADDING, end = START_PADDING, top = 6.dp)
+                        .padding(start = END_PADDING, end = START_PADDING, top = 2.dp)
                         .fillMaxWidth()
                         .wrapContentHeight(),
                     hasError = payIdHasError, errorMessage = payIdError,
                     title = "",
                     placeholder = stringResource(id = R.string.payment_id),
+                    placeholderStyle = MaterialTheme.typography.bodySmall,
                     value = payIdValue, onValueChange = {
                         if (!it.trim().isNotNumber() && it.length <= 13)
                             payIdValue = it

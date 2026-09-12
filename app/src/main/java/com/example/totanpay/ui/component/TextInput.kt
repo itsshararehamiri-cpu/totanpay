@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color.Companion.Transparent
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.TextFieldValue
@@ -32,6 +33,7 @@ fun TextInput(
     textInputModifier: Modifier=Modifier,
     title: String,
     placeholder: String = "",
+    placeholderStyle: TextStyle? = null,
     value: String,
     hasError: Boolean = false,
     errorMessage: String,
@@ -92,7 +94,7 @@ fun TextInput(
                     {
                         Text(
                             text = placeholder,
-                            style = MaterialTheme.typography.bodyMedium.copy(
+                            style = (placeholderStyle ?: MaterialTheme.typography.bodyMedium).copy(
                                 textDirection = TextDirection.Ltr
                             ),
                             color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)

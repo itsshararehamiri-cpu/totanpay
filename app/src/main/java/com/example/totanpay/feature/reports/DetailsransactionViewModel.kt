@@ -43,18 +43,14 @@ class DetailsTransactionViewModel @Inject constructor(
                     it.copy(
                         result = transactions,
                         showProgress = false,
-                        fromDate = getPersianDateFrom(
-                            year = fromDate!!.shYear,
-                            month = fromDate.shMonth,
-                            day = fromDate.shDay
-                        ),
-                        toDate = getPersianDateFrom(
-                            year = toDate!!.shYear,
-                            month = toDate.shMonth,
-                            day = toDate.shDay
-                        ),
-                        fromTime = "${fromDate.hour}:${fromDate.minute}",
-                        toTime = "${toDate.hour}:${toDate.minute}",
+                        fromDate = fromDate?.let {
+                            getPersianDateFrom(year = it.shYear, month = it.shMonth, day = it.shDay)
+                        } ?: "",
+                        toDate = toDate?.let {
+                            getPersianDateFrom(year = it.shYear, month = it.shMonth, day = it.shDay)
+                        } ?: "",
+                        fromTime = fromDate?.let { "${it.hour}:${it.minute}" } ?: "",
+                        toTime = toDate?.let { "${it.hour}:${it.minute}" } ?: "",
                         fromAmount = fromAmount ?: "",
                         toAmount = toAmount ?: "",
                         selectedTransactionTypes = selectedTransactions ?: "",

@@ -73,6 +73,7 @@ fun NavGraphBuilder.chargeNavigation(
             val operator = it.arguments?.getString("selectedOperator") ?: ""
             val isTopUp: Boolean = it.arguments?.getBoolean("isTopUp")!!
             AmountScreen(
+                operator = operator,
                 onConfirm = { amount ->
                     if (isTopUp)
                         navController.navigate("topup_read_card/$amount/$operator/$mobile")

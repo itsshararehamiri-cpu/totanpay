@@ -11,12 +11,13 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.wrapContentHeight
-import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -27,14 +28,17 @@ import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.layoutId
 import com.example.totanpay.R
+import com.example.totanpay.data.Operator
 import com.example.totanpay.ui.ListModifier
 import com.example.totanpay.ui.TextInputModifier
 import com.example.totanpay.ui.component.PriceTextInput
 import com.example.totanpay.ui.component.ShowToast
 import com.example.totanpay.ui.component.button.PriceButton
+import com.google.gson.Gson
 
 @Composable
 fun AmountScreen(
+    operator: String,
     onConfirm: (amount: String) -> Unit,
     onBackButton: () -> Unit
 ) {
@@ -46,9 +50,14 @@ fun AmountScreen(
         mutableStateOf("")
     }
     var showToast by remember { mutableStateOf(false) }
-    val prices: List<String> by remember {
-        mutableStateOf(listOf())
+    val selectedOperator: Operator? = remember(operator) {
+        try {
+            Gson().fromJson(operator, Operator::class.java)
+        } catch (e: Exception) {
+            null
+        }
     }
+    val prices: List<String> = selectedOperator?.chargeList ?: listOf()
     BackHandler {
         onBackButton()
     }
@@ -107,16 +116,19 @@ fun AmountScreen(
                 ) {
                     amountValue = it
                 }
-                LazyRow(
-                    horizontalArrangement = Arrangement.spacedBy(16.dp),
+                LazyColumn(
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                     modifier = ListModifier
                         .layoutId("amounts")
+                        .padding(horizontal = 4.dp)
                 ) {
                     items(prices.size) { item ->
                         PriceButton(
                             selected = (selectedOption == prices[item]),
                             title = prices[item],
-                            modifier = Modifier.height(40.dp)
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(40.dp)
                         ) {
                             selectedOption = it
                             amountValue = it

@@ -235,7 +235,8 @@ fun LoadingContent(
                                     )
                                 if (hasDateFilter)
                                     Text(
-                                        text = "${stringResource(id = R.string.from_date)} ${uiState.fromDate} ${stringResource(id = R.string.to_date)} ${uiState.toDate}",
+                                        text = "${stringResource(id = R.string.from_date)} ${uiState.fromDate} ${uiState.fromTime} " +
+                                                "${stringResource(id = R.string.to_date)} ${uiState.toDate} ${uiState.toTime}",
                                         color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.7f),
                                         style = MaterialTheme.typography.labelMedium
                                     )

@@ -267,7 +267,7 @@ fun CustomReceivedCodeDigitPlacement2(
                     textFieldValueState = TextFieldValue("")
                     onValueChange("")
                 } else if (it.text.length <= 1) {
-                    textFieldValueState = TextFieldValue("*", selection = TextRange(value.length))
+                    textFieldValueState = TextFieldValue("*", selection = TextRange(it.text.length))
                     onValueChange(it.text)
                 }
             },
