@@ -3,11 +3,20 @@ package com.example.totanpay.feature.reports
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -17,9 +26,11 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -34,13 +45,12 @@ import com.example.totanpay.R
 import com.example.totanpay.common.BackButtonModifier
 import com.example.totanpay.common.receipt.AddNumberOfAllTransactions
 import com.example.totanpay.common.receipt.AddSumOfAllTransactions
+import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
 import com.example.totanpay.data.repository.datasource.transaction.TransactionType
 import com.example.totanpay.data.util.formatAmount
 import com.example.totanpay.ui.component.ShowToast
 import com.example.totanpay.ui.component.button.BackButton
 import com.example.totanpay.ui.component.button.PrintButton
-import com.example.totanpay.ui.component.report.DetailsReportOfDayItem
-import com.example.totanpay.ui.component.report.HeaderRow
 import com.example.totanpay.ui.theme.Dimensions.BUTTON_HEIGHT
 import com.example.totanpay.ui.theme.Dimensions.LOADING_HEIGHT
 import com.example.totanpay.ui.theme.TotanPayTheme
@@ -250,25 +260,20 @@ fun LoadingContent(
                         }
                     }
                     if (showDetails) {
-                        HeaderRow(
-                            modifier = Modifier.layoutId("header"),
-                            listOf(
-                                stringResource(id = R.string.transaction_type),
-                                stringResource(id = R.string.amount),
-                                stringResource(id = R.string.trace),
-                                stringResource(id = R.string.time),
-                                stringResource(id = R.string.row1)
-                            ),
-                            isPaperReceipt = false,
-                            textColor = MaterialTheme.colorScheme.onSurface
+                        Text(
+                            text = "${stringResource(id = R.string.details_of_transactions)} (${uiState.numberOfTransactions})",
+                            color = MaterialTheme.colorScheme.onSurface,
+                            style = MaterialTheme.typography.labelLarge,
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(horizontal = 12.dp, vertical = 6.dp)
+                                .layoutId("header")
                         )
-                        DetailsReportOfDayItem(
-                            Modifier
+                        TransactionCardList(
+                            modifier = Modifier
                                 .fillMaxWidth()
                                 .layoutId("list"),
-                            uiState.result,
-                            isPaperReceipt = false,
-                            textColor = MaterialTheme.colorScheme.onSurface,
+                            reports = uiState.result
                         )
                     }
                     if(!showDetails)
@@ -355,6 +360,80 @@ fun LoadingContent(
             ) {
                 onEndShowPrintErrorMessage()
             }
+    }
+}
+
+@Composable
+private fun TransactionCardList(
+    modifier: Modifier,
+    reports: List<ResponseTransaction>
+) {
+    val context = LocalContext.current
+    val groupedTransactions = reports.groupBy { it.date }
+    LazyColumn(
+        modifier = modifier,
+        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        groupedTransactions.forEach { (date, transactions) ->
+            item {
+                Text(
+                    text = date,
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.Medium,
+                    color = MaterialTheme.colorScheme.primary,
+                    modifier = Modifier.padding(top = 4.dp, bottom = 2.dp)
+                )
+            }
+            items(transactions) { transaction ->
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(MaterialTheme.colorScheme.surface)
+                        .border(
+                            1.dp,
+                            MaterialTheme.colorScheme.outlineVariant,
+                            RoundedCornerShape(12.dp)
+                        )
+                        .padding(horizontal = 12.dp, vertical = 8.dp)
+                ) {
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = context.getString(transaction.transactionType),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            color = MaterialTheme.colorScheme.onSurface
+                        )
+                        Text(
+                            text = transaction.amount.formatAmount(),
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = MaterialTheme.colorScheme.primary
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(4.dp))
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween
+                    ) {
+                        Text(
+                            text = "${stringResource(id = R.string.trace)}: ${transaction.trace}",
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                        )
+                        Text(
+                            text = transaction.time,
+                            style = MaterialTheme.typography.labelSmall,
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
+                        )
+                    }
+                }
+            }
+        }
     }
 }
 

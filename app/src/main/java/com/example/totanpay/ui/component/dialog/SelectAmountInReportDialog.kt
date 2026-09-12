@@ -35,6 +35,7 @@ import androidx.constraintlayout.compose.layoutId
 import com.example.totanpay.R
 import com.example.totanpay.ui.TextInputModifier
 import com.example.totanpay.ui.component.PriceTextInput
+import com.example.totanpay.ui.component.button.MainButton
 import com.example.totanpay.ui.theme.END_PADDING
 import com.example.totanpay.ui.theme.START_PADDING
 
@@ -80,6 +81,7 @@ fun SelectAmountInReportDialog(
                 ConstraintSet {
                     val fromAmount = createRefFor("fromAmount")
                     val toAmount = createRefFor("toAmount")
+                    val confirm = createRefFor("confirm")
                     constrain(fromAmount) {
                         top.linkTo(parent.top, 10.dp)
                         end.linkTo(parent.end)
@@ -87,6 +89,11 @@ fun SelectAmountInReportDialog(
                     }
                     constrain(toAmount) {
                         top.linkTo(fromAmount.bottom)
+                        end.linkTo(parent.end)
+                        start.linkTo(parent.start)
+                    }
+                    constrain(confirm) {
+                        top.linkTo(toAmount.bottom, 16.dp)
                         end.linkTo(parent.end)
                         start.linkTo(parent.start)
                     }
@@ -127,6 +134,16 @@ fun SelectAmountInReportDialog(
                     }
                 ) {
                     toAmountValue = it
+                }
+                MainButton(
+                    modifier = Modifier
+                        .padding(horizontal = END_PADDING, vertical = 6.dp)
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .layoutId("confirm")
+                ) {
+                    keyboard?.hide()
+                    confirmAmount(fromAmountValue, toAmountValue)
                 }
             }
         }

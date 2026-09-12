@@ -39,6 +39,7 @@ import androidx.constraintlayout.compose.Dimension
 import androidx.constraintlayout.compose.layoutId
 import com.example.totanpay.R
 import com.example.totanpay.feature.reports.DateContainer
+import com.example.totanpay.ui.component.button.MainButton
 import com.example.totanpay.ui.component.report.SelectDateTime
 import com.example.totanpay.ui.getPersianDateFrom
 import com.example.totanpay.ui.selectedDateIsSmallerOrEqualThanCurrenDate
@@ -98,6 +99,25 @@ fun SelectDateTimeInReportDialog(
     val focusRequester = remember { FocusRequester() }
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
+    }
+    fun confirmSelection() {
+        val temp = DateContainer(
+            rememberDialogFromDatePicker.getPersianYear().toString(),
+            rememberDialogFromDatePicker.getPersianMonth().toString(),
+            rememberDialogFromDatePicker.getPersianDay().toString(),
+            hour = fromTimeValue.dropLast(3),
+            minute = fromTimeValue.drop(3)
+        )
+        val from = Gson().toJson(temp)
+        val tt = DateContainer(
+            rememberDialogToDatePicker.getPersianYear().toString(),
+            rememberDialogToDatePicker.getPersianMonth().toString(),
+            rememberDialogToDatePicker.getPersianDay().toString(),
+            hour = toTimeValue.dropLast(3),
+            minute = toTimeValue.drop(3)
+        )
+        val to = Gson().toJson(tt)
+        confirmDateTime(from, to)
     }
     LaunchedEffect(Unit) {
         rememberDialogFromDatePicker.updateDate(date = Date())
@@ -161,28 +181,7 @@ fun SelectDateTimeInReportDialog(
                 .onKeyEvent { keyEvent ->
                     if (keyEvent.type == KeyEventType.KeyDown) {
                         if (keyEvent.key == Key.Enter) {
-                            val temp = DateContainer(
-                                rememberDialogFromDatePicker.getPersianYear().toString(),
-                                rememberDialogFromDatePicker.getPersianMonth().toString(),
-                                rememberDialogFromDatePicker.getPersianDay().toString(),
-                                hour = fromTimeValue.dropLast(3),
-                                minute = fromTimeValue.drop(3)
-                            )
-                            val from = Gson().toJson(temp)
-                            val tt = DateContainer(
-                                rememberDialogToDatePicker.getPersianYear().toString(),
-                                rememberDialogToDatePicker.getPersianMonth().toString(),
-                                rememberDialogToDatePicker.getPersianDay().toString(),
-                                hour = toTimeValue.dropLast(3),
-                                minute = toTimeValue.drop(3)
-                                //second = 0
-                            )
-                            val to = Gson().toJson(tt)
-
-                            confirmDateTime(
-                                from, to
-
-                            )
+                            confirmSelection()
                             true
                         } else {
                             false
@@ -199,6 +198,7 @@ fun SelectDateTimeInReportDialog(
                     val toDate = createRefFor("toDate")
                     val fromTime = createRefFor("fromTime")
                     val toTime = createRefFor("toTime")
+                    val confirm = createRefFor("confirm")
                     constrain(fromDate) {
                         top.linkTo(parent.top, 10.dp)
                         end.linkTo(fromTime.start)
@@ -224,6 +224,11 @@ fun SelectDateTimeInReportDialog(
                         end.linkTo(fromTime.end)
                         start.linkTo(fromTime.start)
                         width = Dimension.percent(0.40f)
+                    }
+                    constrain(confirm) {
+                        top.linkTo(toDate.bottom, 24.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
                     }
                 }, modifier = Modifier
                     .background(MaterialTheme.colorScheme.surface)
@@ -281,6 +286,15 @@ fun SelectDateTimeInReportDialog(
                     value = toTimeValue
                 ) {
                     showSelectToTime = true
+                }
+                MainButton(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .layoutId("confirm")
+                ) {
+                    confirmSelection()
                 }
             }
 

@@ -4,6 +4,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.MaterialTheme
@@ -33,6 +35,7 @@ import androidx.constraintlayout.compose.layoutId
 import com.example.totanpay.R
 import com.example.totanpay.data.repository.datasource.transaction.TransactionType
 import com.example.totanpay.ui.component.TransactionTypeCheckbox
+import com.example.totanpay.ui.component.button.MainButton
 import org.json.JSONObject
 
 @OptIn(ExperimentalMaterial3Api::class)
@@ -48,6 +51,16 @@ fun SelectTransactionTypeInReport(
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
+    fun confirmSelection() {
+        val transactionType = JSONObject()
+        transactionType.apply {
+            put("purchaseType", if (purchaseIsSelected) "has" else "dontHas")
+            put("billPayType", if (billPayIsSelected) "has" else "dontHas")
+            put("voucherType", if (voucherIsSelected) "has" else "dontHas")
+            put("topupType", if (topUpIsSelected) "has" else "dontHas")
+        }
+        confirmTransactionType(transactionType.toString())
+    }
     ModalBottomSheet(
         onDismissRequest = { onCancelButtonClicked() },
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
@@ -62,17 +75,7 @@ fun SelectTransactionTypeInReport(
                 .onKeyEvent { keyEvent ->
                     if (keyEvent.type == KeyEventType.KeyDown) {
                         if (keyEvent.key == Key.Enter) {
-                            val transactionType = JSONObject()
-                            transactionType.apply {
-                                put("purchaseType", if (purchaseIsSelected) "has" else "dontHas")
-                                put("billPayType", if (billPayIsSelected) "has" else "dontHas")
-                                put("voucherType", if (voucherIsSelected) "has" else "dontHas")
-                                put("topupType", if (topUpIsSelected) "has" else "dontHas")
-                            }
-                            confirmTransactionType(
-                                transactionType.toString()
-
-                            )
+                            confirmSelection()
                             true
                         } else {
                             false
@@ -89,6 +92,7 @@ fun SelectTransactionTypeInReport(
                     val billPay = createRefFor("billPay")
                     val voucher = createRefFor("voucher")
                     val topup = createRefFor("topup")
+                    val confirm = createRefFor("confirm")
                     constrain(transactionTypeTitle) {
                         top.linkTo(parent.top)
                         start.linkTo(parent.start)
@@ -110,6 +114,11 @@ fun SelectTransactionTypeInReport(
                         top.linkTo(voucher.top)
                         bottom.linkTo(voucher.bottom)
                         start.linkTo(topup.start)
+                    }
+                    constrain(confirm) {
+                        top.linkTo(voucher.bottom, 24.dp)
+                        start.linkTo(parent.start)
+                        end.linkTo(parent.end)
                     }
                 }, modifier = Modifier
                     .fillMaxSize()
@@ -148,6 +157,15 @@ fun SelectTransactionTypeInReport(
                     onCheckedChange = {
                         billPayIsSelected = it
                     })
+                MainButton(
+                    modifier = Modifier
+                        .padding(horizontal = 16.dp)
+                        .fillMaxWidth()
+                        .height(50.dp)
+                        .layoutId("confirm")
+                ) {
+                    confirmSelection()
+                }
             }
         }
     }

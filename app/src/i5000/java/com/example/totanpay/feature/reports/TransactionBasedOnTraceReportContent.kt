@@ -15,6 +15,8 @@ import androidx.compose.foundation.layout.wrapContentHeight
 import androidx.compose.foundation.layout.wrapContentWidth
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material3.CompositionLocalProvider
+import androidx.compose.material3.LocalMinimumInteractiveComponentSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.RadioButtonDefaults
@@ -149,7 +151,7 @@ fun TransactionBasedOnTraceReportContent(errorInPrint: String,
                 start.linkTo(parent.start)
             }
             constrain(confirm) {
-                top.linkTo(traceInputText.bottom, 10.dp)
+                top.linkTo(traceInputText.bottom, 6.dp)
                 end.linkTo(parent.end)
                 start.linkTo(parent.start)
             }
@@ -175,53 +177,59 @@ fun TransactionBasedOnTraceReportContent(errorInPrint: String,
     ) {
 
         if (uiState.isInitState) {
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .layoutId("rrnRadioButton"),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                RadioButton(
-                    selected = traceIsSelected, onClick = {
-                        traceIsSelected = true
-                    }, colors = RadioButtonDefaults.colors(
-                        selectedColor = MaterialTheme.colorScheme.primary,
-                        unselectedColor = Color.Gray
+            CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides 0.dp) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .layoutId("rrnRadioButton"),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = traceIsSelected, onClick = {
+                            traceIsSelected = true
+                        }, colors = RadioButtonDefaults.colors(
+                            selectedColor = MaterialTheme.colorScheme.primary,
+                            unselectedColor = Color.Gray
+                        )
                     )
-                )
-                Text(
-                    modifier = Modifier.wrapContentWidth(),
-                    text = stringResource(R.string.trace),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Spacer(modifier = Modifier.fillMaxWidth(1f))
-            }
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .layoutId("traceRadioButton"),
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                RadioButton(
-                    selected = !traceIsSelected, onClick = {
-                        traceIsSelected = false
-                    }, colors = RadioButtonDefaults.colors(
-                        selectedColor = MaterialTheme.colorScheme.primary,
-                        unselectedColor = Color.Gray
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 4.dp)
+                            .wrapContentWidth(),
+                        text = stringResource(R.string.trace),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurface
                     )
-                )
-                Text(
-                    modifier = Modifier.wrapContentWidth(),
-                    text = stringResource(R.string.rrn),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = MaterialTheme.colorScheme.onSurface
-                )
-                Spacer(modifier = Modifier.fillMaxWidth(1f))
+                    Spacer(modifier = Modifier.fillMaxWidth(1f))
+                }
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .layoutId("traceRadioButton"),
+                    verticalAlignment = Alignment.CenterVertically
+                ) {
+                    RadioButton(
+                        selected = !traceIsSelected, onClick = {
+                            traceIsSelected = false
+                        }, colors = RadioButtonDefaults.colors(
+                            selectedColor = MaterialTheme.colorScheme.primary,
+                            unselectedColor = Color.Gray
+                        )
+                    )
+                    Text(
+                        modifier = Modifier
+                            .padding(start = 4.dp)
+                            .wrapContentWidth(),
+                        text = stringResource(R.string.rrn),
+                        style = MaterialTheme.typography.labelMedium,
+                        color = MaterialTheme.colorScheme.onSurface
+                    )
+                    Spacer(modifier = Modifier.fillMaxWidth(1f))
+                }
             }
             TextInput(
                 modifier = Modifier
-                    .padding(start = END_PADDING, end = START_PADDING, top = 6.dp)
+                    .padding(start = END_PADDING, end = START_PADDING, top = 2.dp)
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .layoutId("traceInputText"),

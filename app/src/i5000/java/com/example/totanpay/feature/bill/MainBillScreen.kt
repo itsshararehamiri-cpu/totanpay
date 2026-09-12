@@ -86,7 +86,7 @@ fun MainBillScreen(
                 val fieldsRow = createRefFor("fieldsRow")
 
                 constrain(scan) {
-                    top.linkTo(parent.top, 4.dp)
+                    top.linkTo(parent.top, 40.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
