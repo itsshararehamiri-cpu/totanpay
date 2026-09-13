@@ -27,15 +27,12 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.example.totanpay.R
-import com.example.totanpay.common.BackButtonModifier
 import com.example.totanpay.common.receipt.AddNumberOfAllTransactions
 import com.example.totanpay.common.receipt.AddSumOfAllTransactions
 import com.example.totanpay.ui.PrintButtonModifier
 import com.example.totanpay.ui.component.ShowToast
-import com.example.totanpay.ui.component.button.BackButton
 import com.example.totanpay.ui.component.button.PrintButton
-import com.example.totanpay.ui.component.report.DetailsReportOfDayItem
-import com.example.totanpay.ui.component.report.HeaderRow
+import com.example.totanpay.ui.component.report.TransactionCardCarousel
 import com.example.totanpay.ui.theme.Dimensions.LOADING_HEIGHT
 import com.example.totanpay.ui.theme.TotanPayTheme
 
@@ -54,8 +51,6 @@ fun LoadingContent(
                 val loading = createRefFor("loading")
                 val inProcessing = createRefFor("inProcessing")
                 val list = createRefFor("list")
-                val toolBar = createRefFor("toolBar")
-                val header = createRefFor("header")
                 val notFound = createRefFor("notFound")
                 val printSum = createRefFor("printSum")
                 val printAll = createRefFor("printAll")
@@ -71,25 +66,15 @@ fun LoadingContent(
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
-                constrain(toolBar) {
-                    top.linkTo(parent.top)
-                    end.linkTo(parent.end)
-                    start.linkTo(parent.start)
-                }
-                constrain(header) {
-                    top.linkTo(toolBar.bottom)
-                    end.linkTo(parent.end)
-                    start.linkTo(parent.start)
-                }
                 constrain(list) {
-                    top.linkTo(header.bottom, 0.dp)
+                    top.linkTo(parent.top, 16.dp)
                     bottom.linkTo(numberOfTransactions.top, 16.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                     height = Dimension.fillToConstraints
                 }
                 constrain(notFound) {
-                    top.linkTo(toolBar.bottom)
+                    top.linkTo(parent.top, 16.dp)
                     bottom.linkTo(parent.bottom)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
@@ -155,30 +140,12 @@ fun LoadingContent(
                     style = MaterialTheme.typography.displayMedium
                 )
             } else {
-                BackButton(
-                    title = stringResource(id = R.string.details_of_transactions),
-                    modifier = BackButtonModifier
-                        .layoutId("toolBar")
-                ) {
-                    onBackClicked()
-                }
                 if (!uiState.result.isNullOrEmpty()) {
-                    HeaderRow(
-                        modifier = Modifier.layoutId("header"), listOf(
-                            stringResource(id = R.string.transaction_type),
-                            stringResource(id = R.string.amount),
-                            stringResource(id = R.string.trace),
-                            stringResource(id = R.string.time),
-                            stringResource(id = R.string.row1)
-                        ), isPaperReceipt = false, textColor = MaterialTheme.colorScheme.onSurface
-                    )
-                    DetailsReportOfDayItem(
-                        Modifier
+                    TransactionCardCarousel(
+                        modifier = Modifier
                             .fillMaxWidth()
                             .layoutId("list"),
-                        uiState.result,
-                        isPaperReceipt = false,
-                        textColor = MaterialTheme.colorScheme.onSurface,
+                        reports = uiState.result
                     )
                     AddNumberOfAllTransactions(
                         Modifier

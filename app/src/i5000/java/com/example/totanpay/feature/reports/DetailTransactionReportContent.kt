@@ -4,10 +4,14 @@ import android.util.Log
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.horizontalScroll
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.rememberScrollState
@@ -33,14 +37,17 @@ import androidx.constraintlayout.compose.layoutId
 import com.example.totanpay.R
 import com.example.totanpay.common.isSmall
 import com.example.totanpay.common.mainButtonModifier
+import com.example.totanpay.common.selectedTransactionTypesOf
 import com.example.totanpay.ui.component.ShowToast
 import com.example.totanpay.ui.component.button.MainButton
 import com.example.totanpay.ui.component.button.ReportOptionFilter
+import com.example.totanpay.ui.component.button.SelectedFilterChip
 import com.example.totanpay.ui.component.dialog.SelectAmountInReportDialog
 import com.example.totanpay.ui.component.dialog.SelectDateTimeInReportDialog
 import com.example.totanpay.ui.component.dialog.SelectTransactionTypeInReport
 import com.example.totanpay.ui.theme.BUTTON_CORNER_RADIUS
 import com.example.totanpay.ui.theme.TotanPayTheme
+import com.google.gson.Gson
 
 @Composable
 fun DetailTransactionReportContent(
@@ -88,6 +95,22 @@ fun DetailTransactionReportContent(
         mutableStateOf(false)
     }
     var showToast by remember { mutableStateOf(false) }
+
+    val context = LocalContext.current
+    val typeLabelText = remember(selectedTransactionType) {
+        selectedTransactionTypesOf(selectedTransactionType)
+    }.joinToString("، ") { context.getString(it.title) }
+    val fromDateDisplay = remember(selectFromDateTimeValue) {
+        selectFromDateTimeValue.takeIf { it.isNotEmpty() }
+            ?.let { runCatching { Gson().fromJson(it, DateContainer::class.java).toDisplayText() }.getOrNull() }
+    }
+    val toDateDisplay = remember(selectToDateTimeValue) {
+        selectToDateTimeValue.takeIf { it.isNotEmpty() }
+            ?.let { runCatching { Gson().fromJson(it, DateContainer::class.java).toDisplayText() }.getOrNull() }
+    }
+    val fromAmountLabel = stringResource(R.string.from_amount)
+    val toAmountLabel = stringResource(R.string.to_amount)
+    val transactionTypeLabel = stringResource(R.string.transaction_type)
 
 
     Box(
@@ -139,9 +162,7 @@ fun DetailTransactionReportContent(
                             title = stringResource(R.string.transaction_type),
                             modifier = Modifier.padding(horizontal = 7.dp),
                             onSelected = {
-                                isTransactionTypeSelected2 = !isTransactionTypeSelected
-
-                                isTransactionTypeSelected = !isTransactionTypeSelected
+                                isTransactionTypeSelected2 = true
                             })
                     }
                     item {
@@ -149,8 +170,7 @@ fun DetailTransactionReportContent(
                             title = stringResource(R.string.date_time),
                             modifier = Modifier.padding(horizontal = 7.dp),
                             onSelected = {
-                                isDateTimeSelected2 = !isDateTimeSelected
-                                isDateTimeSelected = !isDateTimeSelected
+                                isDateTimeSelected2 = true
                             })
                     }
                     item {
@@ -158,13 +178,43 @@ fun DetailTransactionReportContent(
                             title = stringResource(R.string.amount),
                             modifier = Modifier.padding(horizontal = 7.dp),
                             onSelected = {
-                                isAmouteSelected2= !isAmouteSelected
-                                isAmouteSelected = !isAmouteSelected
-
+                                isAmouteSelected2 = true
                             })
                     }
                 }
 
+            }
+            if (isTransactionTypeSelected || isDateTimeSelected || isAmouteSelected) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .horizontalScroll(rememberScrollState())
+                        .padding(horizontal = 10.dp, vertical = 4.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    if (isTransactionTypeSelected && typeLabelText.isNotEmpty()) {
+                        SelectedFilterChip(label = "$transactionTypeLabel: $typeLabelText") {
+                            selectedTransactionType = ""
+                            isTransactionTypeSelected = false
+                        }
+                    }
+                    if (isDateTimeSelected && fromDateDisplay != null && toDateDisplay != null) {
+                        SelectedFilterChip(label = "$fromDateDisplay - $toDateDisplay") {
+                            selectFromDateTimeValue = ""
+                            selectToDateTimeValue = ""
+                            isDateTimeSelected = false
+                        }
+                    }
+                    if (isAmouteSelected && (fromAmountValue.isNotEmpty() || toAmountValue.isNotEmpty())) {
+                        SelectedFilterChip(
+                            label = "$fromAmountLabel ${fromAmountValue.ifEmpty { "0" }} $toAmountLabel ${toAmountValue.ifEmpty { "-" }}"
+                        ) {
+                            fromAmountValue = ""
+                            toAmountValue = ""
+                            isAmouteSelected = false
+                        }
+                    }
+                }
             }
             Box(
                 modifier =  Modifier.
@@ -192,6 +242,7 @@ fun DetailTransactionReportContent(
                 }, confirmDateTime = { fromDate, toDate ->
                     selectToDateTimeValue = toDate
                     selectFromDateTimeValue = fromDate
+                    isDateTimeSelected = true
                     isDateTimeSelected2=false
                 })
         }
@@ -201,6 +252,7 @@ fun DetailTransactionReportContent(
                 }, confirmAmount = { fromAmount,toAmount ->
                     fromAmountValue = fromAmount
                     toAmountValue = toAmount
+                    isAmouteSelected = true
                     isAmouteSelected2=false
                 })
         }
@@ -209,6 +261,7 @@ fun DetailTransactionReportContent(
                 onCancelButtonClicked = {                    isTransactionTypeSelected2=false
                 }, confirmTransactionType = {
                     selectedTransactionType=it
+                    isTransactionTypeSelected = true
                     isTransactionTypeSelected2=false
                 })
         }

@@ -36,3 +36,8 @@ data class DateContainer(
     val year: String, val month: String, val day: String,
     val hour: String, val minute: String
 )
+
+fun DateContainer.toDisplayText(): String {
+    val time = "${hour.ifEmpty { "0" }.padStart(2, '0')}:${minute.ifEmpty { "0" }.padStart(2, '0')}"
+    return "$year/$month/$day $time"
+}

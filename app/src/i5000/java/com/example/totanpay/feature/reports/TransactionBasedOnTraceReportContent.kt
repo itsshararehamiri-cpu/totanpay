@@ -134,7 +134,7 @@ fun TransactionBasedOnTraceReportContent(errorInPrint: String,
                 start.linkTo(parent.start)
             }
             constrain(rrnRadioButton) {
-                top.linkTo(parent.top, 4.dp)
+                top.linkTo(parent.top, 32.dp)
                 end.linkTo(parent.end)
                 start.linkTo(parent.start)
                 width = Dimension.percent(0.5f)
@@ -238,7 +238,8 @@ fun TransactionBasedOnTraceReportContent(errorInPrint: String,
                     if (traceIsSelected) R.string.plz_enter_trace
                     else R.string.plz_enter_rrn
                 ),
-                title = stringResource(id = if (traceIsSelected) R.string.trace else R.string.rrn),
+                title = "",
+                placeholder = stringResource(id = if (traceIsSelected) R.string.trace else R.string.rrn),
                 value = trace, hasError = hasError, onNextClicked = {
                     confirmSearch()
                 }, isSmall = isSmall(context = LocalContext.current), onValueChange = {

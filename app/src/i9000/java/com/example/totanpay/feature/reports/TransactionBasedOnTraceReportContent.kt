@@ -103,7 +103,7 @@ fun TransactionBasedOnTraceReportContent(errorInPrint: String,
                 start.linkTo(parent.start)
             }
             constrain(traceRadioButton) {
-                top.linkTo(toolBar.bottom)
+                top.linkTo(toolBar.bottom, 20.dp)
                 end.linkTo(parent.end)
                 start.linkTo(rrnRadioButton.end)
                 width= Dimension.fillToConstraints
@@ -236,7 +236,8 @@ fun TransactionBasedOnTraceReportContent(errorInPrint: String,
                     .layoutId("traceInputText"),
                 errorMessage = stringResource(if(traceIsSelected)R.string.plz_enter_trace
                 else R.string.plz_enter_rrn),
-                title = stringResource(id =if(traceIsSelected) R.string.trace else R.string.rrn),
+                title = "",
+                placeholder = stringResource(id =if(traceIsSelected) R.string.trace else R.string.rrn),
                 value = trace, hasError = hasError, onNextClicked = {
                     keyboard?.hide()
                 }, isSmall =false,onValueChange = {

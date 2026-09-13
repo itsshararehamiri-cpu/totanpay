@@ -3,20 +3,11 @@ package com.example.totanpay.feature.reports
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.PaddingValues
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -26,11 +17,9 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
@@ -42,34 +31,16 @@ import coil.decode.GifDecoder
 import coil.decode.ImageDecoderDecoder
 import coil.request.ImageRequest
 import com.example.totanpay.R
-import com.example.totanpay.common.BackButtonModifier
 import com.example.totanpay.common.receipt.AddNumberOfAllTransactions
 import com.example.totanpay.common.receipt.AddSumOfAllTransactions
-import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
-import com.example.totanpay.data.repository.datasource.transaction.TransactionType
+import com.example.totanpay.common.selectedTransactionTypesOf
 import com.example.totanpay.data.util.formatAmount
 import com.example.totanpay.ui.component.ShowToast
-import com.example.totanpay.ui.component.button.BackButton
 import com.example.totanpay.ui.component.button.PrintButton
+import com.example.totanpay.ui.component.report.TransactionCardCarousel
 import com.example.totanpay.ui.theme.Dimensions.BUTTON_HEIGHT
 import com.example.totanpay.ui.theme.Dimensions.LOADING_HEIGHT
 import com.example.totanpay.ui.theme.TotanPayTheme
-import org.json.JSONObject
-
-private fun selectedTransactionTypesOf(json: String): List<TransactionType> {
-    if (json.isEmpty()) return emptyList()
-    return try {
-        val obj = JSONObject(json)
-        buildList {
-            if (obj.optString("purchaseType") == "has") add(TransactionType.PURCHASE)
-            if (obj.optString("billPayType") == "has") add(TransactionType.BILL_PAY)
-            if (obj.optString("voucherType") == "has") add(TransactionType.VOUCHER)
-            if (obj.optString("topupType") == "has") add(TransactionType.TOPUP)
-        }
-    } catch (e: Exception) {
-        emptyList()
-    }
-}
 
 @Composable
 fun LoadingContent(
@@ -88,9 +59,7 @@ fun LoadingContent(
                 val loading = createRefFor("loading")
                 val inProcessing = createRefFor("inProcessing")
                 val list = createRefFor("list")
-                val toolBar = createRefFor("toolBar")
                 val filterSummary = createRefFor("filterSummary")
-                val header = createRefFor("header")
                 val notFound = createRefFor("notFound")
                 val printSum = createRefFor("printSum")
                 val printAll = createRefFor("printAll")
@@ -108,31 +77,21 @@ fun LoadingContent(
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                 }
-                constrain(toolBar) {
-                    top.linkTo(parent.top)
-                    end.linkTo(parent.end)
-                    start.linkTo(parent.start)
-                }
                 constrain(filterSummary) {
-                    top.linkTo(toolBar.bottom)
+                    top.linkTo(parent.top, 16.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                     width = Dimension.fillToConstraints
                 }
-                constrain(header) {
-                    top.linkTo(filterSummary.bottom)
-                    end.linkTo(parent.end)
-                    start.linkTo(parent.start)
-                }
                 constrain(list) {
-                    top.linkTo(header.bottom, 0.dp)
+                    top.linkTo(filterSummary.bottom, 8.dp)
                     bottom.linkTo(printAll.top, 6.dp)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
                     height = Dimension.fillToConstraints
                 }
                 constrain(notFound) {
-                    top.linkTo(toolBar.bottom)
+                    top.linkTo(parent.top, 16.dp)
                     bottom.linkTo(parent.bottom)
                     end.linkTo(parent.end)
                     start.linkTo(parent.start)
@@ -213,13 +172,6 @@ fun LoadingContent(
             } else {
 
                 if (!uiState.result.isNullOrEmpty()) {
-                    BackButton(
-                        title = stringResource(id = R.string.details_of_transactions),
-                        modifier = BackButtonModifier
-                            .layoutId("toolBar")
-                    ) {
-                        onBackClicked()
-                    }
                     Box(
                         modifier = Modifier
                             .fillMaxWidth()
@@ -260,16 +212,7 @@ fun LoadingContent(
                         }
                     }
                     if (showDetails) {
-                        Text(
-                            text = "${stringResource(id = R.string.details_of_transactions)} (${uiState.numberOfTransactions})",
-                            color = MaterialTheme.colorScheme.onSurface,
-                            style = MaterialTheme.typography.labelLarge,
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(horizontal = 12.dp, vertical = 6.dp)
-                                .layoutId("header")
-                        )
-                        TransactionCardList(
+                        TransactionCardCarousel(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .layoutId("list"),
@@ -360,80 +303,6 @@ fun LoadingContent(
             ) {
                 onEndShowPrintErrorMessage()
             }
-    }
-}
-
-@Composable
-private fun TransactionCardList(
-    modifier: Modifier,
-    reports: List<ResponseTransaction>
-) {
-    val context = LocalContext.current
-    val groupedTransactions = reports.groupBy { it.date }
-    LazyColumn(
-        modifier = modifier,
-        contentPadding = PaddingValues(horizontal = 12.dp, vertical = 4.dp),
-        verticalArrangement = Arrangement.spacedBy(8.dp)
-    ) {
-        groupedTransactions.forEach { (date, transactions) ->
-            item {
-                Text(
-                    text = date,
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.Medium,
-                    color = MaterialTheme.colorScheme.primary,
-                    modifier = Modifier.padding(top = 4.dp, bottom = 2.dp)
-                )
-            }
-            items(transactions) { transaction ->
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(MaterialTheme.colorScheme.surface)
-                        .border(
-                            1.dp,
-                            MaterialTheme.colorScheme.outlineVariant,
-                            RoundedCornerShape(12.dp)
-                        )
-                        .padding(horizontal = 12.dp, vertical = 8.dp)
-                ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = context.getString(transaction.transactionType),
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Medium,
-                            color = MaterialTheme.colorScheme.onSurface
-                        )
-                        Text(
-                            text = transaction.amount.formatAmount(),
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Bold,
-                            color = MaterialTheme.colorScheme.primary
-                        )
-                    }
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
-                    ) {
-                        Text(
-                            text = "${stringResource(id = R.string.trace)}: ${transaction.trace}",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                        )
-                        Text(
-                            text = transaction.time,
-                            style = MaterialTheme.typography.labelSmall,
-                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.6f)
-                        )
-                    }
-                }
-            }
-        }
     }
 }
 

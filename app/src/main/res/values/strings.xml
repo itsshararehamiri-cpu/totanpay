@@ -173,6 +173,8 @@
     <string name="plz_enter_trace">لطفا شماره پیگیری را وارد کنید.</string>
     <string name="show_more">نمایش جزئیات</string>
     <string name="show_sum">نمایش مجموع</string>
+    <string name="previous">قبلی</string>
+    <string name="next">بعدی</string>
 
     <string name="version_label">نسخه %1$s</string>
     <string name="mobile_is_not_valid">شماره موبایل معتبر نیست</string>
