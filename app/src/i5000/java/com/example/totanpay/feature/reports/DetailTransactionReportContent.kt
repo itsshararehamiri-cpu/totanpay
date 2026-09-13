@@ -223,7 +223,13 @@ fun DetailTransactionReportContent(
                     .background( MaterialTheme.colorScheme.primary)
                     .clip(RoundedCornerShape(BUTTON_CORNER_RADIUS))
                     .clickable {
-                        searchTransaction(selectFromDateTimeValue,selectToDateTimeValue,fromAmountValue,toAmountValue,selectedTransactionType)}
+                        val inclusiveToDateTime = selectToDateTimeValue.takeIf { it.isNotEmpty() }
+                            ?.let {
+                                runCatching {
+                                    Gson().toJson(Gson().fromJson(it, DateContainer::class.java).plusOneMinute())
+                                }.getOrDefault(it)
+                            } ?: selectToDateTimeValue
+                        searchTransaction(selectFromDateTimeValue,inclusiveToDateTime,fromAmountValue,toAmountValue,selectedTransactionType)}
                     .padding(horizontal = 24.dp)
             ) {
                 Text(
@@ -259,6 +265,8 @@ fun DetailTransactionReportContent(
         if(isTransactionTypeSelected2){
             SelectTransactionTypeInReport(
                 onCancelButtonClicked = {                    isTransactionTypeSelected2=false
+                }, onNoTypeSelected = {
+                    showToast = true
                 }, confirmTransactionType = {
                     selectedTransactionType=it
                     isTransactionTypeSelected = true
@@ -268,7 +276,7 @@ fun DetailTransactionReportContent(
         if (showToast) {
             ShowToast(
                 modifier = Modifier.align(Alignment.BottomCenter),
-                message = "هیچ تراکنشی انتخاب نشده است!"
+                message = stringResource(R.string.no_transactions_selected)
             ) {
                 showToast = false
             }

@@ -41,7 +41,9 @@ import org.json.JSONObject
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SelectTransactionTypeInReport(
-    onCancelButtonClicked: () -> Unit, confirmTransactionType: (String) -> Unit
+    onCancelButtonClicked: () -> Unit,
+    onNoTypeSelected: () -> Unit = {},
+    confirmTransactionType: (String) -> Unit
 ) {
     var purchaseIsSelected by remember { mutableStateOf(true) }
     var billPayIsSelected by remember { mutableStateOf(false) }
@@ -52,6 +54,10 @@ fun SelectTransactionTypeInReport(
         focusRequester.requestFocus()
     }
     fun confirmSelection() {
+        if (!purchaseIsSelected && !billPayIsSelected && !voucherIsSelected && !topUpIsSelected) {
+            onNoTypeSelected()
+            return
+        }
         val transactionType = JSONObject()
         transactionType.apply {
             put("purchaseType", if (purchaseIsSelected) "has" else "dontHas")

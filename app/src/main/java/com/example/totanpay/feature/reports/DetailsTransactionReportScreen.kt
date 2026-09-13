@@ -41,3 +41,9 @@ fun DateContainer.toDisplayText(): String {
     val time = "${hour.ifEmpty { "0" }.padStart(2, '0')}:${minute.ifEmpty { "0" }.padStart(2, '0')}"
     return "$year/$month/$day $time"
 }
+
+fun DateContainer.plusOneMinute(): DateContainer {
+    val totalMinutes = (hour.ifEmpty { "0" }.toIntOrNull() ?: 0) * 60 +
+            (minute.ifEmpty { "0" }.toIntOrNull() ?: 0) + 1
+    return copy(hour = ((totalMinutes / 60) % 24).toString(), minute = (totalMinutes % 60).toString())
+}
