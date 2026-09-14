@@ -239,6 +239,8 @@ fun TransactionBasedOnTraceReportContent(errorInPrint: String,
                     else R.string.plz_enter_rrn
                 ),
                 title = "",
+                placeholderStyle = MaterialTheme.typography.bodySmall,
+
                 placeholder = stringResource(id = if (traceIsSelected) R.string.trace else R.string.rrn),
                 value = trace, hasError = hasError, onNextClicked = {
                     confirmSearch()
@@ -248,7 +250,7 @@ fun TransactionBasedOnTraceReportContent(errorInPrint: String,
                 })
 
             MainButton(
-                modifier = Modifier
+                modifier = Modifier.padding(top = 10.dp)
                     .mainButtonModifier(isSmall = isSmall(context = LocalContext.current))
                     .layoutId("confirm")
             ) {

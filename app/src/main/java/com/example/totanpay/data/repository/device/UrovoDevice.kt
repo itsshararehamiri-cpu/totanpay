@@ -195,9 +195,9 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
     @SuppressLint("MissingPermission")
     override fun getSerial(): String {
         return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            // Build.getSerial()
+             Build.getSerial()
             ///  "98282013260916"
-            "98282013260916"
+          //  "98282013260916"
             //  "98262351307754"
         } else {
             DeviceManager().deviceId
