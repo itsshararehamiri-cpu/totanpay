@@ -23,29 +23,24 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.input.TextFieldValue
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.layoutId
@@ -61,7 +56,6 @@ fun EnterPasswordBottomDialog(
     onConfirmButtonClicked: (String) -> Unit
 ) {
     var showToast by remember { mutableStateOf(false) }
-    var enteredPassword by remember { mutableStateOf("") }
     LaunchedEffect(errorMessage) {
         if (errorMessage.isNotEmpty()) {
             showToast = true
@@ -72,8 +66,6 @@ fun EnterPasswordBottomDialog(
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
         containerColor = MaterialTheme.colorScheme.surface
     ) {
-        var number by remember { mutableIntStateOf(0) }
-        val focusManager = LocalFocusManager.current
         val (digit1, setDigit1) = remember {
             mutableStateOf("")
         }
@@ -86,35 +78,7 @@ fun EnterPasswordBottomDialog(
         val (digit4, setDigit4) = remember {
             mutableStateOf("")
         }
-        LaunchedEffect(key1 = digit1) {
-            if (digit1.isNotEmpty()) {
-                focusManager.moveFocus(focusDirection = FocusDirection.Right)
-            } else {
-                focusManager.moveFocus(focusDirection = FocusDirection.Left)
-            }
-        }
-        LaunchedEffect(key1 = digit2)
-        {
-            if (digit2.isNotEmpty()) {
-                focusManager.moveFocus(focusDirection = FocusDirection.Right)
-            } else {
-                focusManager.moveFocus(focusDirection = FocusDirection.Left)
-            }
-        }
-        LaunchedEffect(key1 = digit3) {
-            if (digit3.isNotEmpty()) {
-                focusManager.moveFocus(focusDirection = FocusDirection.Right)
-            } else {
-                focusManager.moveFocus(focusDirection = FocusDirection.Left)
-            }
-        }
-        LaunchedEffect(key1 = digit4) {
-            if (digit4.isNotEmpty()) {
-                focusManager.moveFocus(focusDirection = FocusDirection.Right)
-            } else {
-                focusManager.moveFocus(focusDirection = FocusDirection.Left)
-            }
-        }
+        val enteredPassword = "$digit1$digit2$digit3$digit4"
         Box(
             modifier = Modifier
                 .fillMaxSize()
@@ -160,7 +124,10 @@ fun EnterPasswordBottomDialog(
                         horizontalArrangement = Arrangement.spacedBy(10.dp)
                     ) {
                         val focusRequester1 = remember { FocusRequester() }
-                        LaunchedEffect(focusRequester1) {
+                        val focusRequester2 = remember { FocusRequester() }
+                        val focusRequester3 = remember { FocusRequester() }
+                        val focusRequester4 = remember { FocusRequester() }
+                        LaunchedEffect(Unit) {
                             focusRequester1.requestFocus()
                         }
                         CustomReceivedCodeDigitPlacement2(
@@ -177,11 +144,12 @@ fun EnterPasswordBottomDialog(
                             value = digit1
                         ) {
                             setDigit1(it)
-                            number = 1
-                            enteredPassword = it
+                            if (it.isNotEmpty()) focusRequester2.requestFocus()
                         }
                         CustomReceivedCodeDigitPlacement2(
-                            modifier = Modifier.padding(horizontal = 2.dp),
+                            modifier = Modifier
+                                .padding(horizontal = 2.dp)
+                                .focusRequester(focusRequester2),
                             onDone = {
                                 if (enteredPassword.length == 4) {
                                     onConfirmButtonClicked(enteredPassword)
@@ -193,11 +161,13 @@ fun EnterPasswordBottomDialog(
 
                             ) {
                             setDigit2(it)
-                            number = 2
-                            enteredPassword = "$enteredPassword$it"
+                            if (it.isNotEmpty()) focusRequester3.requestFocus()
+                            else focusRequester1.requestFocus()
                         }
                         CustomReceivedCodeDigitPlacement2(
-                            modifier = Modifier.padding(horizontal = 2.dp),
+                            modifier = Modifier
+                                .padding(horizontal = 2.dp)
+                                .focusRequester(focusRequester3),
                             value = digit3,
                             onDone = {
                                 if (enteredPassword.length == 4) {
@@ -208,11 +178,13 @@ fun EnterPasswordBottomDialog(
                             }
                         ) {
                             setDigit3(it)
-                            number = 3
-                            enteredPassword = "$enteredPassword$it"
+                            if (it.isNotEmpty()) focusRequester4.requestFocus()
+                            else focusRequester2.requestFocus()
                         }
                         CustomReceivedCodeDigitPlacement2(
-                            modifier = Modifier.padding(horizontal = 2.dp),
+                            modifier = Modifier
+                                .padding(horizontal = 2.dp)
+                                .focusRequester(focusRequester4),
                             value = digit4,
                             onDone = {
                                 if (enteredPassword.length == 4) {
@@ -223,8 +195,7 @@ fun EnterPasswordBottomDialog(
                             }
                         ) {
                             setDigit4(it)
-                            number = 4
-                            enteredPassword = "$enteredPassword$it"
+                            if (it.isEmpty()) focusRequester3.requestFocus()
                         }
                     }
                 }
@@ -252,25 +223,18 @@ fun CustomReceivedCodeDigitPlacement2(
     onDone: () -> Unit,
     onValueChange: (String) -> Unit
 ) {
-    var textFieldValueState by remember {
-        mutableStateOf(
-            TextFieldValue(
-                text = value, selection = TextRange(value.length)
-            )
-        )
-    }
     CompositionLocalProvider(LocalLayoutDirection provides LayoutDirection.Rtl) {
         OutlinedTextField(
-            value = textFieldValueState,
+            value = value,
             onValueChange = {
-                if (it.text.isEmpty()) {
-                    textFieldValueState = TextFieldValue("")
-                    onValueChange("")
-                } else if (it.text.length <= 1) {
-                    textFieldValueState = TextFieldValue("*", selection = TextRange(it.text.length))
-                    onValueChange(it.text)
-                }
+                // Always keep the most recently typed digit: the cursor position after an
+                // automatic focus change is not guaranteed to be at the end of the field, so a
+                // new keystroke can land before the existing digit (e.g. "5" -> "65"). Taking the
+                // last digit instead of rejecting multi-character input is what makes clearing a
+                // box and typing a new digit into it work reliably.
+                onValueChange(it.filter { char -> char.isDigit() }.takeLast(1))
             },
+            visualTransformation = PasswordVisualTransformation(),
             singleLine = true,
             modifier = modifier
                 .size(56.dp),
@@ -286,12 +250,10 @@ fun CustomReceivedCodeDigitPlacement2(
                 fontWeight = FontWeight.Medium,
                textAlign = TextAlign.Center
             ), keyboardOptions = KeyboardOptions.Default.copy(
-                keyboardType = KeyboardType.Number,
+                keyboardType = KeyboardType.NumberPassword,
                 imeAction = ImeAction.Done
             ),
-            keyboardActions = KeyboardActions(onNext = {
-
-            }, onDone = {
+            keyboardActions = KeyboardActions(onDone = {
                 onDone()
             })
         )

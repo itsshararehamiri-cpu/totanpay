@@ -160,7 +160,7 @@ class VoucherTransaction(
             }
             return FailedTransactionResponse(
                 responseCode = receivedIsoMessage.respCode,
-                responseMessage = R.string.empty_message,
+                responseMessage = null,
                 reasonCode = null,
                 date = sendMessage.tranDate,
                 time = sendMessage.tranTime,

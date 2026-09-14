@@ -3,7 +3,6 @@ package com.example.totanpay.feature.reports
 import android.os.Build.VERSION.SDK_INT
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -44,6 +43,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
@@ -101,8 +101,6 @@ fun TransactionBasedOnTraceReportContent(errorInPrint: String,
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .focusRequester(focusRequester)
-            .focusable()
             .onKeyEvent { keyEvent ->
                 if (keyEvent.type == KeyEventType.KeyDown && keyEvent.key == Key.Enter) {
                     confirmSearch()
@@ -134,7 +132,7 @@ fun TransactionBasedOnTraceReportContent(errorInPrint: String,
                 start.linkTo(parent.start)
             }
             constrain(rrnRadioButton) {
-                top.linkTo(parent.top, 32.dp)
+                top.linkTo(parent.top, 48.dp)
                 end.linkTo(parent.end)
                 start.linkTo(parent.start)
                 width = Dimension.percent(0.5f)
@@ -152,7 +150,7 @@ fun TransactionBasedOnTraceReportContent(errorInPrint: String,
                 start.linkTo(parent.start)
             }
             constrain(confirm) {
-                top.linkTo(traceInputText.bottom, 6.dp)
+                top.linkTo(traceInputText.bottom, 20.dp)
                 end.linkTo(parent.end)
                 start.linkTo(parent.start)
             }
@@ -234,12 +232,13 @@ fun TransactionBasedOnTraceReportContent(errorInPrint: String,
                     .fillMaxWidth()
                     .wrapContentHeight()
                     .layoutId("traceInputText"),
+                textInputModifier = Modifier.focusRequester(focusRequester),
                 errorMessage = stringResource(
                     if (traceIsSelected) R.string.plz_enter_trace
                     else R.string.plz_enter_rrn
                 ),
                 title = "",
-                placeholderStyle = MaterialTheme.typography.bodySmall,
+                placeholderStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
 
                 placeholder = stringResource(id = if (traceIsSelected) R.string.trace else R.string.rrn),
                 value = trace, hasError = hasError, onNextClicked = {

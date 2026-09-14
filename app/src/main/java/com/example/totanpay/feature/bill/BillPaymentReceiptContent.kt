@@ -124,12 +124,12 @@ fun BillPaymentReceiptContent(
             textColor = firstColor,
             isPaperReceipt = isPaperReceipt
         )
+        ShowSuccessResult(
+            modifier = Modifier
+                .wrapContentSize()
+                .align(Alignment.CenterHorizontally), firstColor = firstColor
+        )
         if (isPaperReceipt) {
-            ShowSuccessResult(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .align(Alignment.CenterHorizontally), firstColor = firstColor
-            )
             if (receiptType == ReceiptType.MERCHANT_RECEIPT)
           AddCustomerSignature(
                     modifier = Modifier.rowReceiptModifier(isPaperReceipt),

@@ -114,12 +114,10 @@ fun TopUpReceiptContent(
             if (isPaperReceipt) Color.Black else Green60,
             isPaperReceipt = isPaperReceipt
         )
+        ShowSuccessResult(modifier = Modifier
+            .wrapContentSize()
+            .align(Alignment.CenterHorizontally), firstColor = firstColor)
         if (isPaperReceipt) {
-            ShowSuccessResult(modifier = Modifier
-                .wrapContentSize()
-                .align(Alignment.CenterHorizontally), firstColor = firstColor)
-
-
             if(receiptType== ReceiptType.MERCHANT_RECEIPT)  AddCustomerSignature( modifier = Modifier.rowReceiptModifier(isPaperReceipt)
                 ,textColor=firstColor,isPaperReceipt = true)
             AddPSPLog(

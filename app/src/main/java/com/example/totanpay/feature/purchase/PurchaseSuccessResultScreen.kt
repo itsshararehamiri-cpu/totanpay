@@ -245,12 +245,12 @@ fun ReceiptContent(
                 modifier = Modifier.rowReceiptModifier(isPaperReceipt),
                 result.amount, textColor = if (isPaperReceipt) Black else Green60, isPaperReceipt
             )
+        ShowSuccessResult(
+            modifier = Modifier
+                .wrapContentSize()
+                .align(Alignment.CenterHorizontally), firstColor = firstColor
+        )
         if (isPaperReceipt) {
-            ShowSuccessResult(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .align(Alignment.CenterHorizontally), firstColor = firstColor
-            )
             if (receiptType == ReceiptType.MERCHANT_RECEIPT)
                 AddCustomerSignature(
                     modifier = Modifier.rowReceiptModifier(isPaperReceipt),

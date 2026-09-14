@@ -176,7 +176,7 @@ class PurchaseTransaction(
                 time = request.time,
                 maskedPan = (request as PurchaseTransactionRequest).pan,
                 amount = request.amount,
-                responseMessage = R.string.empty_message,
+                responseMessage = null,
                 cardIssuer = cardIssuer,
                 posCode = receivedIsoMessage.getField48Tag(0x98) ?: "",
                 dateTimeOfServer = dateTimeOfServer

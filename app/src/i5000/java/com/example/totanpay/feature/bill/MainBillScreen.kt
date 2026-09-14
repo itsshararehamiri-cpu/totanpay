@@ -66,7 +66,10 @@ fun MainBillScreen(
     }
     LaunchedEffect(uiState) {
         if (uiState.barcode.isNotEmpty()) {
-            billIdValue = uiState.barcode
+            if (uiState.barcode.length == 26) {
+                billIdValue = uiState.barcode.substring(0, 13)
+                payIdValue = uiState.barcode.substring(13, 26)
+            }
         }
     }
     val focusManager = LocalFocusManager.current

@@ -93,7 +93,7 @@ class BillInquiryTransaction(
             }
             return FailedTransactionResponse(
                 responseCode = receivedIsoMessage.respCode,
-                responseMessage = R.string.empty_message,
+                responseMessage = null,
                 reasonCode = 0,
                 amount = "",
                 date = sendMessage.tranDate,

@@ -149,13 +149,13 @@ fun VoucherReceiptContent(
             textColor = if (isPaperReceipt) Black else Green60,
             isPaperReceipt
         )
+        ShowSuccessResult(
+            modifier = Modifier
+                .wrapContentSize()
+                .align(Alignment.CenterHorizontally),
+            firstColor = firstColor
+        )
         if (isPaperReceipt) {
-            ShowSuccessResult(
-                modifier = Modifier
-                    .wrapContentSize()
-                    .align(Alignment.CenterHorizontally),
-                firstColor = firstColor
-            )
             if (receiptType == ReceiptType.MERCHANT_RECEIPT) AddCustomerSignature(
                 modifier = Modifier.rowReceiptModifier(isPaperReceipt),
                 textColor = firstColor,
