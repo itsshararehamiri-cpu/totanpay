@@ -234,19 +234,19 @@ fun CustomReceivedCodeDigitPlacement2(
                 // box and typing a new digit into it work reliably.
                 onValueChange(it.filter { char -> char.isDigit() }.takeLast(1))
             },
-            visualTransformation = PasswordVisualTransformation(),
+            visualTransformation = PasswordVisualTransformation(mask = '*'),
             singleLine = true,
             modifier = modifier
                 .size(56.dp),
             colors = TextFieldDefaults.colors().copy(
                 disabledTextColor = Color.Gray,
-                disabledContainerColor = Color.White,
+                disabledContainerColor = MaterialTheme.colorScheme.surface,
                 cursorColor = Color.Blue,
                 errorCursorColor = Color.Red
             ),
             textStyle = MaterialTheme.typography.bodyLarge.copy(
                 textDirection = TextDirection.Ltr,
-                color = Color.Black,
+                color = MaterialTheme.colorScheme.onSurface,
                 fontWeight = FontWeight.Medium,
                textAlign = TextAlign.Center
             ), keyboardOptions = KeyboardOptions.Default.copy(

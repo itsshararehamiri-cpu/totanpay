@@ -109,7 +109,8 @@ fun SelectAmountInReportDialog(
                         .layoutId("fromAmount"),
                     hasError = false,
                     errorMessage = "",
-                    title = stringResource(R.string.from_amount),
+                    title = "",
+                    placeholder = stringResource(R.string.from_amount),
                     trailerTitle = stringResource(id = R.string.currency),
                     value = fromAmountValue,
                     onNextClicked = {
@@ -120,12 +121,13 @@ fun SelectAmountInReportDialog(
                 }
                 PriceTextInput(
                     modifier = TextInputModifier
-                        .padding(start = END_PADDING, end = START_PADDING, top = 6.dp)
+                        .padding(start = END_PADDING, end = START_PADDING, top = 2.dp)
                         .focusRequester(toAmountFocusRequester)
                         .layoutId("toAmount"),
                     hasError = false,
                     errorMessage = "",
-                    title = stringResource(R.string.to_amount),
+                    title = "",
+                    placeholder = stringResource(R.string.to_amount),
                     trailerTitle = stringResource(id = R.string.currency),
                     value = toAmountValue,
                     onNextClicked = {

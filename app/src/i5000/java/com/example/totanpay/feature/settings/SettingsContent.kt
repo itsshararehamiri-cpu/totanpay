@@ -72,7 +72,7 @@ fun SettingsContent(isFarsiSelected: Boolean,
                     .padding(top = 20.dp, bottom = 20.dp)
             ) {
                 I5000SettingsItem(
-                    modifier = Modifier.background(Color.White),
+                    modifier = Modifier,
                     iconImageId = R.drawable.ic_i5000_supervisor_settings,
                     title = stringResource(id = R.string.supervisor_settings)
                 ) {
@@ -83,7 +83,7 @@ fun SettingsContent(isFarsiSelected: Boolean,
                     isPaperReceipt = false
                 )
                 I5000SettingsItem(
-                    modifier = Modifier.background(Color.White),
+                    modifier = Modifier,
                     iconImageId = R.drawable.ic_i5000_merchant_settings,
                     title = stringResource(id = R.string.merchant_settings)
                 ) {
@@ -94,7 +94,7 @@ fun SettingsContent(isFarsiSelected: Boolean,
                     isPaperReceipt = false
                 )
                 I5000SettingsItem(
-                    modifier = Modifier.background(Color.White),
+                    modifier = Modifier,
                     iconImageId = R.drawable.ic_i5000_reports,
                     title = stringResource(id = R.string.reports)
                 ) {
@@ -105,7 +105,7 @@ fun SettingsContent(isFarsiSelected: Boolean,
                     isPaperReceipt = false
                 )
                 I5000SettingsItem(
-                    modifier = Modifier.background(Color.White),
+                    modifier = Modifier,
                     iconImageId = R.drawable.ic_setting_connection,
                     title = stringResource(id = R.string.connection_to_net)
                 ) {
@@ -121,7 +121,6 @@ fun SettingsContent(isFarsiSelected: Boolean,
                     Modifier
                         .fillMaxWidth()
                         .height(56.dp)
-                        .background(Color.White)
                         .padding(horizontal = 12.dp),
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -156,7 +155,7 @@ fun SettingsContent(isFarsiSelected: Boolean,
                     isPaperReceipt = false
                 )
                 I5000SettingsItem(
-                    modifier = Modifier.background(Color.White),
+                    modifier = Modifier,
                     iconImageId = R.drawable.ic_i5000_exit,
                     title = stringResource(id = R.string.exit), textColor = Color(0XFFED1C22)
                 ) {

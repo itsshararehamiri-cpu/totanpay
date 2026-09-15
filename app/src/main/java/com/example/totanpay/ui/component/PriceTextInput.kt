@@ -48,6 +48,7 @@ fun PriceTextInput(
     errorMessage: String ,
     hasError: Boolean = false,
     isSmall:Boolean=true,
+    placeholder: String = "",
     onNextClicked: () -> Unit,
     onValueChange: (String) -> Unit
 ) {
@@ -115,6 +116,17 @@ fun PriceTextInput(
                 visualTransformation = { annotatedString ->
                     priceFilter(annotatedString.text)
                 },
+                placeholder = if (placeholder.isNotEmpty()) {
+                    {
+                        Text(
+                            text = placeholder,
+                            style = MaterialTheme.typography.bodyMedium.copy(
+                                textDirection = TextDirection.Ltr
+                            ),
+                            color = MaterialTheme.colorScheme.onSurface.copy(alpha = 0.4f)
+                        )
+                    }
+                } else null,
             )
             Text(
                 modifier = Modifier

@@ -23,7 +23,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.layoutId
 import androidx.compose.ui.res.painterResource
@@ -139,7 +138,6 @@ fun MerchantSettingsContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp)
-                    .background(Color.White)
                     .padding(horizontal = 12.dp)
                     .layoutId("enableAndDisableVoice"), contentAlignment = Alignment.Center
             ) {
@@ -186,7 +184,6 @@ fun MerchantSettingsContent(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(52.dp)
-                    .background(Color.White)
                     .padding(horizontal = 12.dp)
                     .layoutId("chooseTheme"), contentAlignment = Alignment.Center
             ) {

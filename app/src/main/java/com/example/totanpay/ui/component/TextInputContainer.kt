@@ -47,7 +47,7 @@ fun TextInputContainer(
         )
         Box(
             modifier = Modifier
-                .padding(top = if (isSmall) MARGIN_TOP_TEXTFIELD_WITH_TITLE else MARGIN_TOP_TEXTFIELD_WITH_TITLE)
+                .padding(top = if (title.isNotEmpty()) MARGIN_TOP_TEXTFIELD_WITH_TITLE else 0.dp)
                 .fillMaxWidth()
                 .border(
                     width = 1.dp, brush = Brush.horizontalGradient(

@@ -120,13 +120,13 @@ fun DetailTransactionReportContent(
             modifier = Modifier
                 .fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
+                .verticalScroll(scrollState)
         ) {
             ConstraintLayout(
                 ConstraintSet {
                     val reportFilter = createRefFor("reportFilter")
                     val loading = createRefFor("loading")
                     val inProcessing = createRefFor("in_processing")
-                    val confirm=createRefFor("confirm")
                     constrain(reportFilter) {
                         top.linkTo(parent.top, 24.dp)
                         end.linkTo(parent.end)
@@ -142,16 +142,9 @@ fun DetailTransactionReportContent(
                         end.linkTo(parent.end)
                         start.linkTo(parent.start)
                     }
-                    constrain(confirm) {
-                        bottom.linkTo(parent.bottom, 20.dp)
-                        end.linkTo(parent.end)
-                        start.linkTo(parent.start)
-                    }
                 },
                 modifier = Modifier
-                    .verticalScroll(scrollState)
                     .padding(top = 16.dp, bottom = 16.dp)
-                    .padding(bottom = 70.dp)
             ) {
                 LazyRow(
                     modifier = Modifier.layoutId("reportFilter"),
@@ -217,8 +210,9 @@ fun DetailTransactionReportContent(
                 }
             }
             Box(
-                modifier =  Modifier.
-                mainButtonModifier(isSmall = isSmall(context = LocalContext.current) )
+                modifier =  Modifier
+                    .padding(top = 8.dp)
+                    .mainButtonModifier(isSmall = isSmall(context = LocalContext.current) )
                     .clip(RoundedCornerShape(BUTTON_CORNER_RADIUS))
                     .background( MaterialTheme.colorScheme.primary)
                     .clip(RoundedCornerShape(BUTTON_CORNER_RADIUS))

@@ -9,10 +9,10 @@ import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -67,15 +67,11 @@ class MainActivity : ComponentActivity() {
             TotanPayTheme(darkTheme = dataFlow, isFarsi = isFarsiSelected) {
                 LocaleHelper.setLocale(this, if (!isFarsiSelected) "en" else "fa")
                 val systemUiController = rememberSystemUiController()
-                if (dataFlow) {
-                    systemUiController.setSystemBarsColor(
-                        color = Color.Transparent
-                    )
-                } else {
-                    systemUiController.setSystemBarsColor(
-                        color = Color.White
-                    )
-                }
+                val systemBarsColor = MaterialTheme.colorScheme.background
+                systemUiController.setSystemBarsColor(
+                    color = systemBarsColor,
+                    darkIcons = !dataFlow
+                )
                 CompositionLocalProvider(LocalDeviceManager provides deviceManager) {
                     val navController = rememberNavController()
                     NavHost(
