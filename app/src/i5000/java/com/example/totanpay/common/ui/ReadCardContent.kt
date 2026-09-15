@@ -122,8 +122,11 @@ fun ReadCardContent(
 //                    start.linkTo(plzSwipeCard.start, 55.dp)
 //                }
                 constrain(merchantName) {
-                    bottom.linkTo(merchantPhone.top
-                        , 5.dp)
+                    if (extraMessageValue != null) {
+                        top.linkTo(extraMessage.bottom, 10.dp)
+                    } else {
+                        bottom.linkTo(merchantPhone.top, 5.dp)
+                    }
                     start.linkTo(plzSwipeCard.start)
                     end.linkTo(plzSwipeCard.end)
                 }
@@ -133,7 +136,11 @@ fun ReadCardContent(
 //                    start.linkTo(merchantNameImage.start)
 //                }
                 constrain(merchantPhone) {
-                    bottom.linkTo(parent.bottom, 14.dp)
+                    if (extraMessageValue != null) {
+                        top.linkTo(merchantName.bottom, 5.dp)
+                    } else {
+                        bottom.linkTo(parent.bottom, 14.dp)
+                    }
                     start.linkTo(plzSwipeCard.start)
                     end.linkTo(plzSwipeCard.end)
                 }
