@@ -1,6 +1,10 @@
 package com.example.totanpay.feature.bill
 
+import android.Manifest
+import android.content.pm.PackageManager
 import androidx.activity.compose.BackHandler
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -36,6 +40,7 @@ import androidx.compose.ui.unit.dp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.Dimension
+import androidx.core.content.ContextCompat
 import androidx.lifecycle.compose.collectAsStateWithLifecycle
 import com.example.totanpay.R
 import com.example.totanpay.data.util.isNotNumber
@@ -78,6 +83,11 @@ fun MainBillScreen(
         billIdFocusRequester.requestFocus()
     }
     val context = LocalContext.current
+    val cameraPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        if (isGranted) viewModel.scan(context)
+    }
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -113,7 +123,15 @@ fun MainBillScreen(
                 .padding(start = 18.dp)
                 .layoutId("scan")
                 .clickable {
-                    viewModel.scan(context)
+                    if (ContextCompat.checkSelfPermission(
+                            context,
+                            Manifest.permission.CAMERA
+                        ) == PackageManager.PERMISSION_GRANTED
+                    ) {
+                        viewModel.scan(context)
+                    } else {
+                        cameraPermissionLauncher.launch(Manifest.permission.CAMERA)
+                    }
                 }) {
                 Image(
                     painter = painterResource(id = R.drawable.scan__2_),
