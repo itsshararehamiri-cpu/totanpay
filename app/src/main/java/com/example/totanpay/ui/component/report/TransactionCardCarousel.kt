@@ -22,19 +22,16 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.derivedStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.example.totanpay.R
 import com.example.totanpay.data.repository.datasource.model.ResponseTransaction
 import com.example.totanpay.data.util.formatAmount
-import com.example.totanpay.ui.component.button.PrintButton
-import kotlinx.coroutines.launch
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -45,7 +42,6 @@ fun TransactionCardCarousel(
     val context = LocalContext.current
     val listState = rememberLazyListState()
     val flingBehavior = rememberSnapFlingBehavior(lazyListState = listState)
-    val coroutineScope = rememberCoroutineScope()
     val lastIndex = (reports.size - 1).coerceAtLeast(0)
     val currentIndex by remember(reports) {
         derivedStateOf { listState.firstVisibleItemIndex.coerceIn(0, lastIndex) }
@@ -120,32 +116,14 @@ fun TransactionCardCarousel(
             }
         }
         Spacer(modifier = Modifier.height(8.dp))
-        Row(
+        Text(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 16.dp),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            PrintButton(
-                title = stringResource(id = R.string.previous),
-                enabled = reports.isNotEmpty() && currentIndex > 0
-            ) {
-                val target = (currentIndex - 1).coerceAtLeast(0)
-                coroutineScope.launch { listState.animateScrollToItem(target) }
-            }
-            Text(
-                text = if (reports.isEmpty()) "0 / 0" else "${currentIndex + 1} / ${reports.size}",
-                style = MaterialTheme.typography.labelMedium,
-                color = MaterialTheme.colorScheme.onSurface
-            )
-            PrintButton(
-                title = stringResource(id = R.string.next),
-                enabled = reports.isNotEmpty() && currentIndex < lastIndex
-            ) {
-                val target = (currentIndex + 1).coerceAtMost(lastIndex)
-                coroutineScope.launch { listState.animateScrollToItem(target) }
-            }
-        }
+            text = if (reports.isEmpty()) "0 / 0" else "${currentIndex + 1} / ${reports.size}",
+            style = MaterialTheme.typography.labelMedium,
+            color = MaterialTheme.colorScheme.onSurface,
+            textAlign = TextAlign.Center
+        )
     }
 }

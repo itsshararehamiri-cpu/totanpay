@@ -1,7 +1,7 @@
 package com.example.totanpay.ui.component.button
 
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.padding
@@ -27,17 +27,14 @@ fun SelectedFilterChip(
     Row(
         modifier = modifier
             .clip(RoundedCornerShape(8.dp))
-            .background(
-                MaterialTheme.colorScheme.primary,
-                RoundedCornerShape(8.dp)
-            )
+            .border(1.dp, MaterialTheme.colorScheme.secondary, RoundedCornerShape(8.dp))
             .padding(horizontal = 10.dp, vertical = 6.dp),
         verticalAlignment = Alignment.CenterVertically
     ) {
         Image(
             painter = painterResource(id = R.drawable.ic_close_circle),
             contentDescription = null,
-            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.onPrimary),
+            colorFilter = ColorFilter.tint(MaterialTheme.colorScheme.secondary),
             modifier = Modifier
                 .size(18.dp)
                 .clickable { onRemove() }
@@ -45,7 +42,7 @@ fun SelectedFilterChip(
         Text(
             modifier = Modifier.padding(horizontal = 6.dp),
             text = label,
-            color = MaterialTheme.colorScheme.onPrimary,
+            color = MaterialTheme.colorScheme.secondary,
             style = MaterialTheme.typography.labelMedium
         )
     }

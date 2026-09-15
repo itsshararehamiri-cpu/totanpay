@@ -58,7 +58,7 @@ fun SmallMenuItem(
             Text(
                 text = title,
                 modifier = Modifier
-                    .padding(top = 8.dp)
+                    .padding(top = 2.dp)
                     .align(Alignment.CenterHorizontally).padding(horizontal = 3.dp),
                 color = y,
                 style = MaterialTheme.typography.titleLarge.copy(fontWeight= FontWeight.Bold),

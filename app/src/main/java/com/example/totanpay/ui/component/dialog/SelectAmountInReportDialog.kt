@@ -29,6 +29,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.constraintlayout.compose.ConstraintLayout
 import androidx.constraintlayout.compose.ConstraintSet
 import androidx.constraintlayout.compose.layoutId
@@ -111,6 +112,7 @@ fun SelectAmountInReportDialog(
                     errorMessage = "",
                     title = "",
                     placeholder = stringResource(R.string.from_amount),
+                    placeholderStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
                     trailerTitle = stringResource(id = R.string.currency),
                     value = fromAmountValue,
                     onNextClicked = {
@@ -128,6 +130,7 @@ fun SelectAmountInReportDialog(
                     errorMessage = "",
                     title = "",
                     placeholder = stringResource(R.string.to_amount),
+                    placeholderStyle = MaterialTheme.typography.bodySmall.copy(fontSize = 11.sp),
                     trailerTitle = stringResource(id = R.string.currency),
                     value = toAmountValue,
                     onNextClicked = {
