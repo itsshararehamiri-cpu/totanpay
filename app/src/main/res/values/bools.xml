@@ -1,0 +1,3 @@
+<resources>
+    <bool name="use_back_camera_for_scan">false</bool>
+</resources>

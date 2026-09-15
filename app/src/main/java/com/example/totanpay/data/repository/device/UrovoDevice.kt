@@ -496,11 +496,13 @@ class UrovoDevice @Inject constructor(val context: Context) : IDevice {
             com.urovo.sdk.scanner.utils.Constant.Scankey.downPromptString, ""
         )
         bundle.putString(com.urovo.sdk.scanner.utils.Constant.Scankey.title, "")
+        val useBackCamera = model.contains("i9100/W") ||
+                context.resources.getBoolean(R.bool.use_back_camera_for_scan)
         try {
             mInnerScanner.startScan(
                 context,
                 bundle,
-                if (model.contains("i9100/W")) com.urovo.sdk.scanner.utils.Constant.CameraID.BACK else FRONT,
+                if (useBackCamera) com.urovo.sdk.scanner.utils.Constant.CameraID.BACK else FRONT,
                 40,
                 object : ScannerListener {
                     override fun onSuccess(data: String?, byData: ByteArray) {
